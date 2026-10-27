@@ -1,0 +1,11 @@
+[package]
+name = "city_core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+regex = "1"
+libm = "0.2"

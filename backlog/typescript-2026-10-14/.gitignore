@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.rea/*
+!.rea/original/
+!.rea/original/mfcg.js
+.DS_Store
+*.local

@@ -1,0 +1,11 @@
+[package]
+name = "city_bevy"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+city_core = { path = "../city_core" }
+bevy.workspace = true
+serde_json.workspace = true
+serde.workspace = true

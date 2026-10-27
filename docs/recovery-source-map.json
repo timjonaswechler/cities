@@ -1,0 +1,1129 @@
+{
+  "archive": "Archiv.zip",
+  "archiveSha256": "13c376f609467ce7b40ffa692873ebb069ca9de87966bb3be068c04aa3a2a839",
+  "method": "Literal source patches and file heredocs; only reviewed source mutations replayed in a staging directory. Archived shell commands were not executed as a session.",
+  "excludedSessions": [
+    "rollout-2026-10-13T22-28-28-01a136f3-c60e-7482-9ed9-37ae971666cd.jsonl",
+    "rollout-2026-10-13T22-53-58-01a1370b-2202-7703-8e4d-bf88b69ca677.jsonl"
+  ],
+  "originalBundleSha256": "b67cf2e75dcae555a9de56f49d897a04a0a2cbcdccc9e40df02c9f249459d86e",
+  "namingAssetsMatchArchivedProvenance": true,
+  "regenerated": [
+    "TypeScript kernel",
+    "790 Rust functions",
+    "8 Node URL fixtures replacing missing browser fixture files",
+    "24 Rust original-reference fixtures",
+    "3 TypeScript projection fixtures",
+    "Cargo.lock",
+    "package-lock.json",
+    "font metrics and TTF fonts",
+    "TypeScript production build"
+  ],
+  "historicalImages": {
+    "backlog/typescript-2026-10-14/docs/preview.png": {
+      "toolRecord": 543
+    }
+  },
+  "sourceEvents": [
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 103,
+      "timestamp": "2026-10-13T21:27:43.297Z",
+      "operation": "Add",
+      "path": "package.json"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 103,
+      "timestamp": "2026-10-13T21:27:43.297Z",
+      "operation": "Add",
+      "path": "tsconfig.json"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 103,
+      "timestamp": "2026-10-13T21:27:43.297Z",
+      "operation": "Add",
+      "path": ".gitignore"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 103,
+      "timestamp": "2026-10-13T21:27:43.297Z",
+      "operation": "Add",
+      "path": "index.html"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 103,
+      "timestamp": "2026-10-13T21:27:43.297Z",
+      "operation": "Add",
+      "path": "src/model/types.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 165,
+      "timestamp": "2026-10-13T21:30:05.149Z",
+      "operation": "Add",
+      "path": "src/state.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 165,
+      "timestamp": "2026-10-13T21:30:05.149Z",
+      "operation": "Add",
+      "path": "src/warp.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 165,
+      "timestamp": "2026-10-13T21:30:05.149Z",
+      "operation": "Add",
+      "path": "src/export.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 165,
+      "timestamp": "2026-10-13T21:30:05.149Z",
+      "operation": "Add",
+      "path": "public/favicon.svg"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 174,
+      "timestamp": "2026-10-13T21:31:02.022Z",
+      "operation": "Add",
+      "path": "src/style.css"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 75,
+      "timestamp": "2026-10-13T21:31:16.485Z",
+      "operation": "Add",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 98,
+      "timestamp": "2026-10-13T21:31:51.496Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 121,
+      "timestamp": "2026-10-13T21:32:28.325Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 129,
+      "timestamp": "2026-10-13T21:33:06.770Z",
+      "operation": "Add",
+      "path": "tests/render.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 187,
+      "timestamp": "2026-10-13T21:34:06.433Z",
+      "operation": "Add",
+      "path": "src/main.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 212,
+      "timestamp": "2026-10-13T21:34:20.022Z",
+      "operation": "Add",
+      "path": "src/vite-env.d.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 209,
+      "timestamp": "2026-10-13T21:35:50.368Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 241,
+      "timestamp": "2026-10-13T21:35:52.109Z",
+      "operation": "Update",
+      "path": "src/main.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 241,
+      "timestamp": "2026-10-13T21:35:52.109Z",
+      "operation": "Add",
+      "path": "tests/state.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 241,
+      "timestamp": "2026-10-13T21:35:52.109Z",
+      "operation": "Add",
+      "path": "tests/warp.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 336,
+      "timestamp": "2026-10-13T21:38:57.744Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 346,
+      "timestamp": "2026-10-13T21:40:40.379Z",
+      "operation": "Add",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 346,
+      "timestamp": "2026-10-13T21:40:40.379Z",
+      "operation": "Add",
+      "path": "docs/reverse-engineering.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 365,
+      "timestamp": "2026-10-13T21:41:26.783Z",
+      "operation": "Update",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 365,
+      "timestamp": "2026-10-13T21:41:26.783Z",
+      "operation": "Update",
+      "path": "docs/reverse-engineering.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 78,
+      "timestamp": "2026-10-13T21:51:05.803Z",
+      "operation": "Add",
+      "path": "scripts/oracle-server.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 159,
+      "timestamp": "2026-10-13T21:53:06.281Z",
+      "operation": "Add",
+      "path": ".rea/oracle/canonical.js"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 169,
+      "timestamp": "2026-10-13T21:53:21.676Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 478,
+      "timestamp": "2026-10-13T21:53:37.214Z",
+      "operation": "Add",
+      "path": "scripts/extract-original.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 212,
+      "timestamp": "2026-10-13T21:54:28.593Z",
+      "operation": "Update",
+      "path": "scripts/oracle-server.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 248,
+      "timestamp": "2026-10-13T21:55:37.032Z",
+      "operation": "Add",
+      "path": "docs/oracle-notes.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 569,
+      "timestamp": "2026-10-13T21:57:38.574Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 252,
+      "timestamp": "2026-10-13T21:58:23.706Z",
+      "operation": "Update",
+      "path": "src/model/types.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 607,
+      "timestamp": "2026-10-13T21:58:29.461Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 622,
+      "timestamp": "2026-10-13T21:58:52.072Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 285,
+      "timestamp": "2026-10-13T21:58:59.722Z",
+      "operation": "Add",
+      "path": "scripts/browser-parity.html"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 285,
+      "timestamp": "2026-10-13T21:58:59.722Z",
+      "operation": "Add",
+      "path": "scripts/browser-parity.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 317,
+      "timestamp": "2026-10-13T22:00:01.670Z",
+      "operation": "Update",
+      "path": "docs/oracle-notes.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 271,
+      "timestamp": "2026-10-13T22:00:11.112Z",
+      "operation": "heredoc",
+      "path": "src/model/original-adapter.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 682,
+      "timestamp": "2026-10-13T22:00:39.857Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 307,
+      "timestamp": "2026-10-13T22:01:09.386Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 319,
+      "timestamp": "2026-10-13T22:01:15.948Z",
+      "operation": "Update",
+      "path": "src/model/types.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 319,
+      "timestamp": "2026-10-13T22:01:15.948Z",
+      "operation": "Update",
+      "path": "src/model/original-adapter.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 314,
+      "timestamp": "2026-10-13T22:01:35.106Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 708,
+      "timestamp": "2026-10-13T22:01:39.286Z",
+      "operation": "heredoc",
+      "path": "src/original/assets.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 708,
+      "timestamp": "2026-10-13T22:01:39.286Z",
+      "operation": "heredoc",
+      "path": "src/model/generator.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 708,
+      "timestamp": "2026-10-13T22:01:39.286Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 387,
+      "timestamp": "2026-10-13T22:01:58.470Z",
+      "operation": "Add",
+      "path": "scripts/node-original-oracle.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 323,
+      "timestamp": "2026-10-13T22:02:19.905Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 330,
+      "timestamp": "2026-10-13T22:02:49.951Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 766,
+      "timestamp": "2026-10-13T22:03:10.513Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 437,
+      "timestamp": "2026-10-13T22:03:29.462Z",
+      "operation": "Update",
+      "path": "scripts/node-original-oracle.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 437,
+      "timestamp": "2026-10-13T22:03:29.462Z",
+      "operation": "Update",
+      "path": "scripts/browser-parity.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 437,
+      "timestamp": "2026-10-13T22:03:29.462Z",
+      "operation": "Add",
+      "path": "scripts/original-canonical.d.mts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 437,
+      "timestamp": "2026-10-13T22:03:29.462Z",
+      "operation": "Add",
+      "path": "scripts/node-original-oracle.d.mts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 437,
+      "timestamp": "2026-10-13T22:03:29.462Z",
+      "operation": "Add",
+      "path": "tests/original-parity.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 352,
+      "timestamp": "2026-10-13T22:03:40.247Z",
+      "operation": "Update",
+      "path": "tests/render.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 445,
+      "timestamp": "2026-10-13T22:03:45.561Z",
+      "operation": "Update",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 375,
+      "timestamp": "2026-10-13T22:03:58.172Z",
+      "operation": "Update",
+      "path": "src/model/types.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 375,
+      "timestamp": "2026-10-13T22:03:58.172Z",
+      "operation": "Update",
+      "path": "src/model/original-adapter.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 375,
+      "timestamp": "2026-10-13T22:03:58.172Z",
+      "operation": "Update",
+      "path": "src/warp.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 360,
+      "timestamp": "2026-10-13T22:04:08.333Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 461,
+      "timestamp": "2026-10-13T22:04:13.179Z",
+      "operation": "Update",
+      "path": "tests/original-parity.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 461,
+      "timestamp": "2026-10-13T22:04:13.179Z",
+      "operation": "Update",
+      "path": "docs/oracle-notes.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 775,
+      "timestamp": "2026-10-13T22:04:16.836Z",
+      "operation": "heredoc",
+      "path": "tests/generator.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 377,
+      "timestamp": "2026-10-13T22:04:24.884Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 387,
+      "timestamp": "2026-10-13T22:04:28.376Z",
+      "operation": "heredoc",
+      "path": "tests/warp-original.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 798,
+      "timestamp": "2026-10-13T22:04:46.017Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 385,
+      "timestamp": "2026-10-13T22:04:48.512Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 835,
+      "timestamp": "2026-10-13T22:05:25.510Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-00-01a1373e-6ef6-71f1-83d9-b453a3fa9ef4.jsonl",
+      "line": 494,
+      "timestamp": "2026-10-13T22:05:52.759Z",
+      "operation": "Update",
+      "path": "tests/original-parity.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 884,
+      "timestamp": "2026-10-13T22:08:24.011Z",
+      "operation": "heredoc",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 884,
+      "timestamp": "2026-10-13T22:08:24.011Z",
+      "operation": "heredoc",
+      "path": "docs/reverse-engineering.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 884,
+      "timestamp": "2026-10-13T22:08:24.011Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 939,
+      "timestamp": "2026-10-13T22:10:03.207Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 501,
+      "timestamp": "2026-10-13T22:12:55.664Z",
+      "operation": "Add",
+      "path": "src/render/labels.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 482,
+      "timestamp": "2026-10-13T22:13:02.324Z",
+      "operation": "Update",
+      "path": "docs/oracle-notes.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 509,
+      "timestamp": "2026-10-13T22:13:15.947Z",
+      "operation": "Update",
+      "path": "src/render/map.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-28-12-01a1372a-7759-7803-8a70-84e0912141dd.jsonl",
+      "line": 524,
+      "timestamp": "2026-10-13T22:13:50.363Z",
+      "operation": "Update",
+      "path": "tests/render.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 567,
+      "timestamp": "2026-10-13T22:16:40.647Z",
+      "operation": "Update",
+      "path": "src/model/types.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 574,
+      "timestamp": "2026-10-13T22:17:03.079Z",
+      "operation": "Update",
+      "path": "src/model/types.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 574,
+      "timestamp": "2026-10-13T22:17:03.079Z",
+      "operation": "Update",
+      "path": "src/model/generator.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 574,
+      "timestamp": "2026-10-13T22:17:03.079Z",
+      "operation": "Update",
+      "path": "src/state.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 579,
+      "timestamp": "2026-10-13T22:17:17.840Z",
+      "operation": "Update",
+      "path": "src/main.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 598,
+      "timestamp": "2026-10-13T22:18:01.486Z",
+      "operation": "Update",
+      "path": "tests/state.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 598,
+      "timestamp": "2026-10-13T22:18:01.486Z",
+      "operation": "Add",
+      "path": "tests/original-behavior.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 643,
+      "timestamp": "2026-10-13T22:18:51.815Z",
+      "operation": "Update",
+      "path": "tests/original-behavior.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1159,
+      "timestamp": "2026-10-13T22:19:04.147Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 693,
+      "timestamp": "2026-10-13T22:20:22.293Z",
+      "operation": "Update",
+      "path": "src/model/generator.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 693,
+      "timestamp": "2026-10-13T22:20:22.293Z",
+      "operation": "Update",
+      "path": "src/main.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-50-12-01a1373e-9df4-7430-9f63-e4a124088687.jsonl",
+      "line": 693,
+      "timestamp": "2026-10-13T22:20:22.293Z",
+      "operation": "Update",
+      "path": "tests/original-behavior.test.ts"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1222,
+      "timestamp": "2026-10-13T22:21:11.530Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": "Cargo.toml"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": "rust-toolchain.toml"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": ".gitignore"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": "crates/city_core/Cargo.toml"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": "crates/city_core/src/lib.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": "crates/city_bevy/Cargo.toml"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1345,
+      "timestamp": "2026-10-14T10:43:09.905Z",
+      "operation": "Add",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1354,
+      "timestamp": "2026-10-14T10:44:48.436Z",
+      "operation": "Add",
+      "path": "tools/port-kernel.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1365,
+      "timestamp": "2026-10-14T10:48:59.180Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1365,
+      "timestamp": "2026-10-14T10:48:59.180Z",
+      "operation": "Add",
+      "path": "crates/city_core/src/runtime.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1373,
+      "timestamp": "2026-10-14T10:49:11.210Z",
+      "operation": "Update",
+      "path": "tools/port-kernel.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1389,
+      "timestamp": "2026-10-14T10:50:45.275Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/lib.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1389,
+      "timestamp": "2026-10-14T10:50:45.275Z",
+      "operation": "Add",
+      "path": "crates/city_core/src/model.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1389,
+      "timestamp": "2026-10-14T10:50:45.275Z",
+      "operation": "Add",
+      "path": "crates/city_core/src/snapshot.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1389,
+      "timestamp": "2026-10-14T10:50:45.275Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/runtime.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1389,
+      "timestamp": "2026-10-14T10:50:45.275Z",
+      "operation": "Add",
+      "path": "crates/city_core/examples/snapshot.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1420,
+      "timestamp": "2026-10-14T10:51:48.794Z",
+      "operation": "Update",
+      "path": "tools/port-kernel.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1432,
+      "timestamp": "2026-10-14T10:54:07.926Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/model.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1432,
+      "timestamp": "2026-10-14T10:54:07.926Z",
+      "operation": "Add",
+      "path": "crates/city_core/src/adapter.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1432,
+      "timestamp": "2026-10-14T10:54:07.926Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/lib.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1447,
+      "timestamp": "2026-10-14T10:54:29.645Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1476,
+      "timestamp": "2026-10-14T10:55:31.186Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/runtime.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1484,
+      "timestamp": "2026-10-14T10:56:51.809Z",
+      "operation": "Add",
+      "path": "crates/city_bevy/src/mesh.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1539,
+      "timestamp": "2026-10-14T10:59:09.822Z",
+      "operation": "Add",
+      "path": "crates/city_core/src/math.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1539,
+      "timestamp": "2026-10-14T10:59:09.822Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/lib.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1539,
+      "timestamp": "2026-10-14T10:59:09.822Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1590,
+      "timestamp": "2026-10-14T11:01:08.063Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/runtime.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1612,
+      "timestamp": "2026-10-14T11:01:58.267Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1626,
+      "timestamp": "2026-10-14T11:04:04.732Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1626,
+      "timestamp": "2026-10-14T11:04:04.732Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/Cargo.toml"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1637,
+      "timestamp": "2026-10-14T11:05:03.504Z",
+      "operation": "Add",
+      "path": "crates/city_core/tests/parity.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1637,
+      "timestamp": "2026-10-14T11:05:03.504Z",
+      "operation": "Add",
+      "path": "tools/original-fixtures.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1645,
+      "timestamp": "2026-10-14T11:05:15.534Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1660,
+      "timestamp": "2026-10-14T11:06:27.369Z",
+      "operation": "Add",
+      "path": "crates/city_core/examples/export.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1660,
+      "timestamp": "2026-10-14T11:06:27.369Z",
+      "operation": "Add",
+      "path": "tools/adapter-fixtures.mjs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1660,
+      "timestamp": "2026-10-14T11:06:27.369Z",
+      "operation": "Update",
+      "path": "crates/city_core/tests/parity.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1660,
+      "timestamp": "2026-10-14T11:06:27.369Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1685,
+      "timestamp": "2026-10-14T11:07:46.727Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/math.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1685,
+      "timestamp": "2026-10-14T11:07:46.727Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1728,
+      "timestamp": "2026-10-14T11:09:55.902Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1736,
+      "timestamp": "2026-10-14T11:10:19.988Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/lib.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1745,
+      "timestamp": "2026-10-14T11:11:46.672Z",
+      "operation": "Add",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1745,
+      "timestamp": "2026-10-14T11:11:46.672Z",
+      "operation": "Add",
+      "path": "docs/rust-port.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1768,
+      "timestamp": "2026-10-14T11:12:13.693Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/model.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1768,
+      "timestamp": "2026-10-14T11:12:13.693Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/adapter.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1816,
+      "timestamp": "2026-10-14T11:14:09.446Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1816,
+      "timestamp": "2026-10-14T11:14:09.446Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1816,
+      "timestamp": "2026-10-14T11:14:09.446Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1834,
+      "timestamp": "2026-10-14T11:15:38.086Z",
+      "operation": "Update",
+      "path": "crates/city_core/src/lib.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1834,
+      "timestamp": "2026-10-14T11:15:38.086Z",
+      "operation": "Update",
+      "path": "crates/city_core/tests/parity.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1853,
+      "timestamp": "2026-10-14T11:16:45.730Z",
+      "operation": "Add",
+      "path": "tools/verify-archive.py"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1853,
+      "timestamp": "2026-10-14T11:16:45.730Z",
+      "operation": "Update",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1861,
+      "timestamp": "2026-10-14T11:16:54.983Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1870,
+      "timestamp": "2026-10-14T11:17:39.324Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1904,
+      "timestamp": "2026-10-14T11:19:45.212Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1940,
+      "timestamp": "2026-10-14T11:21:44.361Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 1965,
+      "timestamp": "2026-10-14T11:22:56.001Z",
+      "operation": "reviewed mutation",
+      "path": null
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 2069,
+      "timestamp": "2026-10-14T11:28:07.635Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 2100,
+      "timestamp": "2026-10-14T11:29:11.420Z",
+      "operation": "Update",
+      "path": "crates/city_bevy/src/main.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 2100,
+      "timestamp": "2026-10-14T11:29:11.420Z",
+      "operation": "Update",
+      "path": "docs/rust-port.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 2100,
+      "timestamp": "2026-10-14T11:29:11.420Z",
+      "operation": "Update",
+      "path": "README.md"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 2124,
+      "timestamp": "2026-10-14T11:29:42.271Z",
+      "operation": "Update",
+      "path": "crates/city_core/tests/parity.rs"
+    },
+    {
+      "archiveEntry": "rollout-2026-10-13T23-25-18-01a13727-cef7-76c0-82da-0743bdf389c0.jsonl",
+      "line": 2249,
+      "timestamp": "2026-10-14T11:46:30.126Z",
+      "operation": "reviewed mutation",
+      "path": null
+    }
+  ],
+  "renderVerification": {
+    "path": "docs/bevy-preview.png",
+    "sha256": "eadde5ca8db94d9a90e68c92fae0fd48add4226aefaeb23512bbcd759e037adf",
+    "size": [
+      1440,
+      960
+    ],
+    "backend": "Metal",
+    "smokeTestExitCode": 0
+  },
+  "recoveryAdjustments": [
+    "Reapplied machine-applicable Clippy fixes, as in the archived session; inspected changes and reran all original-reference tests.",
+    "Documented missing browser artifacts and regenerated Node fixtures.",
+    "Kept pinned original bundle versionable via .gitignore exceptions."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "new-cities",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:parity": "vitest run tests/original-parity.test.ts",
+    "regenerate:kernel": "node scripts/extract-original.mjs",
+    "oracle": "node scripts/oracle-server.mjs"
+  },
+  "devDependencies": {
+    "@babel/generator": "^8.0.6",
+    "@babel/parser": "^8.0.7",
+    "@babel/traverse": "^8.0.7",
+    "@babel/types": "^8.0.6",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}

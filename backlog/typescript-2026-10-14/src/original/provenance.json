@@ -1,0 +1,784 @@
+{
+  "title": "Medieval Fantasy City Generator",
+  "author": "Oleg Dolya / Watabou",
+  "version": "0.11.5",
+  "build": 2431,
+  "url": "https://watabou.github.io/city-generator/mfcg.js",
+  "sourceSha256": "b67cf2e75dcae555a9de56f49d897a04a0a2cbcdccc9e40df02c9f249459d86e",
+  "transforms": [
+    "AST dependency closure",
+    "split top-level comma/declaration statements",
+    "host adapters",
+    "explicit Haxe dynamic type annotations",
+    "scope-safe readable class identifiers"
+  ],
+  "classes": [
+    {
+      "symbol": "$k",
+      "name": "com.watabou.mfcg.model.blocks.TwistedBlock",
+      "boundary": false
+    },
+    {
+      "symbol": "Aa",
+      "name": "com.watabou.system.URLState",
+      "boundary": true
+    },
+    {
+      "symbol": "Ae",
+      "name": "com.watabou.mfcg.model.Forester",
+      "boundary": false
+    },
+    {
+      "symbol": "Bb",
+      "name": "com.watabou.mfcg.model.ModelDispatcher",
+      "boundary": false
+    },
+    {
+      "symbol": "C",
+      "name": "com.watabou.utils.Random",
+      "boundary": false
+    },
+    {
+      "symbol": "Db",
+      "name": "com.watabou.mfcg.model.UnitSystem",
+      "boundary": false
+    },
+    {
+      "symbol": "E",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "Ea",
+      "name": "com.watabou.geom.Circle",
+      "boundary": false
+    },
+    {
+      "symbol": "Ei",
+      "name": "com.watabou.tracery.ExtSymbol",
+      "boundary": false
+    },
+    {
+      "symbol": "Fc",
+      "name": "com.watabou.utils.MathUtils",
+      "boundary": false
+    },
+    {
+      "symbol": "Fd",
+      "name": "com.watabou.mfcg.model.Blueprint",
+      "boundary": false
+    },
+    {
+      "symbol": "G",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "Gb",
+      "name": "com.watabou.geom.polygons.PolyBounds",
+      "boundary": false
+    },
+    {
+      "symbol": "Gc",
+      "name": "com.watabou.geom.Color",
+      "boundary": false
+    },
+    {
+      "symbol": "Gl",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "H",
+      "name": "Std",
+      "boundary": false
+    },
+    {
+      "symbol": "Hf",
+      "name": "com.watabou.geom.Chaikin",
+      "boundary": false
+    },
+    {
+      "symbol": "Hl",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "I",
+      "name": "openfl.geom.Point",
+      "boundary": false
+    },
+    {
+      "symbol": "Ic",
+      "name": "com.watabou.geom.DCEL",
+      "boundary": false
+    },
+    {
+      "symbol": "If",
+      "name": "openfl.net.URLRequest",
+      "boundary": true
+    },
+    {
+      "symbol": "Il",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "J",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "Jd",
+      "name": "com.watabou.mfcg.model.Building",
+      "boundary": false
+    },
+    {
+      "symbol": "K",
+      "name": "com.watabou.mfcg.mapping.Style",
+      "boundary": false
+    },
+    {
+      "symbol": "Ld",
+      "name": "lime.math.Rectangle",
+      "boundary": false
+    },
+    {
+      "symbol": "Lh",
+      "name": "haxe.ds._List.ListNode",
+      "boundary": false
+    },
+    {
+      "symbol": "Ma",
+      "name": "com.watabou.mfcg.linguistics.Namer",
+      "boundary": false
+    },
+    {
+      "symbol": "Me",
+      "name": "com.watabou.geom.Cubic",
+      "boundary": false
+    },
+    {
+      "symbol": "N",
+      "name": "HxOverrides",
+      "boundary": false
+    },
+    {
+      "symbol": "Nc",
+      "name": "msignal.Signal0",
+      "boundary": false
+    },
+    {
+      "symbol": "Ne",
+      "name": "com.watabou.mfcg.model.wards.Cathedral",
+      "boundary": false
+    },
+    {
+      "symbol": "O",
+      "name": "StringTools",
+      "boundary": false
+    },
+    {
+      "symbol": "Oe",
+      "name": "com.watabou.tracery.Tracery",
+      "boundary": false
+    },
+    {
+      "symbol": "Oh",
+      "name": "haxe.ds._StringMap.StringMapKeyIterator",
+      "boundary": false
+    },
+    {
+      "symbol": "Pa",
+      "name": "haxe.ds.StringMap",
+      "boundary": false
+    },
+    {
+      "symbol": "Pc",
+      "name": "com.watabou.mfcg.model.wards.Alleys",
+      "boundary": false
+    },
+    {
+      "symbol": "Pe",
+      "name": "com.watabou.mfcg.model.District",
+      "boundary": false
+    },
+    {
+      "symbol": "Qb",
+      "name": "com.watabou.geom.Delaunator",
+      "boundary": false
+    },
+    {
+      "symbol": "Qd",
+      "name": "com.watabou.geom.polygons.PolyCreate",
+      "boundary": false
+    },
+    {
+      "symbol": "Qe",
+      "name": "com.watabou.mfcg.model.wards.WardGroup",
+      "boundary": false
+    },
+    {
+      "symbol": "Qf",
+      "name": "com.watabou.tracery.Symbol",
+      "boundary": false
+    },
+    {
+      "symbol": "Ra",
+      "name": "openfl.Lib",
+      "boundary": true
+    },
+    {
+      "symbol": "Rb",
+      "name": "com.watabou.mfcg.model.wards.Ward",
+      "boundary": false
+    },
+    {
+      "symbol": "Re",
+      "name": "com.watabou.mfcg.model.Grower",
+      "boundary": false
+    },
+    {
+      "symbol": "Sa",
+      "name": "com.watabou.geom.polygons.PolyCore",
+      "boundary": false
+    },
+    {
+      "symbol": "Se",
+      "name": "com.watabou.utils.Perlin",
+      "boundary": false
+    },
+    {
+      "symbol": "Ta",
+      "name": "haxe.NativeStackTrace",
+      "boundary": false
+    },
+    {
+      "symbol": "Tc",
+      "name": "com.watabou.mfcg.model.Edge",
+      "boundary": false
+    },
+    {
+      "symbol": "Te",
+      "name": "com.watabou.mfcg.model.wards.Mansion",
+      "boundary": false
+    },
+    {
+      "symbol": "Tj",
+      "name": "haxe.ds._List.ListIterator",
+      "boundary": false
+    },
+    {
+      "symbol": "Ua",
+      "name": "com.watabou.geom.EdgeChain",
+      "boundary": false
+    },
+    {
+      "symbol": "Ub",
+      "name": "com.watabou.mfcg.model.City",
+      "boundary": false
+    },
+    {
+      "symbol": "Vb",
+      "name": "openfl.errors.Error",
+      "boundary": false
+    },
+    {
+      "symbol": "Vh",
+      "name": "com.watabou.geom.Face",
+      "boundary": false
+    },
+    {
+      "symbol": "Wh",
+      "name": "com.watabou.geom.IFillableShape",
+      "boundary": false
+    },
+    {
+      "symbol": "X",
+      "name": "haxe.Exception",
+      "boundary": false
+    },
+    {
+      "symbol": "Xc",
+      "name": "com.watabou.utils.Palette",
+      "boundary": false
+    },
+    {
+      "symbol": "Xh",
+      "name": "com.watabou.geom.FillablePoly",
+      "boundary": false
+    },
+    {
+      "symbol": "Xk",
+      "name": "com.watabou.mfcg.annotations.Ridge",
+      "boundary": false
+    },
+    {
+      "symbol": "Y",
+      "name": "haxe.IMap",
+      "boundary": false
+    },
+    {
+      "symbol": "Yc",
+      "name": "com.watabou.geom.polygons.PolyTransform",
+      "boundary": false
+    },
+    {
+      "symbol": "Yh",
+      "name": "com.watabou.geom._SkeletonBuilder.Node",
+      "boundary": false
+    },
+    {
+      "symbol": "Z",
+      "name": "com.watabou.utils.ArrayExtender",
+      "boundary": false
+    },
+    {
+      "symbol": "Zh",
+      "name": "com.watabou.tracery.DeckRuleSelector",
+      "boundary": false
+    },
+    {
+      "symbol": "Zj",
+      "name": "com.watabou.geom.Vertex",
+      "boundary": false
+    },
+    {
+      "symbol": "Zk",
+      "name": "com.watabou.mfcg.utils.Cutter",
+      "boundary": false
+    },
+    {
+      "symbol": "ac",
+      "name": "openfl.utils.Assets",
+      "boundary": true
+    },
+    {
+      "symbol": "ak",
+      "name": "com.watabou.geom.Graph",
+      "boundary": false
+    },
+    {
+      "symbol": "ba",
+      "name": "com.watabou.system.State",
+      "boundary": true
+    },
+    {
+      "symbol": "bb",
+      "name": "haxe.ds.List",
+      "boundary": false
+    },
+    {
+      "symbol": "bh",
+      "name": "openfl.geom.Vector3D",
+      "boundary": false
+    },
+    {
+      "symbol": "bi",
+      "name": "com.watabou.mfcg.model.Cell",
+      "boundary": false
+    },
+    {
+      "symbol": "bk",
+      "name": "com.watabou.geom.Node",
+      "boundary": false
+    },
+    {
+      "symbol": "cb",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "ce",
+      "name": "com.watabou.mfcg.model.wards.Park",
+      "boundary": false
+    },
+    {
+      "symbol": "ch",
+      "name": "com.watabou.geom.Rib",
+      "boundary": false
+    },
+    {
+      "symbol": "ci",
+      "name": "com.watabou.mfcg.model.Landmark",
+      "boundary": false
+    },
+    {
+      "symbol": "ck",
+      "name": "com.watabou.geom.PoissonPattern",
+      "boundary": false
+    },
+    {
+      "symbol": "de",
+      "name": "com.watabou.nlp.Markov",
+      "boundary": false
+    },
+    {
+      "symbol": "dh",
+      "name": "com.watabou.utils.StringUtils",
+      "boundary": false
+    },
+    {
+      "symbol": "di",
+      "name": "com.watabou.mfcg.model.DocksGrower",
+      "boundary": false
+    },
+    {
+      "symbol": "dk",
+      "name": "com.watabou.geom._SkeletonBuilder.Segment",
+      "boundary": false
+    },
+    {
+      "symbol": "ec",
+      "name": "msignal.Signal1",
+      "boundary": false
+    },
+    {
+      "symbol": "ei",
+      "name": "com.watabou.mfcg.model.ParkGrower",
+      "boundary": false
+    },
+    {
+      "symbol": "ek",
+      "name": "com.watabou.geom._Triangulation.Node",
+      "boundary": false
+    },
+    {
+      "symbol": "fh",
+      "name": "com.watabou.mfcg.model.Topology",
+      "boundary": false
+    },
+    {
+      "symbol": "fi",
+      "name": "msignal.Slot0",
+      "boundary": false
+    },
+    {
+      "symbol": "g",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "gb",
+      "name": "haxe.Log",
+      "boundary": true
+    },
+    {
+      "symbol": "gc",
+      "name": "com.watabou.mfcg.mapping.TreesLayer",
+      "boundary": false
+    },
+    {
+      "symbol": "gd",
+      "name": "com.watabou.geom.polygons.PolyCut",
+      "boundary": false
+    },
+    {
+      "symbol": "gf",
+      "name": "com.watabou.utils.SetUtils",
+      "boundary": false
+    },
+    {
+      "symbol": "gi",
+      "name": "msignal.Slot1",
+      "boundary": false
+    },
+    {
+      "symbol": "he",
+      "name": "com.watabou.mfcg.model.wards.Market",
+      "boundary": false
+    },
+    {
+      "symbol": "hf",
+      "name": "com.watabou.geom.Segment",
+      "boundary": false
+    },
+    {
+      "symbol": "hi",
+      "name": "com.watabou.mfcg.model.blocks.Block",
+      "boundary": false
+    },
+    {
+      "symbol": "hk",
+      "name": "com.watabou.tracery.Grammar",
+      "boundary": false
+    },
+    {
+      "symbol": "ia",
+      "name": "com.watabou.mfcg.scenes.TownScene",
+      "boundary": true
+    },
+    {
+      "symbol": "id",
+      "name": "com.watabou.utils.Stopwatch",
+      "boundary": true
+    },
+    {
+      "symbol": "ig",
+      "name": "lime.math.Vector2",
+      "boundary": false
+    },
+    {
+      "symbol": "ii",
+      "name": "com.watabou.mfcg.utils.Bisector",
+      "boundary": false
+    },
+    {
+      "symbol": "ik",
+      "name": "com.watabou.mfcg.model.DistrictBuilder",
+      "boundary": false
+    },
+    {
+      "symbol": "ja",
+      "name": "EReg",
+      "boundary": false
+    },
+    {
+      "symbol": "jb",
+      "name": "com.watabou.tracery.ModsEngBasic",
+      "boundary": false
+    },
+    {
+      "symbol": "jc",
+      "name": "com.watabou.utils.ParamType",
+      "boundary": false
+    },
+    {
+      "symbol": "je",
+      "name": "msignal.Signal",
+      "boundary": false
+    },
+    {
+      "symbol": "jf",
+      "name": "com.watabou.geom.SkeletonBuilder",
+      "boundary": false
+    },
+    {
+      "symbol": "jg",
+      "name": "com.watabou.geom.HalfEdge",
+      "boundary": false
+    },
+    {
+      "symbol": "jk",
+      "name": "com.watabou.mfcg.model.wards._Mansion.Rect",
+      "boundary": false
+    },
+    {
+      "symbol": "kd",
+      "name": "com.watabou.mfcg.Values",
+      "boundary": false
+    },
+    {
+      "symbol": "kf",
+      "name": "com.watabou.geom.polygons.PolyAccess",
+      "boundary": false
+    },
+    {
+      "symbol": "l",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "lc",
+      "name": "com.watabou.mfcg.model.DistrictType",
+      "boundary": false
+    },
+    {
+      "symbol": "lf",
+      "name": "com.watabou.mfcg.model.wards.Harbour",
+      "boundary": false
+    },
+    {
+      "symbol": "mf",
+      "name": "com.watabou.mfcg.utils.Bloater",
+      "boundary": false
+    },
+    {
+      "symbol": "na",
+      "name": "openfl.geom.Rectangle",
+      "boundary": false
+    },
+    {
+      "symbol": "nb",
+      "name": "lime.utils.ObjectPool",
+      "boundary": false
+    },
+    {
+      "symbol": "nd",
+      "name": "com.watabou.nlp.Syllables",
+      "boundary": false
+    },
+    {
+      "symbol": "ne",
+      "name": "haxe.StackItem",
+      "boundary": false
+    },
+    {
+      "symbol": "ng",
+      "name": "com.watabou.mfcg.model.wards.Wilderness",
+      "boundary": false
+    },
+    {
+      "symbol": "og",
+      "name": "com.watabou.utils.Noise",
+      "boundary": false
+    },
+    {
+      "symbol": "oh",
+      "name": "com.watabou.tracery.TraceryNode",
+      "boundary": false
+    },
+    {
+      "symbol": "pa",
+      "name": "haxe.ds.ObjectMap",
+      "boundary": false
+    },
+    {
+      "symbol": "pc",
+      "name": "com.watabou.mfcg.model.CurtainWall",
+      "boundary": false
+    },
+    {
+      "symbol": "ph",
+      "name": "com.watabou.tracery.NodeAction",
+      "boundary": false
+    },
+    {
+      "symbol": "qa",
+      "name": "com.watabou.geom.GeomUtils",
+      "boundary": false
+    },
+    {
+      "symbol": "qh",
+      "name": "haxe.ValueException",
+      "boundary": false
+    },
+    {
+      "symbol": "r",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "sb",
+      "name": "com.watabou.mfcg.Main",
+      "boundary": true
+    },
+    {
+      "symbol": "se",
+      "name": "msignal.Slot",
+      "boundary": false
+    },
+    {
+      "symbol": "uc",
+      "name": "com.watabou.mfcg.utils.PolyUtils",
+      "boundary": false
+    },
+    {
+      "symbol": "v",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "va",
+      "name": "js.Boot",
+      "boundary": false
+    },
+    {
+      "symbol": "vg",
+      "name": "com.watabou.tracery.RuleSelector",
+      "boundary": false
+    },
+    {
+      "symbol": "vl",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "w",
+      "name": "Type",
+      "boundary": false
+    },
+    {
+      "symbol": "wd",
+      "name": "com.watabou.utils.PointExtender",
+      "boundary": false
+    },
+    {
+      "symbol": "we",
+      "name": "openfl.text.TextFormat",
+      "boundary": true
+    },
+    {
+      "symbol": "wg",
+      "name": "com.watabou.tracery.RuleSet",
+      "boundary": false
+    },
+    {
+      "symbol": "xd",
+      "name": "com.watabou.mfcg.model.wards.Castle",
+      "boundary": false
+    },
+    {
+      "symbol": "xe",
+      "name": "com.watabou.geom.Triangulation",
+      "boundary": false
+    },
+    {
+      "symbol": "xl",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "y",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "ya",
+      "name": "Reflect",
+      "boundary": false
+    },
+    {
+      "symbol": "yb",
+      "name": "com.watabou.mfcg.model.Canal",
+      "boundary": false
+    },
+    {
+      "symbol": "yd",
+      "name": "com.watabou.mfcg.model.wards.Farm",
+      "boundary": false
+    },
+    {
+      "symbol": "ye",
+      "name": "com.watabou.geom.polygons.PolyBool",
+      "boundary": false
+    },
+    {
+      "symbol": "yf",
+      "name": "haxe.iterators.ArrayIterator",
+      "boundary": false
+    },
+    {
+      "symbol": "yl",
+      "name": null,
+      "boundary": false
+    },
+    {
+      "symbol": "zd",
+      "name": "msignal.SlotList",
+      "boundary": false
+    },
+    {
+      "symbol": "ze",
+      "name": "com.watabou.mfcg.annotations.Equator",
+      "boundary": false
+    }
+  ],
+  "assets": {
+    "elven.txt": "23451d6d68fd8b6c44573e98314375e44ce7c9fdff579d799d2b64b086b8586b",
+    "english.txt": "023f2a1b4f714d271cb383ec79750f0bf39f39c52b1c0af25567c51cb10b77c8",
+    "given_female.txt": "09fe64cee0ce5f4d01d095d29c681402175f0e1bc609499a1eba0e68b1a2cdb4",
+    "given_male.txt": "6681d0a35e53c6dac34d069432e6c0dd34135c83cb4d70b0da2acd1d08670f2a",
+    "grammar.json": "be5750b0ff62c5ec19010fb5190fd08bc1d2a52a3e87db77d1422703973cb27f"
+  }
+}

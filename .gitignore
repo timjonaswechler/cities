@@ -1,0 +1,9 @@
+/target/
+**/node_modules/
+**/dist/
+**/.rea/*
+!backlog/typescript-2026-10-14/.rea/original/
+!backlog/typescript-2026-10-14/.rea/original/mfcg.js
+.DS_Store
+*.local
+/exports/
