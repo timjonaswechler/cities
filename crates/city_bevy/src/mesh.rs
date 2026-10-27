@@ -1,7 +1,8 @@
 use bevy::{
     asset::RenderAssetUsages, mesh::Indices, prelude::*, render::render_resource::PrimitiveTopology,
 };
-use city_core::{City, Point, Polygon};
+use city_core::{City, EconomicAnalysis, EconomicUse, Point, Polygon};
+use std::collections::BTreeMap;
 
 /// One original map unit is four metres. Conversion to f32 happens only here.
 const SCALE: f64 = 4.0;
@@ -173,6 +174,7 @@ pub fn spawn_city(
     meshes: &mut Assets<Mesh>,
     materials: &mut Assets<StandardMaterial>,
     city: &City,
+    economy: Option<&EconomicAnalysis>,
 ) {
     let mut land = Geometry::default();
     let mut water = Geometry::default();
@@ -181,6 +183,13 @@ pub fn spawn_city(
     let mut trees = Geometry::default();
     let mut farms = Geometry::default();
     let mut houses: [Geometry; 4] = std::array::from_fn(|_| Geometry::default());
+    let uses: BTreeMap<_, _> = economy
+        .into_iter()
+        .flat_map(|e| &e.buildings)
+        .map(|b| ((b.ward_id, b.building_index), b.usage))
+        .collect();
+    let mut economic_roofs: [Geometry; 4] = std::array::from_fn(|_| Geometry::default());
+    let mut market_markers = Geometry::default();
     let mut landmarks = Geometry::default();
     let mut sides = Geometry::default();
     let original = &city.original_geometry;
@@ -242,9 +251,29 @@ pub fn spawn_city(
             if building.landmark {
                 landmarks.polygon(&building.polygon, height + 0.02);
             } else {
-                houses[bucket].polygon(&building.polygon, height + 0.02);
+                let use_index = match uses.get(&(ward.id, i)) {
+                    Some(EconomicUse::ShopDwelling) => Some(0),
+                    Some(EconomicUse::WorkshopDwelling) => Some(1),
+                    Some(EconomicUse::Inn) => Some(2),
+                    Some(EconomicUse::Warehouse) => Some(3),
+                    _ => None,
+                };
+                if let Some(i) = use_index {
+                    economic_roofs[i].polygon(&building.polygon, height + 0.03);
+                } else {
+                    houses[bucket].polygon(&building.polygon, height + 0.02);
+                }
             }
         }
+    }
+    for site in economy
+        .into_iter()
+        .flat_map(|e| &e.markets)
+        .filter(|m| m.proposed)
+    {
+        // Elevated pins identify proposals; they do not pretend a plaza was cleared.
+        market_markers.prism(&disk(site.position, 0.3), 0.5, 30.0);
+        market_markers.prism(&disk(site.position, 2.0), 30.0, 33.0);
     }
     for wall in &original.walls {
         for edge in &wall.segments {
@@ -273,6 +302,7 @@ pub fn spawn_city(
         (walls, Color::srgb_u8(121, 121, 105)),
         (landmarks, Color::srgb_u8(104, 125, 126)),
         (trees, Color::srgb_u8(119, 145, 103)),
+        (market_markers, Color::srgb_u8(240, 181, 45)),
     ];
     for (i, g) in houses.into_iter().enumerate() {
         layers.push((
@@ -284,6 +314,14 @@ pub fn spawn_city(
                 Color::srgb_u8(183, 148, 117),
             ][i],
         ));
+    }
+    for (geometry, color) in economic_roofs.into_iter().zip([
+        Color::srgb_u8(76, 143, 81),
+        Color::srgb_u8(70, 130, 185),
+        Color::srgb_u8(186, 80, 64),
+        Color::srgb_u8(140, 92, 160),
+    ]) {
+        layers.push((geometry, color));
     }
     for (geometry, color) in layers {
         if geometry.positions.is_empty() {

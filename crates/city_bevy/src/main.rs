@@ -10,7 +10,10 @@ use bevy::{
     render::view::screenshot::{Screenshot, ScreenshotCaptured, save_to_disk},
     ui_widgets::{Activate, Button},
 };
-use city_core::{City, CityOptions, GenerationError, generate_city, generate_snapshot};
+use city_core::{
+    City, CityOptions, EconomicAnalysis, GenerationError, analyze_economy, generate_city,
+    generate_snapshot,
+};
 use std::sync::{Mutex, mpsc};
 
 #[derive(Resource)]
@@ -18,8 +21,19 @@ struct CityState {
     city: City,
     options: CityOptions,
     message: String,
-    job: Option<Mutex<mpsc::Receiver<Result<City, GenerationError>>>>,
+    job: Option<Mutex<mpsc::Receiver<Result<GeneratedCity, GenerationError>>>>,
     seed_edit: Option<String>,
+    economy_enabled: bool,
+    economy: Option<EconomicAnalysis>,
+}
+struct GeneratedCity {
+    city: City,
+    economy: Option<EconomicAnalysis>,
+}
+fn generate_view(options: &CityOptions, economy: bool) -> Result<GeneratedCity, GenerationError> {
+    let city = generate_city(options)?;
+    let economy = economy.then(|| analyze_economy(&city));
+    Ok(GeneratedCity { city, economy })
 }
 #[derive(Resource, Default)]
 struct Actions(Vec<Action>);
@@ -32,6 +46,7 @@ enum Action {
     Seed,
     Gates,
     Feature(usize),
+    Economy,
     Top,
     Reset,
     Json,
@@ -112,13 +127,14 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut options = CityOptions::default();
     let mut output = None;
     let mut snapshot = None;
+    let mut economy_enabled = false;
     let mut capture = Capture::default();
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--help" | "-h" => {
                 println!(
-                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
+                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE] [--economy]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · E: economy overlay · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
                 );
                 return Ok(());
             }
@@ -129,6 +145,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             }
             "--seed" => options.seed = args.next().ok_or("--seed requires a number")?.parse()?,
             "--size" => options.size = args.next().ok_or("--size requires a number")?.parse()?,
+            "--economy" => economy_enabled = true,
             "--coast" => options.coast = true,
             "--river" => options.river = true,
             "--greens" => options.greens = true,
@@ -144,13 +161,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
     options.validate()?;
     if let Some(path) = snapshot {
+        if economy_enabled {
+            return Err("--economy annotates cities, not original snapshots; use --export".into());
+        }
         write_json(&path, &generate_snapshot(&options)?)?;
         println!("Snapshot: {path}");
         return Ok(());
     }
-    let city = generate_city(&options)?;
+    let GeneratedCity { city, economy } = generate_view(&options, economy_enabled)?;
     if let Some(path) = output {
-        write_city(&path, &city)?;
+        write_city(&path, &city, economy.as_ref())?;
         println!(
             "{} · {} buildings → {path}",
             city.name,
@@ -187,6 +207,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             message: "Bereit".into(),
             job: None,
             seed_edit: None,
+            economy_enabled,
+            economy,
         })
         .insert_resource(orbit)
         .insert_resource(capture)
@@ -219,11 +241,16 @@ fn write_json(path: &str, value: &impl serde::Serialize) -> Result<(), Box<dyn s
     std::fs::write(p, serde_json::to_vec_pretty(value)?)?;
     Ok(())
 }
-fn write_city(path: &str, city: &City) -> Result<(), Box<dyn std::error::Error>> {
-    write_json(
-        path,
-        &serde_json::json!({"format":"new-cities","version":1,"city":city}),
-    )
+fn write_city(
+    path: &str,
+    city: &City,
+    economy: Option<&EconomicAnalysis>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut value = serde_json::json!({"format":"new-cities","version":1,"city":city});
+    if let Some(economy) = economy {
+        value["economy"] = serde_json::to_value(economy)?;
+    }
+    write_json(path, &value)
 }
 fn orbit_for(city: &City) -> Orbit {
     let extent = city.bounds.width.max(city.bounds.height) as f32 * 4.0;
@@ -248,7 +275,13 @@ fn setup_scene(
     mut capture: ResMut<Capture>,
     state: Res<CityState>,
 ) {
-    mesh::spawn_city(&mut commands, &mut meshes, &mut materials, &state.city);
+    mesh::spawn_city(
+        &mut commands,
+        &mut meshes,
+        &mut materials,
+        &state.city,
+        state.economy.as_ref(),
+    );
     // A smoke test must render even when the desktop is locked or the window
     // is occluded. An image target does not depend on a window swap chain.
     let target = if capture.exit_after {
@@ -350,6 +383,7 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
             spawn_button(parent, Action::Feature(i));
         }
         spawn_button(parent, Action::Gates);
+        spawn_button(parent, Action::Economy);
         parent.spawn((
             Text::new("ANSICHT & EXPORT"),
             font(11.0),
@@ -501,6 +535,7 @@ fn keyboard(
         (KeyCode::KeyR, Action::New),
         (KeyCode::Enter, Action::Rebuild),
         (KeyCode::KeyT, Action::Top),
+        (KeyCode::KeyE, Action::Economy),
         (KeyCode::Home, Action::Reset),
         (KeyCode::Equal, Action::Larger),
         (KeyCode::Minus, Action::Smaller),
@@ -520,9 +555,10 @@ fn start_generation(state: &mut CityState) {
     }
     state.seed_edit = None;
     let options = state.options.clone();
+    let economy = state.economy_enabled;
     let (tx, rx) = mpsc::channel();
     std::thread::spawn(move || {
-        let _ = tx.send(generate_city(&options));
+        let _ = tx.send(generate_view(&options, economy));
     });
     state.job = Some(Mutex::new(rx));
     state.message = "Generierung läuft …".into();
@@ -586,11 +622,18 @@ fn apply_actions(
                 };
                 regenerate = true;
             }
+            Action::Economy => {
+                if state.job.is_some() {
+                    continue;
+                }
+                state.economy_enabled = !state.economy_enabled;
+                regenerate = true;
+            }
             Action::Top => orbit.top = !orbit.top,
             Action::Reset => *orbit = orbit_for(&state.city),
             Action::Json => {
                 let path = format!("exports/city-{}.json", state.city.options.seed);
-                state.message = match write_city(&path, &state.city) {
+                state.message = match write_city(&path, &state.city, state.economy.as_ref()) {
                     Ok(_) => format!("Gespeichert: {path}"),
                     Err(e) => e.to_string(),
                 };
@@ -624,17 +667,25 @@ fn poll_generation(
     let Some(result) = result else { return };
     state.job = None;
     match result {
-        Ok(city) => {
+        Ok(GeneratedCity { city, economy }) => {
             for entity in &query {
                 commands.entity(entity).despawn();
             }
             *orbit = orbit_for(&city);
-            mesh::spawn_city(&mut commands, &mut meshes, &mut materials, &city);
+            mesh::spawn_city(
+                &mut commands,
+                &mut meshes,
+                &mut materials,
+                &city,
+                economy.as_ref(),
+            );
             state.city = city;
+            state.economy = economy;
             state.message = "Bereit".into();
         }
         Err(error) => {
             state.options = state.city.options.clone();
+            state.economy_enabled = state.economy.is_some();
             state.message = format!("Generierung fehlgeschlagen: {error}");
         }
     }
@@ -684,6 +735,10 @@ fn update_labels(
                     "Draufsicht"
                 }
             ),
+            Action::Economy => format!(
+                "{} Wirtschaft (Experiment)  [E]",
+                if state.economy_enabled { "[x]" } else { "[ ]" }
+            ),
             Action::Reset => "Kamera zurücksetzen   [Home]".into(),
             Action::Json => "Stadt als JSON exportieren".into(),
             Action::Png => "Ansicht als PNG speichern".into(),
@@ -698,12 +753,19 @@ fn update_labels(
         }
     }
     for mut text in &mut status {
+        let analysis = state.economy.as_ref().map(|e| format!(
+            "\nGold: {} Markt-Kandidaten · Wege-Proxy: {:.0} -> {:.0} m (bei 320 m gedeckelt)\nOhne Anschluss: {} · Ohne Marktabdeckung: {} · Grün: Laden · Blau: Werkstatt · Rot: Gasthaus · Violett: Lager",
+            e.markets.iter().filter(|m| m.proposed).count(),
+            e.baseline_capped_distance_metres, e.planned_capped_distance_metres,
+            e.unlinked_buildings, e.unserved_buildings,
+        )).unwrap_or_default();
         let value = format!(
-            "{} Gebäude · {} Viertel · Seed {}\n{}",
+            "{} Gebäude · {} Viertel · Seed {}\n{}{}",
             state.city.building_count(),
             state.city.original_geometry.districts.len(),
             state.city.options.seed,
-            state.message
+            state.message,
+            analysis
         );
         if text.0 != value {
             text.0 = value;
@@ -829,6 +891,62 @@ mod tests {
     use super::*;
 
     #[test]
+    fn economy_toggle_and_export_preserve_original_city() {
+        let options = CityOptions {
+            size: 5,
+            seed: 42,
+            ..Default::default()
+        };
+        let city = generate_city(&options).unwrap();
+        let original = serde_json::to_value(&city).unwrap();
+        let orbit = orbit_for(&city);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+        })
+        .insert_resource(orbit)
+        .insert_resource(Actions::default())
+        .init_resource::<Assets<Mesh>>()
+        .init_resource::<Assets<StandardMaterial>>()
+        .add_systems(Update, (apply_actions, poll_generation).chain());
+        for enabled in [true, false] {
+            app.world_mut()
+                .resource_mut::<Actions>()
+                .0
+                .push(Action::Economy);
+            app.update();
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            while app.world().resource::<CityState>().job.is_some() {
+                assert!(std::time::Instant::now() < deadline);
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                app.update();
+            }
+            let state = app.world().resource::<CityState>();
+            assert_eq!(state.economy_enabled, enabled);
+            assert_eq!(state.economy.is_some(), enabled);
+            assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+            let path = std::env::temp_dir().join(format!(
+                "cities-economy-export-{}-{enabled}.json",
+                std::process::id()
+            ));
+            write_city(path.to_str().unwrap(), &state.city, state.economy.as_ref()).unwrap();
+            let exported: serde_json::Value =
+                serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+            std::fs::remove_file(path).unwrap();
+            assert_eq!(exported["city"], original);
+            assert_eq!(exported.get("economy").is_some(), enabled);
+            if let Some(economy) = &state.economy {
+                assert_eq!(exported["economy"], serde_json::to_value(economy).unwrap());
+            }
+        }
+    }
+    #[test]
     fn native_controls_replace_a_city_after_background_generation() {
         let options = CityOptions {
             size: 5,
@@ -844,6 +962,8 @@ mod tests {
             message: String::new(),
             job: None,
             seed_edit: None,
+            economy_enabled: false,
+            economy: None,
         })
         .insert_resource(orbit)
         .insert_resource(Actions(vec![Action::Feature(4)]))

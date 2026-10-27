@@ -3,9 +3,11 @@ mod runtime;
 #[rustfmt::skip]
 mod generated;
 mod adapter;
+mod economy;
 mod math;
 mod model;
 mod snapshot;
+pub use economy::{BuildingUse, EconomicAnalysis, EconomicUse, MarketSite, analyze_economy};
 pub use model::*;
 
 use runtime::{Runtime, V};

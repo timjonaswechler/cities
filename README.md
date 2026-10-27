@@ -36,6 +36,7 @@ Die Seitenleiste steuert Seed, Stadtgröße, Zitadelle, innere Burg, Marktplatz,
 | `R` | Neue Stadt mit nächstem Seed |
 | `Enter` | Stadt erneut berechnen / Seed übernehmen |
 | `T` | Zwischen Draufsicht und Perspektive wechseln |
+| `E` | Wirtschaftsanalyse ein-/ausschalten (Experiment) |
 | `Home` | Kamera zurücksetzen |
 | `+` / `−` | Stadtgröße ändern |
 | `Esc` | Seedeingabe abbrechen / Anwendung schließen |
@@ -54,6 +55,25 @@ cargo run -- --options village.json
 ```json
 {"seed":42,"size":5,"citadel":false,"walls":false,"temple":false,"greens":true}
 ```
+
+## Experiment: wirtschaftlich plausible Stadt
+
+Die Leitlinie ist historisch inspiriert, aber nicht historisch gebunden: Nutzungen sollen nachvollziehbare Standortgründe haben. Die erste zuschaltbare Analyse schlägt bis zu drei kleine Nebenmarkt-Standorte vor und kennzeichnet gewöhnliche Gebäude als Wohnen, Wohnen mit Laden/Werkstatt, Gasthaus oder Lager. **Sie verändert keine Grundrisse, schafft noch keine freien Marktflächen und simuliert noch keine Bauphasen.** Sonderbauten bleiben unverändert.
+
+```sh
+cargo run -- --seed 42 --size 25 --economy
+cargo run -- --seed 42 --size 25 --economy --export exports/economy.json
+```
+
+In der Anwendung schaltet der Knopf „Wirtschaft (Experiment)“ oder `E` die Analyse um. Goldene Pins markieren Markt-Kandidaten, Dachfarben mögliche Nutzungen: Grün = Laden, Blau = Werkstatt, Rot = Gasthaus, Violett = Lager; gewöhnliches Wohnen behält seine Dachfarbe. Marktzuordnungen und die versorgte Gebäudegrundfläche stehen im JSON-Export. Mit aktivierter Analyse ergänzt der Export das Feld `economy` neben dem unveränderten `city`; ohne Analyse bleibt das bisherige Format erhalten. `--snapshot` bleibt ausschließlich der Originalvergleich und kann nicht mit `--economy` kombiniert werden.
+
+Die Analyse verwendet Gebäudegrundfläche als Nachfrage-Proxy, keine geschätzte historische Bevölkerung. Ein rekonstruiertes Straßennetz verbindet echte Schnittpunkte und ergänzt höchstens zwei Karteneinheiten lange Anschlüsse an eingerückten Gassenenden. Vorschläge an Kreuzungen reduzieren die grundflächengewichtete Entfernung zu Märkten; zwischen Standorten bleiben mindestens 25 Netz-Karteneinheiten. Vorhandene anschließbare Märkte zählen mit; alle Netzpunkte auf oder innerhalb ihrer Marktfläche dienen als Zugänge mit geprüften Barrieren und Zugangskosten. Gasthäuser und Lager bevorzugen Tornähe, Laden-/Werkstattnutzungen Marktnähe; ein stabiler, vom Original-RNG unabhängiger Wert variiert die Zuordnung.
+
+**Grenzen:** Das Netz ist eine Annäherung, kein garantierter Fußgängerroutenplaner. Gebäudezugänge sind geradlinige Schätzungen bis 20 Karteneinheiten, keine geprüften Türen oder Wege durch Höfe; dabei werden andere Gebäude nicht als Hindernisse modelliert. Flussmittellinien, Küstenpolygone und Mauersegmente sperren Querungen; Straßen dürfen Flüsse nur in modellierten Brückenkorridoren und Mauern an Toren queren. Uferbreiten und sämtliche baulichen Hindernisse werden nicht vollständig geprüft. Nicht angeschlossene Gebäude und solche ohne Markt innerhalb von 80 Karteneinheiten werden ausdrücklich ausgewiesen. Die angezeigte mittlere Distanz ist bei 320 Metern pro Gebäude gedeckelt, einschließlich unversorgter Gebäude; sie ist **keine reale mittlere Gehstrecke**. Die Zahlen dienen nur dem Vergleich dieses Modells, nicht als Nachweis historischer oder baulicher Plausibilität.
+
+![Wirtschaftsanalyse mit Markt-Kandidaten und Nutzungsfarben](docs/economy-preview.png)
+
+Die Rust-API `analyze_economy(&city)` liefert dieselbe separate Analyse, ohne die Stadt oder ihren Zufallszustand zu verändern. Ansätze, Quellen und weitergehende Experimente stehen in der [Recherche zu organischeren Städten](docs/research-organic-cities.md).
 
 ## Generator verwenden
 
