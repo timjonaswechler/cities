@@ -6,6 +6,10 @@ Dieser PR ist die Arbeitsfläche für wirtschaftlich plausible, historisch inspi
 
 ## Prototyp öffnen und Quellen finden
 
+**Aktuelle Runde:** [Marktwege und Distrikte](market-district-experiment.md) entwickelt die Standortlogik mit gesonderten Laufwegabständen, Distriktgewicht und sichtbaren Wegen weiter. Weitere 27 Läufe sind dort dokumentiert; Hof- und Wachstumsregeln bleiben unverändert.
+
+Die folgenden festgehaltenen Quellen gehören zu **Runde 1**:
+
 - [Stadtlabor und Anleitung im separaten Prototypbranch](https://github.com/timjonaswechler/cities/tree/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes)
 - [Einzelne HTML-Datei](https://github.com/timjonaswechler/cities/blob/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes/organic-city-lab.html): herunterladen und per Doppelklick öffnen, ohne Server oder Installation.
 - [27 aufgezeichnete Läufe](https://github.com/timjonaswechler/cities/blob/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes/organic-city-runs.json) samt Ausgangscommit, HTML-Prüfsumme und Node-Version.
@@ -59,7 +63,7 @@ Dies sind Ausgaben bewusst vereinfachter Regeln auf drei Städten, keine histori
 - Distrikte sollen die Standortwahl und die versorgten Gebiete mitprägen. Es gibt **keine Pflicht zu einem eigenen Markt pro Distrikt**. Wie Nutzungscharakter und Nachfrage eines Distrikts gewichtet werden und wann ein Markt mehrere Distrikte versorgt, ist im nächsten Versuch zu untersuchen.
 - Ein Versuch soll die Laufwege zum Hauptmarkt und zwischen allen Marktstandorten sowie die Distriktzuordnung zeigen. Abgewiesene Standorte und schlecht versorgte Gebiete müssen erkennbar bleiben. Gute Darstellung allein reicht nicht als Bewertung der Standortlogik.
 
-**Abstand zum aktuellen Ansatz:** Die Rust-Analyse verwendet bereits einen pauschalen Mindestabstand von 25 Netz-Karteneinheiten zum jeweils nächsten berücksichtigten Markt. Das ist noch kein gemeinsam festgelegter Zielwert; gesonderte Haupt-/Nebenmarkt-Abstandsparameter und ein Distriktbezug fehlen. Das bisherige Stadtlabor übernimmt diese Standortvorschläge, statt die neuen Regeln auszuwerten.
+**Unterschied zwischen Produktivstand und Versuch:** Die Rust-Analyse verwendet weiterhin einen pauschalen Mindestabstand von 25 Netz-Karteneinheiten zum jeweils nächsten berücksichtigten Markt, ohne gesonderte Haupt-/Nebenmarkt-Abstandsparameter oder Distriktbezug. Das Stadtlabor aus Runde 1 übernimmt diese Standortvorschläge. Der [Markt-/Distriktprototyp aus Runde 2](market-district-experiment.md) berechnet dagegen neue Standorte mit getrennten Abstandsfiltern und einer weichen Gewichtung unversorgter Distrikte; die Werte sind weiterhin nicht gemeinsam festgelegt und nicht in Rust übernommen.
 
 ### Höfe und übrige Features: nicht freigegeben
 
@@ -74,7 +78,8 @@ Die Reihenfolge ist ein Vorschlag für weitere gemeinsame Experimente, keine Zus
 - [x] Nebenmarkt-Kandidaten und Nutzungsfarben getrennt vom Originalgrundriss untersuchen.
 - [x] Echte Marktflächen einschließlich Eingriffskosten und abgewiesenen Standorten erproben.
 - [x] Hofumbauten und drei Vorstadtphasen als separate, kombinierbare Prototypen ausführen.
-- [ ] Marktverteilung mit gesonderter Mindest-Laufwegentfernung zum Hauptmarkt und zwischen Nebenmärkten sowie Distriktbezug ohne Marktpflicht pro Distrikt erproben; Entfernungen und versorgte Distrikte sichtbar machen.
+- [x] Erste Marktvariante mit gesonderten Haupt-/Nebenmarkt-Laufwegabständen, Distriktgewicht ohne Marktpflicht, sichtbaren Entfernungen und versorgten Distrikten in Runde 2 erproben.
+- [ ] Abstands- und Versorgungsparameter sowie die Distriktgewichtung anhand der neuen Ansicht gemeinsam bewerten; insbesondere verbleibend schlecht versorgte Distrikte und die Grenzen der Netzrekonstruktion beurteilen.
 - [ ] Marktstandorte unter Berücksichtigung vorhandener Freiflächen, Kapazität und Abrisskosten vergleichen; kleine Plätze bei neuer Bebauung früh reservieren.
 - [ ] Hofkonzept hinsichtlich Maßstab, nachvollziehbarer Auswahl und zusammenhängenden Grundstücks-/Blockgruppen neu erproben; nicht bloß weitere kleine Ausschnitte in Einzelgebäuden erzeugen.
 - [ ] Grundstücks-/Blockgruppen, Gärten, Nebengebäude und nachvollziehbare Zugänge erproben.

@@ -73,7 +73,7 @@ Die Analyse verwendet Gebäudegrundfläche als Nachfrage-Proxy, keine geschätzt
 
 ![Wirtschaftsanalyse mit Markt-Kandidaten und Nutzungsfarben](docs/economy-preview.png)
 
-Die Rust-API `analyze_economy(&city)` liefert dieselbe separate Analyse, ohne die Stadt oder ihren Zufallszustand zu verändern. Ansätze und Quellen stehen in der [Recherche zu organischeren Städten](docs/research-organic-cities.md). Das [Stadtlabor mit 27 Prototypläufen und offenen Versuchen](docs/organic-city-experiments.md) hält die Experimente zu tatsächlichen Marktflächen, Höfen und schrittweiser Vorstadt fest; seine Wegwerfdateien liegen unter `crates/city_core/prototypes/` im selben PR-Branch, getrennt vom produktiven Generator.
+Die Rust-API `analyze_economy(&city)` liefert dieselbe separate Analyse, ohne die Stadt oder ihren Zufallszustand zu verändern. Ansätze und Quellen stehen in der [Recherche zu organischeren Städten](docs/research-organic-cities.md). Die [Stadtlabore und offenen Versuche](docs/organic-city-experiments.md) halten die Experimente zu tatsächlichen Marktflächen, Höfen und schrittweiser Vorstadt sowie die [neue Markt-/Distriktvariante mit getrennten Laufwegabständen](docs/market-district-experiment.md) fest. Ihre Wegwerfdateien liegen unter `crates/city_core/prototypes/` im selben PR-Branch, getrennt vom produktiven Generator.
 
 ## Generator verwenden
 

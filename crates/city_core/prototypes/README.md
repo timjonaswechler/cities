@@ -2,13 +2,23 @@
 
 Frage: Wie verändern echte Nebenmarktflächen, Hofumbauten und Vorstadt-Bauphasen einen bestehenden Stadtgrundriss, und welche Eingriffe kosten sie? Dieses Verzeichnis enthält Wegwerfprototypen und primäre Experimentquellen, keine produktive Generatorerweiterung. Die Dateien liegen zur gemeinsamen Betrachtung im PR-Branch und werden nicht von der Rust-Anwendung geladen oder kompiliert.
 
-## Interaktiv öffnen
+## Runde 2: Marktwege und Distrikte
+
+`market-district-lab.html` per Doppelklick öffnen: Die neue Standortlogik hat getrennte Mindestlaufwege zum Hauptmarkt und zwischen Nebenmärkten, ein weiches Distriktgewicht ohne Marktpflicht und eine einstellbare Mindestnachfrage. Wege, Ablehnungsgründe und Versorgung über Distriktgrenzen sind direkt sichtbar. Diese Ansicht erzeugt keine Marktflächen, Höfe oder Neubauten.
+
+```sh
+node crates/city_core/prototypes/run-market-district-lab.mjs
+```
+
+`market-district-runs.json` enthält 27 weitere reproduzierte Läufe. [Ergebnisse und Grenzen](../../../docs/market-district-experiment.md). Die neuen Regeln sind nicht in den Rust-Generator übernommen; Parameter und Gestaltung sind nicht freigegeben.
+
+## Runde 1: Interaktiv öffnen
 
 `organic-city-lab.html` herunterladen und per Doppelklick öffnen. Kein Server und keine Installation nötig. Die Datei enthält drei echte exportierte Städte samt der reinen Planungsfunktionen. Freies Experimentieren, vier geführte Läufe, Kartenzoom und der vollständige relevante Rechenzustand sind eingebaut.
 
 ![Landstadt mit drei Eingriffen](organic-city-combined.png)
 
-## Läufe reproduzieren
+## Runde-1-Läufe reproduzieren
 
 Mit vorhandenem Node:
 
