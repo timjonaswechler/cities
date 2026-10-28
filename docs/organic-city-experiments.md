@@ -11,7 +11,7 @@ Dieser PR ist die Arbeitsfläche für wirtschaftlich plausible, historisch inspi
 - [27 aufgezeichnete Läufe](https://github.com/timjonaswechler/cities/blob/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes/organic-city-runs.json) samt Ausgangscommit, HTML-Prüfsumme und Node-Version.
 - [Runner](https://github.com/timjonaswechler/cities/blob/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes/run-organic-city-lab.mjs): führt dieselben reinen Planungsfunktionen wie die HTML-Datei aus.
 
-Die Prototypdateien liegen absichtlich außerhalb dieses PR-Diffs und damit einer späteren Übernahme nach `main`. Hier bleiben Beobachtungen und offene Fragen. Der Branch heißt `prototype/organic-city-lab`, die oben verlinkte Quelle ist auf Commit `ac8d13e` fixiert.
+Die Prototypdateien liegen inzwischen zusätzlich unter [`crates/city_core/prototypes/`](../crates/city_core/prototypes/README.md) im selben PR-Branch. Damit sind Quellcode, Rohdaten und Ergebnisspur gemeinsam verfügbar; die Prototypen bleiben klar vom produktiven Rust-Generator getrennt. Der ursprüngliche Prototypbranch `prototype/organic-city-lab` und die oben auf Commit `ac8d13e` fixierten Quellen bleiben als Experimentnachweis erhalten.
 
 ![Landstadt mit Marktflächen, Hofumbauten und drei Vorstadtphasen](https://github.com/timjonaswechler/cities/blob/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes/organic-city-combined.png?raw=true)
 

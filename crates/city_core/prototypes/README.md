@@ -1,6 +1,6 @@
 # Wegwerfprototyp: organische Stadtentwicklung
 
-Frage: Wie verändern echte Nebenmarktflächen, Hofumbauten und Vorstadt-Bauphasen einen bestehenden Stadtgrundriss, und welche Eingriffe kosten sie? Dieser Branch ist eine primäre Experimentquelle, keine produktive Generatorerweiterung. Die Dateien sollen nicht in `main` übernommen werden.
+Frage: Wie verändern echte Nebenmarktflächen, Hofumbauten und Vorstadt-Bauphasen einen bestehenden Stadtgrundriss, und welche Eingriffe kosten sie? Dieses Verzeichnis enthält Wegwerfprototypen und primäre Experimentquellen, keine produktive Generatorerweiterung. Die Dateien liegen zur gemeinsamen Betrachtung im PR-Branch und werden nicht von der Rust-Anwendung geladen oder kompiliert.
 
 ## Interaktiv öffnen
 
@@ -42,4 +42,4 @@ Bei maximal 16 Metern Radius entfallen 13/12/13 Gebäude, bei maximal 32 Metern 
 2. Höfe nur in große Einzelgebäude zu schneiden ist zu eingeschränkt; als nächster Versuch sind Grundstücks-/Blockgruppen interessanter.
 3. Schrittweises Wachstum kann die Altstadt unverändert lassen, wirkt mit gleich großen Häusern an vorhandenen Straßen aber weiterhin geplant. Unterschiedliche Grundstücke, Zugangswege und lokale Nachfrage fehlen.
 
-Die drei angewendeten Ansätze wurden als HTML-Ansichten ausgeführt und angesehen, einschließlich des abgewiesenen Marktstandorts. Produktionscode wurde nicht verändert und keine Hypothese automatisch übernommen. Der zugehörige PR erhält eine Ergebnisspur und den Verweis auf diesen Prototypbranch.
+Die drei angewendeten Ansätze wurden als HTML-Ansichten ausgeführt und angesehen, einschließlich des abgewiesenen Marktstandorts. Produktionscode wurde nicht verändert und keine Hypothese automatisch übernommen. Der zugehörige PR enthält diese Dateien zusammen mit der [Ergebnisspur und den Gestaltungsregeln](../../../docs/organic-city-experiments.md).
