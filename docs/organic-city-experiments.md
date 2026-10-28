@@ -2,6 +2,8 @@
 
 Dieser PR ist die Arbeitsfläche für wirtschaftlich plausible, historisch inspirierte Stadtentwicklung. Die vorhandene Wirtschaftsanalyse ist der erste Ansatz, keine fertige Gesamtplanung. Die folgenden Wegwerfprototypen untersuchen tatsächliche Grundrissänderungen; noch keine ihrer Regeln wird in den produktiven Generator übernommen.
 
+**Gestaltungsstatus nach gemeinsamer Sichtung:** Die bisherigen Features sind noch nicht zufriedenstellend. Insbesondere Marktverteilung und Distriktbezug müssen weiterentwickelt, die zu kleinteiligen und willkürlich wirkenden Hofumbauten neu überdacht werden. Ausgeführte Läufe, bestandene Tests und das technische Code-Review bedeuten keine gestalterische Freigabe.
+
 ## Prototyp öffnen und Quellen finden
 
 - [Stadtlabor und Anleitung im separaten Prototypbranch](https://github.com/timjonaswechler/cities/tree/ac8d13eff47ae6a6fa39dec9e22046d4fd2d8d6a/crates/city_core/prototypes)
@@ -47,15 +49,35 @@ Je Phase werden höchstens acht Häuser an vorhandenen Ausfallstraßen in Tornä
 
 Dies sind Ausgaben bewusst vereinfachter Regeln auf drei Städten, keine historische oder ökonomische Validierung. Die eingebettete Geometrie ist auf vier Nachkommastellen gerundet. Nach Abriss und Wachstum wird die Wirtschaftsanalyse nicht neu berechnet. Marktpolygone löschen ganze gewöhnliche Gebäude, ohne Bewohner umzusiedeln. Hofumbauten zeigen keine Geschosse oder Türen. Das Vorstadtmodell ignoriert Eigentum und darf Ackerland umwidmen. Keine der Beobachtungen ist bereits als Produktentscheidung bestätigt.
 
+## Gestaltungsregeln für die nächsten Versuche
+
+### Märkte: Laufwege und Distrikte statt Standortquote
+
+- Ein Nebenmarkt kommt erst ab einer ausreichenden Mindest-Laufwegentfernung zum **Hauptmarkt** infrage. Diese Bedingung muss auch nach Auswahl weiterer Nebenmärkte erhalten bleiben.
+- Zusätzlich müssen Nebenmärkte **untereinander** eine Mindest-Laufwegentfernung einhalten. Beide Abstandsbedingungen sind gesondert auszuwerten; die konkreten Entfernungen sind noch nicht festgelegt.
+- Entfernungen beziehen sich auf begehbare Wege und gültige Zugänge, nicht auf Luftlinie oder den Abstand der Platzmittelpunkte. Die Genauigkeit des rekonstruierten Netzes bleibt dabei eine zu prüfende Grenze.
+- Distrikte sollen die Standortwahl und die versorgten Gebiete mitprägen. Es gibt **keine Pflicht zu einem eigenen Markt pro Distrikt**. Wie Nutzungscharakter und Nachfrage eines Distrikts gewichtet werden und wann ein Markt mehrere Distrikte versorgt, ist im nächsten Versuch zu untersuchen.
+- Ein Versuch soll die Laufwege zum Hauptmarkt und zwischen allen Marktstandorten sowie die Distriktzuordnung zeigen. Abgewiesene Standorte und schlecht versorgte Gebiete müssen erkennbar bleiben. Gute Darstellung allein reicht nicht als Bewertung der Standortlogik.
+
+**Abstand zum aktuellen Ansatz:** Die Rust-Analyse verwendet bereits einen pauschalen Mindestabstand von 25 Netz-Karteneinheiten zum jeweils nächsten berücksichtigten Markt. Das ist noch kein gemeinsam festgelegter Zielwert; gesonderte Haupt-/Nebenmarkt-Abstandsparameter und ein Distriktbezug fehlen. Das bisherige Stadtlabor übernimmt diese Standortvorschläge, statt die neuen Regeln auszuwerten.
+
+### Höfe und übrige Features: nicht freigegeben
+
+Die bisherigen Hofumbauten wirken zu klein und ihre Verteilung zu beliebig. Die aktuelle Regel „geeigneten Einzelgrundriss innen ausschneiden“ ist deshalb keine bestätigte Ziellösung. Größere, räumlich zusammenhängende Hof-/Grundstücks- oder Blockkonzepte bleiben mögliche neue Versuche, nicht bereits beschlossene Lösungen.
+
+Auch die übrigen Features sind gestalterisch noch nicht zufriedenstellend. Die bisherigen Wachstumsreihen und Nutzungszuordnungen bleiben Untersuchungsstände. Weitere reine Mengenvergleiche oder reproduzierbare Läufe ersetzen nicht die gemeinsame Beurteilung von Maßstab, innerer Logik und Stadtbild.
+
 ## Offene Versuche und Feature-Spur
 
-Die Reihenfolge ist ein Vorschlag für weitere gemeinsame Experimente, keine Zusage zur Umsetzung aller Punkte in diesem PR.
+Die Reihenfolge ist ein Vorschlag für weitere gemeinsame Experimente, keine Zusage zur Umsetzung aller Punkte in diesem PR. Abgehakte Punkte bedeuten **Versuch durchgeführt**, nicht **Feature zufriedenstellend fertig**.
 
 - [x] Nebenmarkt-Kandidaten und Nutzungsfarben getrennt vom Originalgrundriss untersuchen.
 - [x] Echte Marktflächen einschließlich Eingriffskosten und abgewiesenen Standorten erproben.
 - [x] Hofumbauten und drei Vorstadtphasen als separate, kombinierbare Prototypen ausführen.
+- [ ] Marktverteilung mit gesonderter Mindest-Laufwegentfernung zum Hauptmarkt und zwischen Nebenmärkten sowie Distriktbezug ohne Marktpflicht pro Distrikt erproben; Entfernungen und versorgte Distrikte sichtbar machen.
 - [ ] Marktstandorte unter Berücksichtigung vorhandener Freiflächen, Kapazität und Abrisskosten vergleichen; kleine Plätze bei neuer Bebauung früh reservieren.
-- [ ] Grundstücks-/Blockgruppen, Höfe, Gärten, Nebengebäude und nachvollziehbare Zugänge erproben.
+- [ ] Hofkonzept hinsichtlich Maßstab, nachvollziehbarer Auswahl und zusammenhängenden Grundstücks-/Blockgruppen neu erproben; nicht bloß weitere kleine Ausschnitte in Einzelgebäuden erzeugen.
+- [ ] Grundstücks-/Blockgruppen, Gärten, Nebengebäude und nachvollziehbare Zugänge erproben.
 - [ ] Wohnen mit Laden/Werkstatt sowie weitere Gebäudenutzungen durch lokale Nachfrage und Voraussetzungen statt bloßer Farbcodierung begründen; etwa Lager mit Lieferzugang oder wasserabhängiges Gewerbe.
 - [ ] Verschiedene Grundstücksgrößen und neue kurze Wege beim Wachstum zulassen, wirtschaftliche Annotation nach jedem Schritt neu bewerten.
 - [ ] Ältere Kerne, erhaltene Wege und Besitzgrenzen sowie ehemalige Stadtgrenzen als sichtbare Wachstumsspuren untersuchen.
