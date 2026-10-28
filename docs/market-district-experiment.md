@@ -2,9 +2,11 @@
 
 Frage: Welche Nebenmarkt-Standorte bleiben sinnvoll, wenn Hauptmarkt-Abstand, gegenseitiger Abstand und Distriktversorgung gemeinsam berücksichtigt werden, ohne jedem Distrikt einen eigenen Markt zuzuteilen?
 
+**Nachfolgestand:** Das Regelwerk wurde als Basis akzeptiert und als [Marktplanung V1](market-planning-v1.md) in Rust übernommen. Diese Seite und das HTML dokumentieren die eingefrorene Prototypreferenz; Hof- und Wachstumsregeln sind davon nicht abgenommen.
+
 ## Öffnen und reproduzieren
 
-[`market-district-lab.html`](../crates/city_core/prototypes/market-district-lab.html) herunterladen und per Doppelklick öffnen. Keine Installation und kein Server nötig. Die Datei enthält die drei realen Ausgangsstädte aus Runde 1, ergänzt um ursprüngliche Distriktpolygone, Marktflächen, Brücken und Tor-/Mauerangaben. Der produktive Rust-Generator ist unverändert.
+[`market-district-lab.html`](../crates/city_core/prototypes/market-district-lab.html) herunterladen und per Doppelklick öffnen. Keine Installation und kein Server nötig. Die Datei enthält die drei realen Ausgangsstädte aus Runde 1, ergänzt um ursprüngliche Distriktpolygone, Marktflächen, Brücken und Tor-/Mauerangaben. Zum Zeitpunkt dieser Runde war der Rust-Planer noch unverändert; der spätere V1-Port wird gegen diese Referenz geprüft.
 
 Die Ansicht bietet einstellbare Abstände, Versorgungsweg, Distriktgewicht, Mindestnachfrage und Höchstzahl; geführte Vergleiche, anklickbare Laufwege, Ablehnungsgründe und eine Distrikt-Versorgungstabelle. Distriktnamen markieren den Umriss auf der Karte. Die Dachfarben zeigen hier **Einzugsgebiete von Märkten, keine Gebäudenutzungen**.
 
@@ -45,10 +47,10 @@ Versorgungsweg jeweils 240 m, Distriktgewicht 1 und Mindestnachfrage zwölf Geb�
 
 ## Noch nicht entschieden oder gelöst
 
-- Welche Abstände, Versorgungswege und Gewichtungen gestalterisch und wirtschaftlich überzeugen, ist weiterhin gemeinsam zu beurteilen. Die Standorte sind **nicht freigegeben**.
+- Das Regelwerk ist als V1-Basis akzeptiert. Abstände, Versorgungswege und Gewichtungen bleiben veränderbare Profileinstellungen; reale Marktflächen sind damit nicht baulich freigegeben.
 - Die Abstandsregeln gelten für den angenäherten Graphen. Gebäudezugänge sind geschätzt und können andere Gebäude schneiden; vollständige Uferbreiten und bauliche Hindernisse fehlen. Auf vier Nachkommastellen gerundete Exportgeometrie ist keine Referenz für Originaltreue.
 - Die neue Logik berechnet Standorte selbst neu, ist aber noch nicht mit Platzgröße, Abrisskosten, Kapazität oder wirtschaftlicher Entwicklung gekoppelt. Sie räumt keine Plätze frei.
 - Distrikte haben noch keinen Gewerbe-/Nutzungscharakter. Die Gewichtung nutzt nur geometrische Zugehörigkeit und Versorgungsdefizit.
-- Hofumbauten und Vorstadtregeln aus Runde 1 wurden nicht weiterentwickelt und bleiben unbefriedigend. Keine automatische Übernahme in Rust/Bevy.
+- Hofumbauten und Vorstadtregeln aus Runde 1 wurden nicht weiterentwickelt und bleiben unbefriedigend; nur die akzeptierte Marktlogik wird in Rust/Bevy übernommen.
 
 Der übergreifende Stand und die offenen Versuche bleiben in [organic-city-experiments.md](organic-city-experiments.md).

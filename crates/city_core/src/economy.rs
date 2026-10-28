@@ -1,54 +1,15 @@
-//! Experimental economic annotation of an immutable city, not a growth simulation.
-//! Distances use a reconstructed planar street graph; building access is an estimate.
-use crate::{City, Point};
-use serde::{Deserialize, Serialize};
-use std::{cmp::Ordering, collections::BinaryHeap};
+//! Market planning V1: an immutable, configurable analysis of planar city geometry.
+use crate::market_model::*;
+use crate::{City, GenerationError, Point};
+use std::{
+    cmp::Ordering,
+    collections::{BTreeMap, BinaryHeap},
+};
 
-const EPS: f64 = 1e-6;
+// Match the accepted HTML model, including its four-decimal reference geometry.
+const EPS: f64 = 1e-4;
 const ACCESS: f64 = 20.0;
-const SERVICE: f64 = 80.0;
 const SCALE: f64 = 4.0;
-
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(rename_all = "snake_case")]
-pub enum EconomicUse {
-    Dwelling,
-    ShopDwelling,
-    WorkshopDwelling,
-    Inn,
-    Warehouse,
-}
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct BuildingUse {
-    pub ward_id: usize,
-    pub building_index: usize,
-    pub usage: EconomicUse,
-    /// Index into `EconomicAnalysis.markets`; None means no market in service range.
-    pub market: Option<usize>,
-}
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct MarketSite {
-    pub position: Point,
-    /// Secondary sites are proposals on streets, not cleared or buildable plazas.
-    pub proposed: bool,
-    /// Sum of assigned building footprints in squared original map units.
-    pub served_footprint_area: f64,
-}
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct EconomicAnalysis {
-    pub markets: Vec<MarketSite>,
-    pub buildings: Vec<BuildingUse>,
-    pub graph_nodes: usize,
-    pub unlinked_buildings: usize,
-    pub unserved_buildings: usize,
-    /// Footprint-area-weighted travel estimate, capped at 320 metres per building.
-    /// Includes estimated access legs. Unlinked buildings receive the cap.
-    pub baseline_capped_distance_metres: f64,
-    pub planned_capped_distance_metres: f64,
-}
 
 #[derive(Clone, Copy)]
 struct Segment(Point, Point);
@@ -56,6 +17,26 @@ struct Segment(Point, Point);
 struct Graph {
     points: Vec<Point>,
     edges: Vec<Vec<(usize, f64)>>,
+    main_entries: Vec<usize>,
+}
+struct Paths {
+    distances: Vec<f64>,
+    previous: Vec<Option<usize>>,
+}
+impl Paths {
+    fn route(&self, graph: &Graph, target: usize) -> Vec<Point> {
+        if !self.distances[target].is_finite() {
+            return vec![];
+        }
+        let mut route = vec![];
+        let mut next = Some(target);
+        while let Some(i) = next {
+            route.push(graph.points[i]);
+            next = self.previous[i];
+        }
+        route.reverse();
+        route
+    }
 }
 #[derive(Clone, Copy, PartialEq)]
 struct Visit(f64, usize);
@@ -283,6 +264,25 @@ impl Graph {
                 }
             }
         }
+        for ward in &city.wards {
+            if let Some(space) = &ward.market_space {
+                let sources = graph.market_access(city, space);
+                for &(i, _) in &sources {
+                    if !graph.main_entries.contains(&i) {
+                        graph.main_entries.push(i);
+                    }
+                }
+                for (index, &(i, _)) in sources.iter().enumerate() {
+                    for &(j, _) in &sources[index + 1..] {
+                        let a = graph.points[i];
+                        let b = graph.points[j];
+                        if !blocked(city, Segment(a, b), false) {
+                            graph.join(a, b);
+                        }
+                    }
+                }
+            }
+        }
         graph
     }
     fn access(&self, city: &City, p: Point) -> Option<(usize, f64)> {
@@ -309,16 +309,17 @@ impl Graph {
                     });
                 incident && !blocked(city, Segment(origin, p), false)
             })
-            .map(|(i, &p)| (i, distance(origin, p)))
+            .map(|(i, _)| (i, 0.0))
             .collect();
-        if sources.is_empty() {
-            self.access(city, origin).into_iter().collect()
-        } else {
-            sources
-        }
+        sources
     }
+    #[cfg(test)]
     fn distances(&self, sources: &[(usize, f64)]) -> Vec<f64> {
+        self.paths(sources).distances
+    }
+    fn paths(&self, sources: &[(usize, f64)]) -> Paths {
         let mut distances = vec![f64::INFINITY; self.points.len()];
+        let mut previous = vec![None; self.points.len()];
         let mut heap = BinaryHeap::new();
         for &(i, d) in sources {
             if d < distances[i] {
@@ -333,180 +334,431 @@ impl Graph {
             for &(j, cost) in &self.edges[i] {
                 if d + cost < distances[j] {
                     distances[j] = d + cost;
+                    previous[j] = Some(i);
                     heap.push(Visit(d + cost, j));
                 }
             }
         }
-        distances
+        Paths {
+            distances,
+            previous,
+        }
     }
 }
 struct Demand {
     ward_id: usize,
     building_index: usize,
+    district: Option<usize>,
     weight: f64,
     access: Option<(usize, f64)>,
 }
-fn trip(d: &Demand, distances: &[f64]) -> f64 {
-    d.access
-        .map_or(f64::INFINITY, |(i, access)| distances[i] + access)
+struct Candidate {
+    node: usize,
+    district: Option<usize>,
+    paths: Paths,
 }
-fn mean(demand: &[Demand], distances: &[f64]) -> f64 {
-    let weight = demand.iter().map(|d| d.weight).sum::<f64>();
-    if weight == 0.0 {
+struct Evaluation {
+    reason: MarketCandidateReason,
+    score: f64,
+    beneficiaries: usize,
+}
+fn trip(d: &Demand, paths: &Paths) -> f64 {
+    d.access
+        .map_or(f64::INFINITY, |(i, leg)| paths.distances[i] + leg)
+}
+fn mean(demand: &[Demand], best: &[f64], cap: f64) -> f64 {
+    let total = demand.iter().map(|d| d.weight).sum::<f64>();
+    if total == 0.0 {
         return 0.0;
     }
     demand
         .iter()
-        .map(|d| d.weight * trip(d, distances).min(SERVICE))
+        .zip(best)
+        .map(|(d, &distance)| d.weight * distance.min(cap))
         .sum::<f64>()
-        / weight
+        / total
         * SCALE
 }
+fn district(city: &City, point: Point) -> Option<usize> {
+    city.original_geometry
+        .districts
+        .iter()
+        .position(|d| contains(&d.polygon, point))
+}
+fn needs(city: &City, demand: &[Demand], best: &[f64], cap: f64) -> Vec<f64> {
+    let mut total = vec![0.0; city.original_geometry.districts.len()];
+    let mut unserved = total.clone();
+    for (d, &distance) in demand.iter().zip(best) {
+        if let Some(i) = d.district {
+            total[i] += d.weight;
+            if distance > cap {
+                unserved[i] += d.weight;
+            }
+        }
+    }
+    total
+        .iter()
+        .zip(unserved)
+        .map(|(&t, u)| if t > 0.0 { u / t } else { 0.0 })
+        .collect()
+}
+struct DemandContext<'a> {
+    demand: &'a [Demand],
+    best: &'a [f64],
+    needs: &'a [f64],
+}
+fn evaluate(
+    candidate: &Candidate,
+    main: &Paths,
+    chosen: &[usize],
+    candidates: &[Candidate],
+    state: &DemandContext<'_>,
+    profile: &MarketProfile,
+) -> Evaluation {
+    let (demand, best, needs) = (state.demand, state.best, state.needs);
+    let main_distance = main.distances[candidate.node] * SCALE;
+    let reject = |reason| Evaluation {
+        reason,
+        score: 0.0,
+        beneficiaries: 0,
+    };
+    if !main_distance.is_finite() {
+        return reject(MarketCandidateReason::Disconnected);
+    }
+    if main_distance + EPS < profile.main_min {
+        return reject(MarketCandidateReason::NearMain);
+    }
+    if chosen
+        .iter()
+        .any(|&i| candidates[i].paths.distances[candidate.node] * SCALE + EPS < profile.side_min)
+    {
+        return reject(MarketCandidateReason::NearSecondary);
+    }
+    let cap = profile.service / SCALE;
+    let mut beneficiaries = 0;
+    let mut score = 0.0;
+    let mut gain = 0.0;
+    for (d, &before) in demand.iter().zip(best) {
+        let next = trip(d, &candidate.paths);
+        let delta = (before.min(cap) - next.min(cap)).max(0.0);
+        gain += d.weight * delta;
+        if d.weight > 0.0 && next <= cap && before - next >= 10.0 / SCALE {
+            beneficiaries += 1;
+        }
+        score += d.weight
+            * delta
+            * (1.0 + profile.district_weight * d.district.map_or(0.0, |i| needs[i]));
+    }
+    if beneficiaries < profile.min_beneficiaries {
+        return reject(MarketCandidateReason::InsufficientDemand);
+    }
+    if gain < EPS {
+        return reject(MarketCandidateReason::NoGain);
+    }
+    Evaluation {
+        reason: MarketCandidateReason::Alternative,
+        score,
+        beneficiaries,
+    }
+}
 
-/// Propose at most three secondary markets and annotate ordinary buildings.
-/// Does not mutate the city, consume its RNG, clear plazas or claim historical accuracy.
-/// `lot` footprint area is a demand proxy, not a population estimate.
-pub fn analyze_economy(city: &City) -> EconomicAnalysis {
+/// V1 planning with the default named profile and footprint demand.
+pub fn analyze_economy(city: &City) -> MarketPlan {
+    plan_markets(city, &MarketProfile::default(), &[])
+        .expect("default market profile and generated geometry are valid")
+}
+
+/// Plan without mutating geometry or consuming the generator RNG.
+/// Demand overrides are supplied before planning; derived market uses never
+/// produce their own demand. Empty overrides retain the footprint-area proxy.
+pub fn plan_markets(
+    city: &City,
+    profile: &MarketProfile,
+    overrides: &[MarketDemandOverride],
+) -> Result<MarketPlan, GenerationError> {
+    profile.validate()?;
+    let mut weights = BTreeMap::new();
+    for input in overrides {
+        if !input.weight.is_finite()
+            || input.weight < 0.0
+            || weights
+                .insert((input.ward_id, input.building_index), input.weight)
+                .is_some()
+        {
+            return Err(GenerationError(
+                "Demand weights must be finite, nonnegative and unique".into(),
+            ));
+        }
+    }
     let graph = Graph::from_city(city);
-    let demand: Vec<_> = city
+    let mut demand = vec![];
+    for ward in &city.wards {
+        for (i, b) in ward
+            .buildings
+            .iter()
+            .enumerate()
+            .filter(|(_, b)| b.role == "lot")
+        {
+            let p = center(&b.polygon);
+            demand.push(Demand {
+                ward_id: ward.id,
+                building_index: i,
+                district: district(city, p),
+                weight: weights
+                    .remove(&(ward.id, i))
+                    .unwrap_or_else(|| area(&b.polygon)),
+                access: graph.access(city, p),
+            });
+        }
+    }
+    if !weights.is_empty() {
+        return Err(GenerationError(
+            "Demand override must identify an ordinary lot building".into(),
+        ));
+    }
+    let total = demand.iter().map(|d| d.weight).sum::<f64>();
+    if !total.is_finite() {
+        return Err(GenerationError("Demand weights overflow".into()));
+    }
+    let main = graph.paths(
+        &graph
+            .main_entries
+            .iter()
+            .map(|&i| (i, 0.0))
+            .collect::<Vec<_>>(),
+    );
+    let mut best: Vec<_> = demand.iter().map(|d| trip(d, &main)).collect();
+    let baseline = mean(&demand, &best, profile.service / SCALE);
+    let spaces: Vec<_> = city
         .wards
         .iter()
-        .flat_map(|w| {
-            w.buildings
-                .iter()
-                .enumerate()
-                .filter(|(_, b)| b.role == "lot")
-                .map(|(i, b)| Demand {
-                    ward_id: w.id,
-                    building_index: i,
-                    weight: area(&b.polygon),
-                    access: graph.access(city, center(&b.polygon)),
-                })
-        })
+        .filter_map(|w| w.market_space.as_ref())
         .collect();
-    let mut markets = vec![];
-    let mut market_distances = vec![];
-    for w in &city.wards {
-        if let Some(space) = &w.market_space {
-            let sources = graph.market_access(city, space);
-            if sources.is_empty() {
-                continue;
-            }
-            markets.push(MarketSite {
-                position: center(space),
-                proposed: false,
-                served_footprint_area: 0.0,
-            });
-            market_distances.push(graph.distances(&sources));
-        }
-    }
-    let mut best = vec![f64::INFINITY; graph.points.len()];
-    for distances in &market_distances {
-        for (best, &d) in best.iter_mut().zip(distances) {
-            *best = best.min(d);
-        }
-    }
-    let baseline = mean(&demand, &best);
-    // Junctions only: a proposal marks a possible street market, never a new plaza.
     let candidates: Vec<_> = graph
         .points
         .iter()
         .enumerate()
         .filter(|&(i, p)| {
             graph.edges[i].len() >= 3
+                && !spaces.iter().any(|s| {
+                    contains(s, *p)
+                        || (0..s.len()).any(|j| {
+                            distance(*p, projection(*p, Segment(s[j], s[(j + 1) % s.len()])).0)
+                                < EPS
+                        })
+                })
                 && !city
                     .wards
                     .iter()
                     .flat_map(|w| &w.buildings)
                     .any(|b| contains(&b.polygon, *p))
         })
-        .map(|(i, _)| i)
-        .collect();
-    for _ in 0..3 {
-        let mut winner = None;
-        let mut winning_gain = 0.0;
-        for &i in &candidates {
-            if best[i] < 25.0 {
-                continue;
-            }
-            let distances = graph.distances(&[(i, 0.0)]);
-            let gain = demand
-                .iter()
-                .map(|d| {
-                    d.weight
-                        * (trip(d, &best).min(SERVICE)
-                            - trip(d, &distances).min(trip(d, &best)).min(SERVICE))
-                })
-                .sum::<f64>();
-            if gain > winning_gain + EPS {
-                winner = Some((i, distances));
-                winning_gain = gain;
-            }
-        }
-        let Some((i, distances)) = winner else { break };
-        for (best, &d) in best.iter_mut().zip(&distances) {
-            *best = best.min(d);
-        }
-        markets.push(MarketSite {
-            position: graph.points[i],
-            proposed: true,
-            served_footprint_area: 0.0,
-        });
-        market_distances.push(distances);
-    }
-    let gate_sources: Vec<_> = city
-        .gates
-        .iter()
-        .filter_map(|&p| graph.access(city, p))
-        .collect();
-    let gates = graph.distances(&gate_sources);
-    let buildings = demand
-        .iter()
-        .map(|d| {
-            let market = market_distances
-                .iter()
-                .enumerate()
-                .map(|(i, ds)| (i, trip(d, ds)))
-                .filter(|&(_, distance)| distance <= SERVICE)
-                .min_by(|a, b| a.1.total_cmp(&b.1).then(a.0.cmp(&b.0)))
-                .map(|m| m.0);
-            if let Some(i) = market {
-                markets[i].served_footprint_area += d.weight;
-            }
-            // Stable variation is subordinate to location suitability, not the original RNG.
-            let variant =
-                (city.options.seed as u64 + d.ward_id as u64 * 31 + d.building_index as u64 * 17)
-                    % 10;
-            let market_distance = trip(d, &best);
-            let gate_distance = trip(d, &gates);
-            let usage = if gate_distance < 15.0 && variant == 0 {
-                EconomicUse::Inn
-            } else if gate_distance < 12.0 && variant <= 2 {
-                EconomicUse::Warehouse
-            } else if market_distance < 18.0 && variant < 4 {
-                EconomicUse::ShopDwelling
-            } else if market_distance < 35.0 && variant < 7 {
-                EconomicUse::WorkshopDwelling
-            } else {
-                EconomicUse::Dwelling
-            };
-            BuildingUse {
-                ward_id: d.ward_id,
-                building_index: d.building_index,
-                usage,
-                market,
-            }
+        .map(|(i, &p)| Candidate {
+            node: i,
+            district: district(city, p),
+            paths: graph.paths(&[(i, 0.0)]),
         })
         .collect();
-    EconomicAnalysis {
+    let mut chosen = vec![];
+    let mut beneficiaries = vec![];
+    for _ in 0..profile.max_markets {
+        let need = needs(city, &demand, &best, profile.service / SCALE);
+        let mut winner = None;
+        let mut score = 0.0;
+        for (i, c) in candidates.iter().enumerate() {
+            if chosen.contains(&i) {
+                continue;
+            }
+            let e = evaluate(
+                c,
+                &main,
+                &chosen,
+                &candidates,
+                &DemandContext {
+                    demand: &demand,
+                    best: &best,
+                    needs: &need,
+                },
+                profile,
+            );
+            if !e.score.is_finite() {
+                return Err(GenerationError("Demand score overflow".into()));
+            }
+            if e.score > score + EPS {
+                score = e.score;
+                winner = Some((i, e.beneficiaries));
+            }
+        }
+        let Some((i, count)) = winner else { break };
+        chosen.push(i);
+        beneficiaries.push(count);
+        for (d, best) in demand.iter().zip(&mut best) {
+            *best = best.min(trip(d, &candidates[i].paths));
+        }
+    }
+    let planned = mean(&demand, &best, profile.service / SCALE);
+    if !baseline.is_finite() || !planned.is_finite() {
+        return Err(GenerationError("Demand distance overflow".into()));
+    }
+    let mut markets = vec![];
+    if let Some(space) = spaces.first() {
+        let p = center(space);
+        markets.push(MarketSite {
+            position: p,
+            proposed: false,
+            district: district(city, p),
+            main_distance_metres: None,
+            beneficiaries: 0,
+            served_demand_weight: 0.0,
+            served_districts: vec![],
+            route: vec![],
+        });
+    }
+    for (index, &i) in chosen.iter().enumerate() {
+        let c = &candidates[i];
+        markets.push(MarketSite {
+            position: graph.points[c.node],
+            proposed: true,
+            district: c.district,
+            main_distance_metres: Some(main.distances[c.node] * SCALE),
+            beneficiaries: beneficiaries[index],
+            served_demand_weight: 0.0,
+            served_districts: vec![],
+            route: main.route(&graph, c.node),
+        });
+    }
+    let mut buildings = vec![];
+    let mut served_weight = 0.0;
+    for d in &demand {
+        let mut nearest = (None, f64::INFINITY);
+        if !markets.is_empty() {
+            for (i, paths) in std::iter::once(&main)
+                .chain(chosen.iter().map(|&i| &candidates[i].paths))
+                .enumerate()
+            {
+                let value = trip(d, paths);
+                if value * SCALE <= profile.service && value < nearest.1 {
+                    nearest = (Some(i), value);
+                }
+            }
+        }
+        if let Some(i) = nearest.0 {
+            served_weight += d.weight;
+            markets[i].served_demand_weight += d.weight;
+            if let Some(district) = d.district
+                && !markets[i].served_districts.contains(&district)
+            {
+                markets[i].served_districts.push(district);
+            }
+        }
+        buildings.push(MarketAssignment {
+            ward_id: d.ward_id,
+            building_index: d.building_index,
+            district: d.district,
+            market: nearest.0,
+            distance_metres: nearest.0.map(|_| nearest.1 * SCALE),
+        });
+    }
+    let mut districts = vec![];
+    for (i, district) in city.original_geometry.districts.iter().enumerate() {
+        let mut weight = 0.0;
+        let mut before = 0.0;
+        let mut after = 0.0;
+        let mut suppliers = vec![];
+        let mut count = 0;
+        for (d, a) in demand
+            .iter()
+            .zip(&buildings)
+            .filter(|(d, _)| d.district == Some(i))
+        {
+            count += 1;
+            weight += d.weight;
+            if trip(d, &main) * SCALE <= profile.service {
+                before += d.weight;
+            }
+            if let Some(market) = a.market {
+                after += d.weight;
+                if !suppliers.contains(&market) {
+                    suppliers.push(market);
+                }
+            }
+        }
+        districts.push(DistrictCoverage {
+            name: district.name.clone(),
+            buildings: count,
+            before: (weight > 0.0).then_some(before / weight),
+            after: (weight > 0.0).then_some(after / weight),
+            secondary_markets: chosen
+                .iter()
+                .filter(|&&c| candidates[c].district == Some(i))
+                .count(),
+            suppliers,
+        });
+    }
+    let mut pairs = vec![];
+    for (i, &a) in chosen.iter().enumerate() {
+        for (j, &b) in chosen.iter().enumerate().skip(i + 1) {
+            let target = candidates[b].node;
+            pairs.push(MarketPair {
+                from: i + 1,
+                to: j + 1,
+                distance_metres: candidates[a].paths.distances[target] * SCALE,
+                route: candidates[a].paths.route(&graph, target),
+            });
+        }
+    }
+    let need = needs(city, &demand, &best, profile.service / SCALE);
+    let reasons = candidates
+        .iter()
+        .enumerate()
+        .map(|(i, c)| MarketCandidate {
+            position: graph.points[c.node],
+            district: c.district,
+            main_distance_metres: main.distances[c.node]
+                .is_finite()
+                .then_some(main.distances[c.node] * SCALE),
+            reason: if chosen.contains(&i) {
+                MarketCandidateReason::Selected
+            } else {
+                evaluate(
+                    c,
+                    &main,
+                    &chosen,
+                    &candidates,
+                    &DemandContext {
+                        demand: &demand,
+                        best: &best,
+                        needs: &need,
+                    },
+                    profile,
+                )
+                .reason
+            },
+        })
+        .collect();
+    Ok(MarketPlan {
+        profile: profile.clone(),
         markets,
         buildings,
+        districts,
+        pairs,
+        candidates: reasons,
         graph_nodes: graph.points.len(),
+        main_entrances: graph.main_entries.len(),
         unlinked_buildings: demand.iter().filter(|d| d.access.is_none()).count(),
-        unserved_buildings: demand.iter().filter(|d| trip(d, &best) > SERVICE).count(),
+        unserved_buildings: best
+            .iter()
+            .filter(|&&d| d * SCALE > profile.service)
+            .count(),
+        unassigned_district_buildings: demand.iter().filter(|d| d.district.is_none()).count(),
+        served_demand_fraction: if total > 0.0 {
+            served_weight / total
+        } else {
+            0.0
+        },
         baseline_capped_distance_metres: baseline,
-        planned_capped_distance_metres: mean(&demand, &best),
-    }
+        planned_capped_distance_metres: planned,
+    })
 }
 
 #[cfg(test)]
@@ -690,9 +942,17 @@ mod tests {
             vec![p(40., -10.), p(40., 10.)],
         ]);
         add_houses(&mut c, &[p(-40., 4.), p(-35., 4.), p(35., 4.), p(40., 4.)]);
+        c.wards[0].market_space = Some(square(0., 0.));
+        let profile = MarketProfile {
+            main_min: 100.,
+            side_min: 100.,
+            service: 320.,
+            min_beneficiaries: 1,
+            ..Default::default()
+        };
         let before = serde_json::to_value(&c).unwrap();
-        let a = analyze_economy(&c);
-        assert_eq!(a, analyze_economy(&c));
+        let a = plan_markets(&c, &profile, &[]).unwrap();
+        assert_eq!(a, plan_markets(&c, &profile, &[]).unwrap());
         assert_eq!(before, serde_json::to_value(&c).unwrap());
         assert_eq!(a.markets.iter().filter(|m| m.proposed).count(), 2);
         assert!(a.planned_capped_distance_metres < a.baseline_capped_distance_metres);
@@ -701,7 +961,7 @@ mod tests {
         assert_eq!(
             a.markets
                 .iter()
-                .map(|m| m.served_footprint_area)
+                .map(|m| m.served_demand_weight)
                 .sum::<f64>(),
             16.
         );
@@ -713,6 +973,24 @@ mod tests {
         }));
     }
     #[test]
+    fn missing_main_market_is_not_treated_as_infinite_eligible_distance() {
+        let mut c = city(vec![
+            vec![p(-60., 0.), p(60., 0.)],
+            vec![p(0., -20.), p(0., 20.)],
+        ]);
+        add_houses(&mut c, &[p(3., 3.)]);
+        let a = analyze_economy(&c);
+        assert!(a.markets.is_empty());
+        assert_eq!(a.main_entrances, 0);
+        assert!(!a.candidates.is_empty());
+        assert!(
+            a.candidates
+                .iter()
+                .all(|c| c.reason == MarketCandidateReason::Disconnected)
+        );
+        assert_eq!(a.unserved_buildings, 1);
+    }
+    #[test]
     fn empty_and_disconnected_demand_is_explicit_not_nan() {
         let mut c = city(vec![]);
         let empty = analyze_economy(&c);
@@ -720,9 +998,8 @@ mod tests {
         add_houses(&mut c, &[p(0., 0.)]);
         let a = analyze_economy(&c);
         assert_eq!(a.unlinked_buildings, 1);
-        assert_eq!(a.planned_capped_distance_metres, 320.);
+        assert_eq!(a.planned_capped_distance_metres, 240.);
         assert_eq!(a.buildings[0].market, None);
-        assert_eq!(a.buildings[0].usage, EconomicUse::Dwelling);
         assert!(a.markets.is_empty());
         serde_json::to_string(&a).unwrap();
     }

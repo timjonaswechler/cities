@@ -10,7 +10,7 @@ Frage: Wie verändern echte Nebenmarktflächen, Hofumbauten und Vorstadt-Bauphas
 node crates/city_core/prototypes/run-market-district-lab.mjs
 ```
 
-`market-district-runs.json` enthält 27 weitere reproduzierte Läufe. [Ergebnisse und Grenzen](../../../docs/market-district-experiment.md). Die neuen Regeln sind nicht in den Rust-Generator übernommen; Parameter und Gestaltung sind nicht freigegeben.
+`market-district-runs.json` enthält 27 weitere reproduzierte Läufe. [Ergebnisse und Grenzen](../../../docs/market-district-experiment.md). Das Regelwerk ist inzwischen als [Marktplanung V1](../../../docs/market-planning-v1.md) akzeptiert und nach Rust portiert; diese HTML-Datei und ihre 27 Läufe bleiben unveränderte Vergleichsreferenz. Die Ausgangswerte sind weiterhin konfigurierbar, bauliche Marktflächen nicht freigegeben.
 
 ## Runde 1: Interaktiv öffnen
 

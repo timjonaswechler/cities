@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "name": "Marktplanung V1",
+  "mainMin": 200.0,
+  "sideMin": 160.0,
+  "service": 240.0,
+  "districtWeight": 1.0,
+  "minBeneficiaries": 12,
+  "maxMarkets": 3
+}

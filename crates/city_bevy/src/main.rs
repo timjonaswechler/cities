@@ -11,8 +11,8 @@ use bevy::{
     ui_widgets::{Activate, Button},
 };
 use city_core::{
-    City, CityOptions, EconomicAnalysis, GenerationError, analyze_economy, generate_city,
-    generate_snapshot,
+    City, CityOptions, GenerationError, MarketPlan, MarketProfile, generate_city,
+    generate_snapshot, plan_markets,
 };
 use std::sync::{Mutex, mpsc};
 
@@ -24,15 +24,27 @@ struct CityState {
     job: Option<Mutex<mpsc::Receiver<Result<GeneratedCity, GenerationError>>>>,
     seed_edit: Option<String>,
     economy_enabled: bool,
-    economy: Option<EconomicAnalysis>,
+    economy: Option<MarketPlan>,
+    market_profile: MarketProfile,
+    market_settings: bool,
+    market_view: mesh::MarketView,
 }
 struct GeneratedCity {
     city: City,
-    economy: Option<EconomicAnalysis>,
+    economy: Option<MarketPlan>,
 }
-fn generate_view(options: &CityOptions, economy: bool) -> Result<GeneratedCity, GenerationError> {
+fn generate_view(
+    options: &CityOptions,
+    economy: bool,
+    profile: &MarketProfile,
+) -> Result<GeneratedCity, GenerationError> {
+    profile.validate()?;
     let city = generate_city(options)?;
-    let economy = economy.then(|| analyze_economy(&city));
+    let economy = if economy {
+        Some(plan_markets(&city, profile, &[])?)
+    } else {
+        None
+    };
     Ok(GeneratedCity { city, economy })
 }
 #[derive(Resource, Default)]
@@ -47,11 +59,65 @@ enum Action {
     Gates,
     Feature(usize),
     Economy,
+    MarketSettings,
+    MarketParam(MarketParameter, i8),
+    MarketDefaults,
+    SaveMarketProfile,
+    MarketRoutes,
+    MarketDistricts,
     Top,
     Reset,
     Json,
     Png,
 }
+#[derive(Clone, Copy)]
+enum MarketParameter {
+    Main,
+    Secondary,
+    Service,
+    District,
+    Beneficiaries,
+    Maximum,
+}
+impl MarketParameter {
+    fn adjust(self, p: &mut MarketProfile, delta: i8) {
+        let d = delta as f64;
+        match self {
+            Self::Main => p.main_min = (p.main_min + d * 20.0).clamp(0.0, 500.0),
+            Self::Secondary => p.side_min = (p.side_min + d * 20.0).clamp(0.0, 400.0),
+            Self::Service => p.service = (p.service + d * 20.0).clamp(80.0, 400.0),
+            Self::District => p.district_weight = (p.district_weight + d * 0.5).clamp(0.0, 2.0),
+            Self::Beneficiaries => {
+                p.min_beneficiaries =
+                    (p.min_beneficiaries as i64 + delta as i64).clamp(1, 100) as usize
+            }
+            Self::Maximum => {
+                p.max_markets = (p.max_markets as i64 + delta as i64).clamp(0, 5) as usize
+            }
+        }
+        p.name = "Marktplanung V1 (angepasst)".into();
+    }
+    fn label(self, p: &MarketProfile) -> String {
+        match self {
+            Self::Main => format!("Hauptmarkt: {:.0} m", p.main_min),
+            Self::Secondary => format!("Nebenmärkte: {:.0} m", p.side_min),
+            Self::Service => format!("Versorgung: {:.0} m", p.service),
+            Self::District => format!("Distriktgewicht: {:.1}", p.district_weight),
+            Self::Beneficiaries => format!("Mindestbedarf: {}", p.min_beneficiaries),
+            Self::Maximum => format!("Max. Nebenmärkte: {}", p.max_markets),
+        }
+    }
+}
+#[derive(Component)]
+struct CityControls;
+#[derive(Component)]
+struct MarketControls;
+#[derive(Component)]
+struct MarketReportBox;
+#[derive(Component)]
+struct MarketReportText;
+#[derive(Component)]
+struct ProfileValue(MarketParameter);
 #[derive(Component)]
 struct ButtonLabel(Action);
 #[derive(Component)]
@@ -128,13 +194,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut output = None;
     let mut snapshot = None;
     let mut economy_enabled = false;
+    let mut market_profile = MarketProfile::default();
+    let mut write_profile = None;
     let mut capture = Capture::default();
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--help" | "-h" => {
                 println!(
-                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE] [--economy]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · E: economy overlay · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
+                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE] [--economy]\n             [--market-profile FILE] [--write-market-profile FILE]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · E: economy overlay · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
                 );
                 return Ok(());
             }
@@ -146,6 +214,18 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             "--seed" => options.seed = args.next().ok_or("--seed requires a number")?.parse()?,
             "--size" => options.size = args.next().ok_or("--size requires a number")?.parse()?,
             "--economy" => economy_enabled = true,
+            "--market-profile" => {
+                market_profile = serde_json::from_str(&std::fs::read_to_string(
+                    args.next().ok_or("--market-profile requires a file")?,
+                )?)?;
+                economy_enabled = true;
+            }
+            "--write-market-profile" => {
+                write_profile = Some(
+                    args.next()
+                        .ok_or("--write-market-profile requires a file")?,
+                )
+            }
             "--coast" => options.coast = true,
             "--river" => options.river = true,
             "--greens" => options.greens = true,
@@ -160,6 +240,12 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     options.validate()?;
+    market_profile.validate()?;
+    if let Some(path) = write_profile {
+        write_json(&path, &market_profile)?;
+        println!("Marktprofil: {path}");
+        return Ok(());
+    }
     if let Some(path) = snapshot {
         if economy_enabled {
             return Err("--economy annotates cities, not original snapshots; use --export".into());
@@ -168,7 +254,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         println!("Snapshot: {path}");
         return Ok(());
     }
-    let GeneratedCity { city, economy } = generate_view(&options, economy_enabled)?;
+    let GeneratedCity { city, economy } =
+        generate_view(&options, economy_enabled, &market_profile)?;
     if let Some(path) = output {
         write_city(&path, &city, economy.as_ref())?;
         println!(
@@ -207,6 +294,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             message: "Bereit".into(),
             job: None,
             seed_edit: None,
+            market_settings: economy_enabled,
+            market_profile,
+            market_view: mesh::MarketView::default(),
             economy_enabled,
             economy,
         })
@@ -222,8 +312,10 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 apply_actions,
                 poll_generation,
                 update_labels,
+                update_market_panel,
                 button_colors,
                 camera,
+                position_market_labels,
                 capture_frame,
             )
                 .chain(),
@@ -244,7 +336,7 @@ fn write_json(path: &str, value: &impl serde::Serialize) -> Result<(), Box<dyn s
 fn write_city(
     path: &str,
     city: &City,
-    economy: Option<&EconomicAnalysis>,
+    economy: Option<&MarketPlan>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut value = serde_json::json!({"format":"new-cities","version":1,"city":city});
     if let Some(economy) = economy {
@@ -281,6 +373,7 @@ fn setup_scene(
         &mut materials,
         &state.city,
         state.economy.as_ref(),
+        &state.market_view,
     );
     // A smoke test must render even when the desktop is locked or the window
     // is occluded. An image target does not depend on a window swap chain.
@@ -321,7 +414,7 @@ fn font(size: f32) -> TextFont {
         ..default()
     }
 }
-fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
+fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>, state: Res<CityState>) {
     commands.insert_resource(UiFonts {
         body: fonts.add(Font::from_bytes(
             include_bytes!("../../../assets/fonts/ShareTech-Regular.ttf").to_vec(),
@@ -339,7 +432,7 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
                 width: px(265),
                 padding: UiRect::all(px(20)),
                 flex_direction: FlexDirection::Column,
-                row_gap: px(7),
+                row_gap: px(5),
                 border_radius: BorderRadius::all(px(12)),
                 ..default()
             },
@@ -347,55 +440,39 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
         ))
         .id();
     commands.entity(panel).with_children(|parent| {
-        parent.spawn((
-            Text::new("NEW CITIES"),
-            font(23.0),
-            TextColor(Color::srgb_u8(231, 224, 203)),
-        ));
-        parent.spawn((
-            Text::new("WATABOU · NATIVE GENERATION"),
-            font(10.5),
-            TextColor(Color::srgb_u8(143, 159, 150)),
-            Node {
-                margin: UiRect::bottom(px(14)),
-                ..default()
-            },
-        ));
-        for action in [
-            Action::Seed,
-            Action::Smaller,
-            Action::Larger,
-            Action::New,
-            Action::Rebuild,
-        ] {
-            spawn_button(parent, action);
+        parent.spawn((Text::new("NEW CITIES"),font(23.0),TextColor(Color::srgb_u8(231,224,203))));
+        parent.spawn((Text::new("WATABOU · NATIVE GENERATION"),font(10.5),TextColor(Color::srgb_u8(143,159,150))));
+        for action in [Action::Seed,Action::Smaller,Action::Larger,Action::New,Action::Rebuild,Action::Economy,Action::MarketSettings] {
+            spawn_button(parent,action);
         }
-        parent.spawn((
-            Text::new("STADTPLAN"),
-            font(11.0),
-            TextColor(Color::srgb_u8(143, 159, 150)),
-            Node {
-                margin: UiRect::top(px(12)),
-                ..default()
-            },
-        ));
-        for i in 0..FEATURES.len() {
-            spawn_button(parent, Action::Feature(i));
-        }
-        spawn_button(parent, Action::Gates);
-        spawn_button(parent, Action::Economy);
-        parent.spawn((
-            Text::new("ANSICHT & EXPORT"),
-            font(11.0),
-            TextColor(Color::srgb_u8(143, 159, 150)),
-            Node {
-                margin: UiRect::top(px(12)),
-                ..default()
-            },
-        ));
-        for action in [Action::Top, Action::Reset, Action::Json, Action::Png] {
-            spawn_button(parent, action);
-        }
+        parent.spawn((CityControls,Node {
+            display: if state.market_settings {Display::None} else {Display::Flex},
+            flex_direction:FlexDirection::Column,row_gap:px(5),..default()
+        })).with_children(|parent| {
+            parent.spawn((Text::new("STADTPLAN"),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+            for i in 0..FEATURES.len() {spawn_button(parent,Action::Feature(i));}
+            spawn_button(parent,Action::Gates);
+        });
+        parent.spawn((MarketControls,Node {
+            display: if state.market_settings {Display::Flex} else {Display::None},
+            flex_direction:FlexDirection::Column,row_gap:px(5),..default()
+        })).with_children(|parent| {
+            parent.spawn((Text::new("MARKTPROFIL · METER / WEGE"),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+            for parameter in [MarketParameter::Main,MarketParameter::Secondary,MarketParameter::Service,MarketParameter::District,MarketParameter::Beneficiaries,MarketParameter::Maximum] {
+                parent.spawn(Node { flex_direction:FlexDirection::Row,align_items:AlignItems::Center,column_gap:px(4),..default() }).with_children(|row| {
+                    row.spawn((ProfileValue(parameter),Text::new(parameter.label(&state.market_profile)),font(11.0),
+                        TextColor(Color::srgb_u8(215,220,202)),Node {width:px(155),..default()}));
+                    spawn_button(row,Action::MarketParam(parameter,-1));
+                    spawn_button(row,Action::MarketParam(parameter,1));
+                });
+            }
+            for action in [Action::MarketDefaults,Action::SaveMarketProfile,Action::MarketRoutes,Action::MarketDistricts] {
+                spawn_button(parent,action);
+            }
+            parent.spawn((Text::new("Abstände sind Netz-Schätzungen.\nKeine Marktpflicht pro Distrikt.\nKeine Plätze freigeräumt."),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+        });
+        parent.spawn((Text::new("ANSICHT & EXPORT"),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+        for action in [Action::Top,Action::Reset,Action::Json,Action::Png] {spawn_button(parent,action);}
     });
     commands.spawn((
         TitleText,
@@ -421,7 +498,135 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
             ..default()
         },
     ));
-    commands.spawn((Text::new("Rechte Maustaste: Drehen     Mittlere Maustaste: Verschieben     Mausrad: Zoom     T: Draufsicht"),font(12.0),TextColor(Color::srgb_u8(57,68,58)),Node{position_type:PositionType::Absolute,left:px(320),bottom:px(22),..default()}));
+    commands
+        .spawn((
+            MarketReportBox,
+            Node {
+                display: if state.economy.is_some() {
+                    Display::Flex
+                } else {
+                    Display::None
+                },
+                position_type: PositionType::Absolute,
+                left: px(310),
+                top: px(172),
+                width: px(310),
+                padding: UiRect::all(px(12)),
+                border_radius: BorderRadius::all(px(8)),
+                ..default()
+            },
+            BackgroundColor(Color::srgba(0.90, 0.90, 0.83, 0.94)),
+        ))
+        .with_children(|p| {
+            p.spawn((
+                MarketReportText,
+                Text::new(""),
+                font(11.5),
+                TextColor(Color::srgb_u8(48, 57, 49)),
+            ));
+        });
+    commands.spawn((Text::new("Rechte Maustaste: Drehen   Mittlere: Verschieben   Mausrad: Zoom   T: Draufsicht   E: Marktplanung"),font(12.0),TextColor(Color::srgb_u8(57,68,58)),
+        Node{position_type:PositionType::Absolute,left:px(320),bottom:px(22),..default()}));
+}
+type MarketPanelFilter = Or<(
+    With<CityControls>,
+    With<MarketControls>,
+    With<MarketReportBox>,
+)>;
+fn update_market_panel(
+    state: Res<CityState>,
+    mut panels: Query<(&mut Node, Has<MarketControls>, Has<MarketReportBox>), MarketPanelFilter>,
+    mut values: Query<(&ProfileValue, &mut Text), Without<MarketReportText>>,
+    mut report: Query<&mut Text, (With<MarketReportText>, Without<ProfileValue>)>,
+    mut layers: Query<(&mesh::MarketLayer, &mut Visibility)>,
+) {
+    for (mut node, market, report) in &mut panels {
+        let visible = if report {
+            state.economy.is_some()
+        } else {
+            market == state.market_settings
+        };
+        node.display = if visible {
+            Display::Flex
+        } else {
+            Display::None
+        };
+    }
+    for (value, mut text) in &mut values {
+        text.0 = value.0.label(&state.market_profile);
+    }
+    for (layer, mut visibility) in &mut layers {
+        *visibility = if layer.visible(&state.market_view) {
+            Visibility::Visible
+        } else {
+            Visibility::Hidden
+        };
+    }
+    if let Some(plan) = &state.economy {
+        let mut lines = vec!["MARKTPLANUNG V1 · WEGE".to_string()];
+        for (i, m) in plan.markets.iter().enumerate().filter(|(_, m)| m.proposed) {
+            let name = m
+                .district
+                .and_then(|i| plan.districts.get(i))
+                .map_or("Ohne Distrikt", |d| d.name.as_str());
+            lines.push(format!(
+                "M{i}: {name} · {:.0} m ab H",
+                m.main_distance_metres.unwrap_or(0.)
+            ));
+        }
+        if !plan.markets.iter().any(|m| m.proposed) {
+            lines.push("Keine zulässigen Nebenmärkte.".into());
+        }
+        for p in &plan.pairs {
+            lines.push(format!(
+                "M{} - M{}: {:.0} m",
+                p.from, p.to, p.distance_metres
+            ));
+        }
+        lines.push("\nDISTRIKTE · NACHFRAGEABDECKUNG".into());
+        for d in &plan.districts {
+            lines.push(if let (Some(before), Some(after)) = (d.before, d.after) {
+                format!(
+                    "{}: {:.0}% -> {:.0}% · {} NM",
+                    d.name,
+                    before * 100.,
+                    after * 100.,
+                    d.secondary_markets
+                )
+            } else {
+                format!("{}: keine Nachfrage", d.name)
+            });
+        }
+        let rejected = plan
+            .candidates
+            .iter()
+            .filter(|c| c.reason != city_core::MarketCandidateReason::Selected)
+            .count();
+        lines.push(format!("\n{rejected} nicht gewählte Kandidaten"));
+        let count = |reason| {
+            plan.candidates
+                .iter()
+                .filter(|c| c.reason == reason)
+                .count()
+        };
+        lines.push(format!(
+            "H-Nähe: {} · NM-Nähe: {}",
+            count(city_core::MarketCandidateReason::NearMain),
+            count(city_core::MarketCandidateReason::NearSecondary)
+        ));
+        lines.push(format!(
+            "Ohne H-Verbindung: {} · Bedarf: {}",
+            count(city_core::MarketCandidateReason::Disconnected),
+            count(city_core::MarketCandidateReason::InsufficientDemand)
+        ));
+        lines.push("NM = eigener Nebenmarkt\nWege und Abdeckung sind Modellwerte.".into());
+        let value = lines.join("\n");
+        for mut text in &mut report {
+            if text.0 != value {
+                text.0 = value.clone();
+            }
+        }
+    }
 }
 fn assign_fonts(
     fonts: Res<UiFonts>,
@@ -556,9 +761,10 @@ fn start_generation(state: &mut CityState) {
     state.seed_edit = None;
     let options = state.options.clone();
     let economy = state.economy_enabled;
+    let profile = state.market_profile.clone();
     let (tx, rx) = mpsc::channel();
     std::thread::spawn(move || {
-        let _ = tx.send(generate_view(&options, economy));
+        let _ = tx.send(generate_view(&options, economy, &profile));
     });
     state.job = Some(Mutex::new(rx));
     state.message = "Generierung läuft …".into();
@@ -629,6 +835,42 @@ fn apply_actions(
                 state.economy_enabled = !state.economy_enabled;
                 regenerate = true;
             }
+            Action::MarketSettings => {
+                state.market_settings = !state.market_settings;
+                if state.market_settings && !state.economy_enabled && state.job.is_none() {
+                    state.economy_enabled = true;
+                    regenerate = true;
+                }
+            }
+            Action::MarketParam(parameter, delta) => {
+                if state.job.is_some() {
+                    continue;
+                }
+                parameter.adjust(&mut state.market_profile, delta);
+                state.economy_enabled = true;
+                regenerate = true;
+            }
+            Action::MarketDefaults => {
+                if state.job.is_some() {
+                    continue;
+                }
+                state.market_profile = MarketProfile::default();
+                state.economy_enabled = true;
+                regenerate = true;
+            }
+            Action::SaveMarketProfile => {
+                let path = format!("exports/market-profile-{}.json", state.city.options.seed);
+                state.message = match write_json(&path, &state.market_profile) {
+                    Ok(()) => format!("Profil gespeichert: {path}"),
+                    Err(e) => e.to_string(),
+                };
+            }
+            Action::MarketRoutes => {
+                state.market_view.routes = (state.market_view.routes + 1) % 3;
+            }
+            Action::MarketDistricts => {
+                state.market_view.districts = !state.market_view.districts;
+            }
             Action::Top => orbit.top = !orbit.top,
             Action::Reset => *orbit = orbit_for(&state.city),
             Action::Json => {
@@ -678,6 +920,7 @@ fn poll_generation(
                 &mut materials,
                 &city,
                 economy.as_ref(),
+                &state.market_view,
             );
             state.city = city;
             state.economy = economy;
@@ -686,6 +929,9 @@ fn poll_generation(
         Err(error) => {
             state.options = state.city.options.clone();
             state.economy_enabled = state.economy.is_some();
+            if let Some(plan) = &state.economy {
+                state.market_profile = plan.profile.clone();
+            }
             state.message = format!("Generierung fehlgeschlagen: {error}");
         }
     }
@@ -736,8 +982,36 @@ fn update_labels(
                 }
             ),
             Action::Economy => format!(
-                "{} Wirtschaft (Experiment)  [E]",
+                "{} Marktplanung V1  [E]",
                 if state.economy_enabled { "[x]" } else { "[ ]" }
+            ),
+            Action::MarketSettings => {
+                if state.market_settings {
+                    "Stadtregeln anzeigen".into()
+                } else {
+                    "Marktregeln anzeigen".into()
+                }
+            }
+            Action::MarketParam(_, delta) => {
+                if delta < 0 {
+                    "-".into()
+                } else {
+                    "+".into()
+                }
+            }
+            Action::MarketDefaults => "Profil V1 zurücksetzen".into(),
+            Action::SaveMarketProfile => "Marktprofil als JSON speichern".into(),
+            Action::MarketRoutes => format!(
+                "Wege: {}",
+                ["Aus", "Hauptmarkt", "Alle Paare"][state.market_view.routes as usize]
+            ),
+            Action::MarketDistricts => format!(
+                "{} Distriktumrisse",
+                if state.market_view.districts {
+                    "[x]"
+                } else {
+                    "[ ]"
+                }
             ),
             Action::Reset => "Kamera zurücksetzen   [Home]".into(),
             Action::Json => "Stadt als JSON exportieren".into(),
@@ -754,9 +1028,9 @@ fn update_labels(
     }
     for mut text in &mut status {
         let analysis = state.economy.as_ref().map(|e| format!(
-            "\nGold: {} Markt-Kandidaten · Wege-Proxy: {:.0} -> {:.0} m (bei 320 m gedeckelt)\nOhne Anschluss: {} · Ohne Marktabdeckung: {} · Grün: Laden · Blau: Werkstatt · Rot: Gasthaus · Violett: Lager",
-            e.markets.iter().filter(|m| m.proposed).count(),
-            e.baseline_capped_distance_metres, e.planned_capped_distance_metres,
+            "\n{} · {} Nebenmärkte · Nachfrageabdeckung: {:.0}%\nWege-Proxy: {:.0} -> {:.0} m (bei {:.0} m gedeckelt) · Ohne Anschluss: {} · Ohne Markt: {}\nDachfarben: Hauptmarkt braun · M1 gold · M2 blau · M3 grün · unversorgt grau",
+            e.profile.name, e.markets.iter().filter(|m| m.proposed).count(), e.served_demand_fraction * 100.0,
+            e.baseline_capped_distance_metres, e.planned_capped_distance_metres, e.profile.service,
             e.unlinked_buildings, e.unserved_buildings,
         )).unwrap_or_default();
         let value = format!(
@@ -836,6 +1110,23 @@ fn camera(
         }
     }
 }
+fn position_market_labels(
+    cameras: Query<(&Camera, &GlobalTransform), With<Camera3d>>,
+    mut labels: Query<(&mesh::MarketPinLabel, &mut Node)>,
+) {
+    let Some((camera, transform)) = cameras.iter().next() else {
+        return;
+    };
+    for (label, mut node) in &mut labels {
+        if let Ok(p) = camera.world_to_viewport(transform, label.0) {
+            node.display = Display::Flex;
+            node.left = px(p.x - 12.0);
+            node.top = px(p.y - 10.0);
+        } else {
+            node.display = Display::None;
+        }
+    }
+}
 fn capture_frame(
     mut commands: Commands,
     mut capture: ResMut<Capture>,
@@ -909,6 +1200,9 @@ mod tests {
             seed_edit: None,
             economy_enabled: false,
             economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
         })
         .insert_resource(orbit)
         .insert_resource(Actions::default())
@@ -947,6 +1241,76 @@ mod tests {
         }
     }
     #[test]
+    fn market_profile_controls_replan_without_changing_the_city() {
+        let options = CityOptions {
+            size: 10,
+            seed: 42,
+            ..Default::default()
+        };
+        let city = generate_city(&options).unwrap();
+        let original = serde_json::to_value(&city).unwrap();
+        let orbit = orbit_for(&city);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+        })
+        .insert_resource(orbit)
+        .insert_resource(Actions::default())
+        .init_resource::<Assets<Mesh>>()
+        .init_resource::<Assets<StandardMaterial>>()
+        .add_systems(
+            Update,
+            (apply_actions, poll_generation, update_market_panel).chain(),
+        );
+        for action in [
+            Action::MarketSettings,
+            Action::MarketParam(MarketParameter::Main, 1),
+            Action::MarketParam(MarketParameter::Maximum, -1),
+        ] {
+            app.world_mut().resource_mut::<Actions>().0.push(action);
+            app.update();
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            while app.world().resource::<CityState>().job.is_some() {
+                assert!(std::time::Instant::now() < deadline);
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                app.update();
+            }
+        }
+        let state = app.world().resource::<CityState>();
+        assert!(state.market_settings && state.economy_enabled);
+        assert_eq!(state.market_profile.main_min, 220.);
+        assert_eq!(state.market_profile.max_markets, 2);
+        let plan = state.economy.as_ref().unwrap();
+        assert_eq!(plan.profile, state.market_profile);
+        assert!(plan.markets.iter().filter(|m| m.proposed).count() <= 2);
+        assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+        app.world_mut().resource_mut::<Actions>().0.extend([
+            Action::MarketRoutes,
+            Action::MarketRoutes,
+            Action::MarketDistricts,
+        ]);
+        app.update();
+        let state = app.world().resource::<CityState>();
+        assert_eq!(state.market_view.routes, 0);
+        assert!(!state.market_view.districts);
+        for (_, visibility) in app
+            .world_mut()
+            .query::<(&mesh::MarketLayer, &Visibility)>()
+            .iter(app.world())
+        {
+            assert_eq!(*visibility, Visibility::Hidden);
+        }
+    }
+    #[test]
     fn native_controls_replace_a_city_after_background_generation() {
         let options = CityOptions {
             size: 5,
@@ -964,6 +1328,9 @@ mod tests {
             seed_edit: None,
             economy_enabled: false,
             economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
         })
         .insert_resource(orbit)
         .insert_resource(Actions(vec![Action::Feature(4)]))

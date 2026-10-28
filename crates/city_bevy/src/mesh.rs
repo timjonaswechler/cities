@@ -1,7 +1,7 @@
 use bevy::{
     asset::RenderAssetUsages, mesh::Indices, prelude::*, render::render_resource::PrimitiveTopology,
 };
-use city_core::{City, EconomicAnalysis, EconomicUse, Point, Polygon};
+use city_core::{City, MarketPlan, Point, Polygon};
 use std::collections::BTreeMap;
 
 /// One original map unit is four metres. Conversion to f32 happens only here.
@@ -167,6 +167,48 @@ fn segment(p: Point, q: Point, width: f64) -> Polygon {
     vec![p.plus(n), p.minus(n), q.minus(n), q.plus(n)]
 }
 
+#[derive(Clone, Copy)]
+pub struct MarketView {
+    pub routes: u8,
+    pub districts: bool,
+}
+impl Default for MarketView {
+    fn default() -> Self {
+        Self {
+            routes: 1,
+            districts: true,
+        }
+    }
+}
+#[derive(Clone, Copy, Component)]
+pub enum MarketLayer {
+    MainRoutes,
+    PairRoutes,
+    Districts,
+}
+impl MarketLayer {
+    pub fn visible(self, view: &MarketView) -> bool {
+        match self {
+            Self::MainRoutes => view.routes >= 1,
+            Self::PairRoutes => view.routes >= 2,
+            Self::Districts => view.districts,
+        }
+    }
+}
+fn market_color(i: usize) -> Color {
+    let [r, g, b] = [
+        [179, 145, 112],
+        [201, 154, 52],
+        [97, 152, 179],
+        [103, 156, 119],
+        [153, 128, 174],
+        [196, 120, 105],
+        [184, 184, 170],
+    ][i];
+    Color::srgb_u8(r, g, b)
+}
+#[derive(Component)]
+pub struct MarketPinLabel(pub Vec3);
 #[derive(Component)]
 pub struct CityMesh;
 pub fn spawn_city(
@@ -174,7 +216,8 @@ pub fn spawn_city(
     meshes: &mut Assets<Mesh>,
     materials: &mut Assets<StandardMaterial>,
     city: &City,
-    economy: Option<&EconomicAnalysis>,
+    economy: Option<&MarketPlan>,
+    view: &MarketView,
 ) {
     let mut land = Geometry::default();
     let mut water = Geometry::default();
@@ -186,10 +229,14 @@ pub fn spawn_city(
     let uses: BTreeMap<_, _> = economy
         .into_iter()
         .flat_map(|e| &e.buildings)
-        .map(|b| ((b.ward_id, b.building_index), b.usage))
+        .map(|b| ((b.ward_id, b.building_index), b.market))
         .collect();
-    let mut economic_roofs: [Geometry; 4] = std::array::from_fn(|_| Geometry::default());
-    let mut market_markers = Geometry::default();
+    let mut economic_roofs: [Geometry; 7] = std::array::from_fn(|_| Geometry::default());
+    let mut market_markers: [Geometry; 6] = std::array::from_fn(|_| Geometry::default());
+    let mut main_market = Geometry::default();
+    let mut main_routes = Geometry::default();
+    let mut pair_routes = Geometry::default();
+    let mut districts = Geometry::default();
     let mut landmarks = Geometry::default();
     let mut sides = Geometry::default();
     let original = &city.original_geometry;
@@ -237,6 +284,9 @@ pub fn spawn_city(
     for ward in &city.wards {
         if let Some(space) = &ward.market_space {
             road.polygon(space, 0.15);
+            if economy.is_some() {
+                main_market.polygon(space, 0.20);
+            }
         }
         for (i, building) in ward.buildings.iter().enumerate() {
             let bucket = (ward.seed as usize + i * 31) % 4;
@@ -251,13 +301,7 @@ pub fn spawn_city(
             if building.landmark {
                 landmarks.polygon(&building.polygon, height + 0.02);
             } else {
-                let use_index = match uses.get(&(ward.id, i)) {
-                    Some(EconomicUse::ShopDwelling) => Some(0),
-                    Some(EconomicUse::WorkshopDwelling) => Some(1),
-                    Some(EconomicUse::Inn) => Some(2),
-                    Some(EconomicUse::Warehouse) => Some(3),
-                    _ => None,
-                };
+                let use_index = uses.get(&(ward.id, i)).map(|market| market.unwrap_or(6));
                 if let Some(i) = use_index {
                     economic_roofs[i].polygon(&building.polygon, height + 0.03);
                 } else {
@@ -266,14 +310,46 @@ pub fn spawn_city(
             }
         }
     }
-    for site in economy
-        .into_iter()
-        .flat_map(|e| &e.markets)
-        .filter(|m| m.proposed)
-    {
-        // Elevated pins identify proposals; they do not pretend a plaza was cleared.
-        market_markers.prism(&disk(site.position, 0.3), 0.5, 30.0);
-        market_markers.prism(&disk(site.position, 2.0), 30.0, 33.0);
+    if let Some(plan) = economy {
+        for (i, site) in plan.markets.iter().enumerate() {
+            commands.spawn((
+                CityMesh,
+                MarketPinLabel(world(site.position, 36.0)),
+                Text::new(if site.proposed {
+                    format!("M{i}")
+                } else {
+                    "H".into()
+                }),
+                TextFont {
+                    font_size: FontSize::Px(13.0),
+                    ..default()
+                },
+                TextColor(Color::srgb_u8(245, 239, 215)),
+                BackgroundColor(Color::srgba(0.12, 0.16, 0.14, 0.94)),
+                Node {
+                    position_type: PositionType::Absolute,
+                    padding: UiRect::all(px(3)),
+                    border_radius: BorderRadius::all(px(3)),
+                    ..default()
+                },
+            ));
+        }
+        for (i, site) in plan.markets.iter().enumerate().filter(|(_, m)| m.proposed) {
+            // Pins are proposals, not cleared plazas.
+            market_markers[i].prism(&disk(site.position, 0.3), 0.5, 30.0);
+            market_markers[i].prism(&disk(site.position, 2.0), 30.0, 33.0);
+            main_routes.path(&site.route, 0.35, 0.50);
+        }
+        for pair in &plan.pairs {
+            pair_routes.path(&pair.route, 0.25, 0.55);
+        }
+        for district in &original.districts {
+            let mut ring = district.polygon.clone();
+            if let Some(&p) = ring.first() {
+                ring.push(p);
+            }
+            districts.path(&ring, 0.13, 0.40);
+        }
     }
     for wall in &original.walls {
         for edge in &wall.segments {
@@ -302,7 +378,7 @@ pub fn spawn_city(
         (walls, Color::srgb_u8(121, 121, 105)),
         (landmarks, Color::srgb_u8(104, 125, 126)),
         (trees, Color::srgb_u8(119, 145, 103)),
-        (market_markers, Color::srgb_u8(240, 181, 45)),
+        (main_market, Color::srgb_u8(228, 207, 140)),
     ];
     for (i, g) in houses.into_iter().enumerate() {
         layers.push((
@@ -315,13 +391,11 @@ pub fn spawn_city(
             ][i],
         ));
     }
-    for (geometry, color) in economic_roofs.into_iter().zip([
-        Color::srgb_u8(76, 143, 81),
-        Color::srgb_u8(70, 130, 185),
-        Color::srgb_u8(186, 80, 64),
-        Color::srgb_u8(140, 92, 160),
-    ]) {
-        layers.push((geometry, color));
+    for (i, geometry) in economic_roofs.into_iter().enumerate() {
+        layers.push((geometry, market_color(i)));
+    }
+    for (i, geometry) in market_markers.into_iter().enumerate() {
+        layers.push((geometry, market_color(i)));
     }
     for (geometry, color) in layers {
         if geometry.positions.is_empty() {
@@ -329,6 +403,42 @@ pub fn spawn_city(
         }
         commands.spawn((
             CityMesh,
+            Mesh3d(meshes.add(geometry.mesh())),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: color,
+                perceptual_roughness: 1.0,
+                ..default()
+            })),
+        ));
+    }
+    for (geometry, color, layer) in [
+        (
+            main_routes,
+            Color::srgb_u8(154, 97, 52),
+            MarketLayer::MainRoutes,
+        ),
+        (
+            pair_routes,
+            Color::srgb_u8(79, 122, 155),
+            MarketLayer::PairRoutes,
+        ),
+        (
+            districts,
+            Color::srgb_u8(90, 115, 96),
+            MarketLayer::Districts,
+        ),
+    ] {
+        if geometry.positions.is_empty() {
+            continue;
+        }
+        commands.spawn((
+            CityMesh,
+            layer,
+            if layer.visible(view) {
+                Visibility::Visible
+            } else {
+                Visibility::Hidden
+            },
             Mesh3d(meshes.add(geometry.mesh())),
             MeshMaterial3d(materials.add(StandardMaterial {
                 base_color: color,

@@ -1,12 +1,12 @@
 # Experimentierstand: organischere Städte
 
-Dieser PR ist die Arbeitsfläche für wirtschaftlich plausible, historisch inspirierte Stadtentwicklung. Die vorhandene Wirtschaftsanalyse ist der erste Ansatz, keine fertige Gesamtplanung. Die folgenden Wegwerfprototypen untersuchen tatsächliche Grundrissänderungen; noch keine ihrer Regeln wird in den produktiven Generator übernommen.
+Dieser PR ist die Arbeitsfläche für wirtschaftlich plausible, historisch inspirierte Stadtentwicklung. Die akzeptierte Marktlogik aus Runde 2 ist als [Marktplanung V1](market-planning-v1.md) in Rust übernommen, ohne fertige Gesamtplanung zu behaupten. Die früheren Wegwerfprototypen zu tatsächlichen Grundrissänderungen bleiben getrennt; ihre Hof-, Abriss- und Wachstumsregeln werden nicht übernommen.
 
-**Gestaltungsstatus nach gemeinsamer Sichtung:** Die bisherigen Features sind noch nicht zufriedenstellend. Insbesondere Marktverteilung und Distriktbezug müssen weiterentwickelt, die zu kleinteiligen und willkürlich wirkenden Hofumbauten neu überdacht werden. Ausgeführte Läufe, bestandene Tests und das technische Code-Review bedeuten keine gestalterische Freigabe.
+**Gestaltungsstatus nach gemeinsamer Sichtung:** Das Marktregelwerk aus Runde 2 ist als V1-Basis akzeptiert; Profilwerte bleiben veränderbar. Höfe und Wachstum sind weiterhin nicht zufriedenstellend, insbesondere die zu kleinteiligen und willkürlich wirkenden Hofumbauten. Die Freigabe der Marktlogik ist keine Freigabe realer Marktflächen oder dieser anderen Features.
 
 ## Prototyp öffnen und Quellen finden
 
-**Aktuelle Runde:** [Marktwege und Distrikte](market-district-experiment.md) entwickelt die Standortlogik mit gesonderten Laufwegabständen, Distriktgewicht und sichtbaren Wegen weiter. Weitere 27 Läufe sind dort dokumentiert; Hof- und Wachstumsregeln bleiben unverändert.
+**Aktueller Featurestand:** [Marktplanung V1](market-planning-v1.md) portiert die akzeptierte Logik mit Profilsteuerung und Vergleichstests nach Rust/Bevy. [Marktwege und Distrikte](market-district-experiment.md) hält die 27 eingefrorenen Referenzläufe fest; Hof- und Wachstumsregeln bleiben unverändert.
 
 Die folgenden festgehaltenen Quellen gehören zu **Runde 1**:
 
@@ -63,7 +63,7 @@ Dies sind Ausgaben bewusst vereinfachter Regeln auf drei Städten, keine histori
 - Distrikte sollen die Standortwahl und die versorgten Gebiete mitprägen. Es gibt **keine Pflicht zu einem eigenen Markt pro Distrikt**. Wie Nutzungscharakter und Nachfrage eines Distrikts gewichtet werden und wann ein Markt mehrere Distrikte versorgt, ist im nächsten Versuch zu untersuchen.
 - Ein Versuch soll die Laufwege zum Hauptmarkt und zwischen allen Marktstandorten sowie die Distriktzuordnung zeigen. Abgewiesene Standorte und schlecht versorgte Gebiete müssen erkennbar bleiben. Gute Darstellung allein reicht nicht als Bewertung der Standortlogik.
 
-**Unterschied zwischen Produktivstand und Versuch:** Die Rust-Analyse verwendet weiterhin einen pauschalen Mindestabstand von 25 Netz-Karteneinheiten zum jeweils nächsten berücksichtigten Markt, ohne gesonderte Haupt-/Nebenmarkt-Abstandsparameter oder Distriktbezug. Das Stadtlabor aus Runde 1 übernimmt diese Standortvorschläge. Der [Markt-/Distriktprototyp aus Runde 2](market-district-experiment.md) berechnet dagegen neue Standorte mit getrennten Abstandsfiltern und einer weichen Gewichtung unversorgter Distrikte; die Werte sind weiterhin nicht gemeinsam festgelegt und nicht in Rust übernommen.
+**Portierter Stand:** Die frühere pauschale Rust-Regel wurde durch [Marktplanung V1](market-planning-v1.md) ersetzt: gesonderte Haupt-/Nebenmarkt-Abstände, weiche Distriktdefizit-Gewichtung, expliziter Bedarf und Diagnosen. Die 27 Fälle des Markt-/Distriktprototyps dienen als Regression; das alte Stadtlabor aus Runde 1 bleibt ein historischer Experimentnachweis.
 
 ### Höfe und übrige Features: nicht freigegeben
 
@@ -79,13 +79,14 @@ Die Reihenfolge ist ein Vorschlag für weitere gemeinsame Experimente, keine Zus
 - [x] Echte Marktflächen einschließlich Eingriffskosten und abgewiesenen Standorten erproben.
 - [x] Hofumbauten und drei Vorstadtphasen als separate, kombinierbare Prototypen ausführen.
 - [x] Erste Marktvariante mit gesonderten Haupt-/Nebenmarkt-Laufwegabständen, Distriktgewicht ohne Marktpflicht, sichtbaren Entfernungen und versorgten Distrikten in Runde 2 erproben.
-- [ ] Abstands- und Versorgungsparameter sowie die Distriktgewichtung anhand der neuen Ansicht gemeinsam bewerten; insbesondere verbleibend schlecht versorgte Distrikte und die Grenzen der Netzrekonstruktion beurteilen.
+- [x] Akzeptierte Marktlogik als V1 mit benanntem Profil, Rust-Port, Bevy-Steuerung und 27 HTML-Vergleichsfällen übernehmen.
+- [ ] Profileinstellungen und zukünftige Nachfrageeinflüsse weiter untersuchen; insbesondere verbleibend schlecht versorgte Distrikte und die Grenzen der Netzrekonstruktion beurteilen.
 - [ ] Marktstandorte unter Berücksichtigung vorhandener Freiflächen, Kapazität und Abrisskosten vergleichen; kleine Plätze bei neuer Bebauung früh reservieren.
 - [ ] Hofkonzept hinsichtlich Maßstab, nachvollziehbarer Auswahl und zusammenhängenden Grundstücks-/Blockgruppen neu erproben; nicht bloß weitere kleine Ausschnitte in Einzelgebäuden erzeugen.
 - [ ] Grundstücks-/Blockgruppen, Gärten, Nebengebäude und nachvollziehbare Zugänge erproben.
 - [ ] Wohnen mit Laden/Werkstatt sowie weitere Gebäudenutzungen durch lokale Nachfrage und Voraussetzungen statt bloßer Farbcodierung begründen; etwa Lager mit Lieferzugang oder wasserabhängiges Gewerbe.
 - [ ] Verschiedene Grundstücksgrößen und neue kurze Wege beim Wachstum zulassen, wirtschaftliche Annotation nach jedem Schritt neu bewerten.
 - [ ] Ältere Kerne, erhaltene Wege und Besitzgrenzen sowie ehemalige Stadtgrenzen als sichtbare Wachstumsspuren untersuchen.
-- [ ] Erst nach gemeinsam bewerteten Ergebnissen geeignete Regeln in Rust/Bevy übernehmen; Originalmodus beibehalten.
+- [ ] Weitere Grundriss-, Hof- und Wachstumsregeln erst nach gemeinsamer Bewertung übernehmen; Originalmodus weiterhin beibehalten.
 
 Methodische Quellen und deren Beleggrenzen stehen in [research-organic-cities.md](research-organic-cities.md). Der aktuelle Produktivstand und die Bedienung der Wirtschaftsanalyse stehen in der [README](../README.md).
