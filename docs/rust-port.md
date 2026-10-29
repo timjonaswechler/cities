@@ -15,6 +15,8 @@ Die Übertragung ist bewusst mechanisch: Die dynamischen Haxe-Interna wurden nic
 | `crates/city_core/src/math.rs` | V8/fdlibm-kompatible Sinus-, Kosinus- und Arkustangensberechnungen |
 | `crates/city_core/src/model.rs` | Öffentliche Optionen und eigenes, serialisierbares Modell |
 | `crates/city_core/src/adapter.rs` | Originalgrundrisse und Zeichenpfade in eigene Daten übernehmen |
+| `crates/city_core/src/economy.rs` | Marktplanung V1, rekonstruiertes Wegenetz und Nachfrageauswertung |
+| `crates/city_core/src/market_model.rs` | Benannte Marktprofile, Nachfrageeingaben und Ergebnisdaten |
 | `crates/city_core/src/snapshot.rs` | Vollständiges kanonisches Modell für Originalvergleiche |
 | `crates/city_bevy/src/mesh.rs` | Triangulation, Gebäudeextrusion, Wege, Mauern und Vegetation |
 | `crates/city_bevy/src/main.rs` | Native Bedienung, Kamera, Hintergrundgenerierung und Exporte |
@@ -63,7 +65,7 @@ cargo run -- --screenshot exports/bevy.png --smoke-test
 
 Der Smoke-Test rendert Stadt und UI in eine eigene GPU-Textur. Damit hängt die Aufnahme nicht von einem sichtbaren Fenster ab und funktioniert auch bei aktivem Bildschirmschoner. Eine leere Aufnahme lässt den Test fehlschlagen. Die interaktive Anwendung rendert weiterhin direkt ins Fenster.
 
-Verifiziert auf macOS ARM64: 24 vollständige Originalmodelle ohne Zahlenabweichung, drei vollständige Geometrievergleiche mit dem TypeScript-Adapter sowie Tests für Wiederholbarkeit, Optionen, die ursprüngliche Blueprint-Generierung, Triangulation und asynchrone Bedienung. Insgesamt bestehen acht Rust-Tests. `cargo fmt`, Clippy mit `-D warnings` und die Archivprüfung bestehen ebenfalls. Ein nativer Metal-Renderlauf ist in [bevy-preview.png](bevy-preview.png) festgehalten.
+Verifiziert auf macOS ARM64: 24 vollständige Originalmodelle ohne Zahlenabweichung, drei vollständige Geometrievergleiche mit dem TypeScript-Adapter sowie Tests für Wiederholbarkeit, Optionen, die ursprüngliche Blueprint-Generierung, Triangulation und asynchrone Bedienung. Zusätzlich wird [Marktplanung V1](market-planning-v1.md) gegen 27 gespeicherte HTML-Konfigurationen geprüft; Profil-/Nachfragevalidierung und native Profilsteuerung sind abgedeckt. Insgesamt bestehen 23 Rust-Tests. `cargo fmt`, Clippy mit `-D warnings` und die Archivprüfung bestehen ebenfalls. Ein nativer Metal-Renderlauf ist in [bevy-preview.png](bevy-preview.png) festgehalten.
 
 ## Bevy und Terrain
 

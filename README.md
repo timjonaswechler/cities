@@ -36,6 +36,7 @@ Die Seitenleiste steuert Seed, Stadtgröße, Zitadelle, innere Burg, Marktplatz,
 | `R` | Neue Stadt mit nächstem Seed |
 | `Enter` | Stadt erneut berechnen / Seed übernehmen |
 | `T` | Zwischen Draufsicht und Perspektive wechseln |
+| `E` | Marktplanung V1 ein-/ausschalten |
 | `Home` | Kamera zurücksetzen |
 | `+` / `−` | Stadtgröße ändern |
 | `Esc` | Seedeingabe abbrechen / Anwendung schließen |
@@ -54,6 +55,27 @@ cargo run -- --options village.json
 ```json
 {"seed":42,"size":5,"citadel":false,"walls":false,"temple":false,"greens":true}
 ```
+
+## Marktplanung V1
+
+Die akzeptierte Marktlogik aus dem HTML-Stadtlabor ist als zuschaltbares Rust-Feature übernommen: getrennte Laufwegabstände zum Hauptmarkt und zwischen Nebenmärkten, Bedarf und Distriktgewicht **ohne Marktpflicht pro Distrikt**. Grundrisse und Original-Zufallszustand bleiben unverändert; es werden noch keine Plätze freigeräumt, Höfe gebaut oder Wachstumsschritte simuliert.
+
+```sh
+cargo run -- --seed 42 --size 25 --economy
+cargo run -- --market-profile assets/market-profiles/market-v1.json
+cargo run -- --write-market-profile exports/market-profile.json
+cargo run -- --market-profile exports/market-profile.json --export exports/city.json
+```
+
+Mit `E` ein-/ausschalten; „Marktregeln anzeigen“ öffnet die Plus/Minus-Regler, Profil-Reset, Profil-Speicherung und Wege-/Distriktanzeige. Dachfarben zeigen Markteinzug, **keine Gebäudenutzung**: H braun, M1 gold, M2 blau, M3 grün, M4 violett, M5 rot; unversorgte Gebäude grau. Beschriftete Pins markieren Kandidaten. Laufwege und Distriktabdeckung stehen im Bericht und JSON-Export.
+
+Das benannte V1-Profil ist konfigurierbar. Das HTML-Stadtlabor bleibt als Referenz erhalten; Rust wird gegen alle 27 gespeicherten Konfigurationen geprüft. Künftige Features können über `plan_markets(&city, &profile, &demand_overrides)` explizite Nachfragegewichte liefern, statt Markteffekte unkontrolliert zurückzukoppeln.
+
+**Grenzen:** Das Wegenetz und Gebäudezugänge sind Annäherungen, keine zertifizierten Fußgängerrouten. Abdeckung verwendet zunächst Gebäudegrundfläche, nicht Einwohnerzahlen. Der Wegemittelwert ist beim jeweiligen Versorgungsweg gedeckelt. Grundstücke, Platzflächen, Kapazität, Abriss und wirtschaftliche Entwicklung sind noch nicht modelliert.
+
+![Native Marktplanung V1](docs/market-v1-preview.png)
+
+Details, Profilformat und Nachfrage-Interface: [Marktplanung V1](docs/market-planning-v1.md). Quellen: [Recherche](docs/research-organic-cities.md). Die [Experimentierspur](docs/organic-city-experiments.md) hält die früheren Marktflächen-/Hof-/Vorstadtversuche und offenen Fragen fest; die HTML-Stadtlabore liegen unter `crates/city_core/prototypes/`.
 
 ## Generator verwenden
 
