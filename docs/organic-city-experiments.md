@@ -47,6 +47,8 @@ Große, geeignete konvexe Einzelgebäude werden in Flügel um einen Innenhof zer
 
 Je Phase werden höchstens acht Häuser an vorhandenen Ausfallstraßen in Tornähe versucht. Modellierte Wasser-, Mauer-, Straßen- und Gebäudekonflikte führen zur Ablehnung. Die bestehende Altstadt wird nicht verschoben. Nach drei Phasen entstehen 23/20/15 zusätzliche Gebäude in den drei Städten.
 
+**Korrektur nach gemeinsamer Sichtung:** Die individuellen Zufahrtsstummel zu Neubauten wurden aus dem aktuellen Runde-1-Stadtlabor entfernt. Bestehende Straßen bleiben unverändert, und eine virtuelle Zugangsprobe prüft nur noch die Platzierung. Die oben verlinkten Quellen auf `ac8d13e` zeigen den historischen Erststand; die korrigierte HTML-Datei liegt im PR-Branch unter `crates/city_core/prototypes/organic-city-lab.html`.
+
 **Beobachtung:** Wachstum ohne Umbau der Altstadt ist darstellbar, aber gleich große Häuser entlang fertiger Straßen erzeugen noch zu regelmäßige Reihen. **Nächste Hypothese:** Unterschiedliche Grundstücke, Hofzugänge, lokale Nachfrage und neue kurze Wege müssen gemeinsam wachsen. Bauphasen sind hier Klickschritte, keine simulierten Jahre; die Standortwahl der Neubauten ist noch nicht wirtschaftlich begründet.
 
 ## Grenzen der Aussage

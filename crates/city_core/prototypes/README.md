@@ -18,6 +18,8 @@ node crates/city_core/prototypes/run-market-district-lab.mjs
 
 ![Landstadt mit drei Eingriffen](organic-city-combined.png)
 
+Die ursprüngliche Straßenanbindung jedes Neubaus wurde nach der gemeinsamen Sichtung entfernt. Bestehende Straßen bleiben unverändert; die Prüfung eines möglichen Zugangs bleibt eine reine Platzierungsbedingung. Die Gebäudezahlen der 27 Läufe bleiben gleich, die protokollierte HTML-Prüfsumme bezieht sich auf die korrigierte Ansicht.
+
 ## Runde-1-Läufe reproduzieren
 
 Mit vorhandenem Node:
@@ -34,7 +36,7 @@ Ausgangsstädte: Größe 25, Seed 42 mit/ohne Fluss und Seed 12345 ohne Fluss, j
 
 - Märkte verwenden vorhandene Standortvorschläge der Rust-Analyse. Unregelmäßige siebeneckige Flächen mit maximal 16/24/32 Metern Radius werden auf Wasser-, Mauer- und Sonderbaukonflikte geprüft. Gewöhnliche überlappende Gebäude werden vollständig entfernt; verlorene Gebäude und Grundfläche werden ausgewiesen. Keine Umsiedlung, Kapazitäts- oder Nachfrage-Neuberechnung.
 - Hofumbauten zerlegen bis zu zwölf geeignete große, konvexe Gebäude in Flügel um einen Innenhof; Außenumriss bleibt erhalten, Dachfläche entfällt. Keine Geschosse, Türen oder Grundstücksrekonstruktion.
-- Drei Bauphasen ergänzen jeweils höchstens acht gleich große Häuser an bestehenden Ausfallstraßen in Tornähe. Abgewiesen werden modellierte Wasser-, Mauer-, Straßen- und Gebäudekonflikte; Zugänge erhalten eine einfache Verbindung zur Straße. Kein neues Straßennetz, keine Nachfrage- oder Preisentscheidung; Ackerland darf umgewidmet werden. Sichtbare Reihenförmigkeit ist eine Grenze dieses Ansatzes.
+- Drei Bauphasen ergänzen jeweils höchstens acht gleich große Häuser an bestehenden Ausfallstraßen in Tornähe. Abgewiesen werden modellierte Wasser-, Mauer-, Straßen- und Gebäudekonflikte; Eine hypothetische Zugangsprobe prüft die Platzierung; individuelle Zufahrtsstummel werden weder als Geometrie ausgegeben noch gezeichnet. Kein neues Straßennetz, keine Nachfrage- oder Preisentscheidung; Ackerland darf umgewidmet werden. Sichtbare Reihenförmigkeit ist eine Grenze dieses Ansatzes.
 
 ## Beobachtete Ergebnisse
 
