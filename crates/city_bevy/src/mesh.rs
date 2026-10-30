@@ -1,7 +1,7 @@
 use bevy::{
     asset::RenderAssetUsages, mesh::Indices, prelude::*, render::render_resource::PrimitiveTopology,
 };
-use city_core::{City, MarketPlan, Point, Polygon};
+use city_core::{BuildingOrigin, City, MarketPlan, Point, Polygon};
 use std::collections::BTreeMap;
 
 /// One original map unit is four metres. Conversion to f32 happens only here.
@@ -218,7 +218,13 @@ pub fn spawn_city(
     city: &City,
     economy: Option<&MarketPlan>,
     view: &MarketView,
+    origins: Option<&[BuildingOrigin]>,
 ) {
+    let style_indices: BTreeMap<_, _> = origins
+        .into_iter()
+        .flatten()
+        .map(|o| ((o.ward_id, o.building_index), o.original_building_index))
+        .collect();
     let mut land = Geometry::default();
     let mut water = Geometry::default();
     let mut road = Geometry::default();
@@ -289,7 +295,8 @@ pub fn spawn_city(
             }
         }
         for (i, building) in ward.buildings.iter().enumerate() {
-            let bucket = (ward.seed as usize + i * 31) % 4;
+            let original_index = style_indices.get(&(ward.id, i)).copied().unwrap_or(i);
+            let bucket = (ward.seed as usize + original_index * 31) % 4;
             let height = match building.role.as_str() {
                 "castle" => 28.0,
                 "temple" | "church" => 23.0,
