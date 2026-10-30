@@ -83,11 +83,13 @@ Details, Profilformat und Nachfrage-Interface: [Marktplanung V1](docs/market-pla
 Mit `B` oder `--buildings` zuschalten: zu kleine oder unbrauchbar schmale/spitze Restformen werden ausgelassen oder mit direkten Nachbarn vereinigt. Schmale Streifen werden entlang gemeinsamer Längswände aufgeteilt, statt am kurzen Ende als dünner Arm angehängt zu werden. Flächenverlust und Zuordnungen sind nachvollziehbar; der Originalmodus bleibt unverändert verfügbar.
 
 ```sh
-cargo run -- --options assets/city-options/stormwind.json --buildings
-cargo run -- --building-profile assets/building-profiles/buildings-v1.json
+cargo run -- --seed 42 --size 25 --economy --buildings
+cargo run -- --seed 42 --size 25 --economy --building-profile assets/building-profiles/buildings-v1.json
 cargo run -- --write-building-profile exports/building-profile.json
-cargo run -- --options assets/city-options/stormwind.json --buildings --export exports/planned-city.json
+cargo run -- --seed 42 --size 25 --economy --buildings --export exports/planned-city.json
 ```
+
+Für die Abnahme bleibt **Purplechurch mit Seed 42 und Größe 25 aus PR #1** die Vergleichsbasis. Der [HTML-Vergleich](docs/building-planning-v1-comparison.html) zeigt Original und Planung bei identischen Optionen und identischer Kamera, einschließlich Detailmarkierung; herunterladen und per Doppelklick öffnen. Stormwind dient nur als zusätzlicher Aufteilungs-Testfall.
 
 Die Marktplanung wird bei gemeinsamer Aktivierung auf den tatsächlich angezeigten Grundrissen neu berechnet. Die Formgrenzen sind konfigurierbare Versuchswerte, keine zertifizierten Raummaße. Komplexe lokale Engstellen, tatsächliche Nutzung und Eigentumsrechte bleiben offen. Details, Exportversion und Prüfnachweise: [Gebäudeformen V1](docs/building-planning-v1.md).
 

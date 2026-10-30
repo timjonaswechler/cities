@@ -5,11 +5,18 @@ Zuschaltbare native Umsetzung des akzeptierten [Aufteilungs-Drafts](../crates/ci
 ## Starten und vergleichen
 
 ```sh
-cargo run -- --options assets/city-options/stormwind.json --buildings
-cargo run -- --building-profile assets/building-profiles/buildings-v1.json
+# Dieselbe Purplechurch-Stadt wie in PR #1, Gebäudeplanung aus:
+cargo run -- --seed 42 --size 25 --economy
+# Nur Gebäudeplanung zusätzlich einschalten:
+cargo run -- --seed 42 --size 25 --economy --buildings
+cargo run -- --seed 42 --size 25 --economy --building-profile assets/building-profiles/buildings-v1.json
 cargo run -- --write-building-profile exports/building-profile.json
-cargo run -- --options assets/city-options/stormwind.json --buildings --export exports/planned-city.json
+cargo run -- --seed 42 --size 25 --economy --buildings --export exports/planned-city.json
 ```
+
+Die Abnahme verwendet **Purplechurch, Seed 42, Größe 25 aus PR #1**, nicht eine andere Stadt. Der [eigenständige HTML-Vergleich](building-planning-v1-comparison.html) zeigt native Umschalt-/Wischbilder und einen markierten Detailausschnitt. Die Datei herunterladen und per Doppelklick öffnen; kein Server erforderlich. [Eingaben und Prüfsummen](building-planning-v1-comparison.json) halten die tatsächlichen Vergleichsbedingungen fest. Ausgangsstadt und Marktanalyse stimmen vollständig mit dem gespeicherten PR-#1-Export überein; beide Bilder verwenden dieselbe aktuelle Anwendung, Kamera, Auflösung und Profile.
+
+In dieser Stadt entfällt bei unverändertem V1-Profil nur `21:8`: etwa 158 m², 5,82 m kurze Umhüllungsseite unter der 6-m-Versuchsvorgabe. Es gibt hier keine Zusammenführung. Alle übrigen Gebäudegrundrisse und übrigen Stadtgeometrien bleiben identisch. Das ist eine transparente Wirkung des Profils, kein historischer Nachweis für die Unbrauchbarkeit dieses Hauses.
 
 Mit `B` oder dem Seitenleistenknopf „Gebäudeformen V1“ zwischen Original und geplanter Bebauung wechseln. Ohne Schalter bleibt der Originalmodus aktiv. Die Kamera bedient sich wie bisher; Statuszeile und Export weisen zugeordnete Teile und ausgelassene Grundfläche aus. Ohne Marktüberlagerung behalten unveränderte Gebäude ihre bisherigen Darstellungsfarben und abgeleiteten Höhen.
 
@@ -47,11 +54,26 @@ cargo test --workspace
 cargo fmt --all --check
 cargo clippy --workspace --all-targets -- -D warnings
 node tools/verify-building-draft.mjs
-cargo run -- --options assets/city-options/stormwind.json --buildings --screenshot exports/buildings.png --smoke-test
+cargo run -- --seed 42 --size 25 --economy --screenshot exports/buildings-original.png --smoke-test
+cargo run -- --seed 42 --size 25 --economy --buildings --screenshot exports/buildings.png --smoke-test
 ```
 
 Die neun eingefrorenen Draft-Konfigurationen werden gegen Rust verglichen. Weitere Prüfungen decken Originaltreue, deterministische Flächenbilanz, geschützte Gebäude, Eck-/Lücken-/Wege-Gegenbeispiele, kollineare Restformen, gemischte Städte sowie native Umschaltung, Marktneuberechnung und Export ab. Automatisierte Rendernachweise laufen unsichtbar und ignorieren Desktop-Tastatureingaben, damit der Seed während der Aufnahme nicht verändert wird.
 
-![Native Gebäudeplanung V1](building-planning-v1-preview.png)
+### Gleiche Abnahmestadt wie PR #1
+
+![Purplechurch, Seed 42, Größe 25, Gebäudeplanung aus](building-planning-v1-original.png)
+
+![Dieselbe Purplechurch-Stadt mit Gebäudeplanung](building-planning-v1-preview.png)
+
+### Zusätzlicher Aufteilungsfall: Stormwind
+
+Stormwind bleibt ein getrennter Testfall für die seitliche Aufteilung, ersetzt aber nicht die bekannte Abnahmestadt:
+
+```sh
+cargo run -- --options assets/city-options/stormwind.json --buildings
+```
+
+![Zusätzlicher Stormwind-Testfall, nicht die Abnahmestadt aus PR #1](building-planning-v1-stormwind.png)
 
 V1 ist keine neue Parzellierung und keine allgemeine Rekonstruktion nutzbarer Innenräume. Lokale Engstellen in großen konkaven Baukörpern, Türen, Belichtung, Geschosse, reale Eigentumsrechte und Umsiedlung bleiben offen. Ausgelassene Dachgrundfläche ist keine kalibrierte Einwohner- oder Wohnraumzahl. Der Originalmodus bleibt deshalb verfügbar; die alten Hof- und Wachstumsregeln werden nicht übernommen.
