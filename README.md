@@ -78,11 +78,11 @@ Das benannte V1-Profil ist konfigurierbar. Das HTML-Stadtlabor bleibt als Refere
 
 Details, Profilformat und Nachfrage-Interface: [Marktplanung V1](docs/market-planning-v1.md). Quellen: [Recherche](docs/research-organic-cities.md). Die [Experimentierspur](docs/organic-city-experiments.md) hält die früheren Marktflächen-/Hof-/Vorstadtversuche und offenen Fragen fest; die HTML-Stadtlabore liegen unter `crates/city_core/prototypes/`.
 
-## Haus-Zoo · neues Ziel von PR #2
+## Referenz-Blockouts · neues Ziel von PR #2
 
-Der [eigenständige Haus-Zoo](crates/city_core/prototypes/house-zoo.html) untersucht schiefwinklige Hauptkörper, viele Anbauten, gestaffelte Höhen, Überhänge und offene/geschlossene Brücken. Fünf feste Beispielrezepte mit Seed-Varianten, drehbarer Ansicht, getrennten Boden-/Überbauungsplänen und geführten Gegenproben. HTML herunterladen und öffnen; kein Server oder Paketdownload erforderlich.
+Der alte Haus-Zoo ist verworfen. Das [neue Referenz-Blockout-Labor](crates/city_core/prototypes/house-blockout-lab.html) stellt vier feste Entwürfe ihren Bildvorlagen gegenüber: Dorfhaus mit Anbau, Stadthaus mit Tor, gedeckte Verbindung und Hofgruppe. Unterschiedliche einzelne Eckwinkel statt globaler Scherung; Sattel-/Pultdächer, Geschossversätze, Treppe, Konsolen und echte facettierte Tor-/Brückenbögen. Keine Seeds oder Zufallsgenerierung in dieser Runde.
 
-Noch keine Stadtintegration oder gestalterische Freigabe: Dies sind Volumenstudien, keine fertige Architektur. [Featurekatalog, Bedienung, Reihenfolge und Grenzen](docs/house-zoo.md). Alle Prüfungen laufen lokal, ohne GitHub Runner. Die vorhandene Marktplanung und die nachstehende V1-/V2-Bereinigung bleiben davon unabhängig verfügbar.
+HTML herunterladen und öffnen; kein Server oder Paketdownload erforderlich. Noch keine gestalterische Freigabe oder Stadtintegration. [Referenzzuordnung, Regeln, Bedienung und Grenzen](docs/house-blockout-lab.md). Die Vorlagen sind Stilreferenzen, keine vermessenen Baupläne oder Spielassets. Alle Prüfungen laufen lokal, ohne GitHub Runner. Marktplanung und die nachstehende V1-/V2-Bereinigung bleiben unverändert verfügbar.
 
 ## Gebäudeformen V2
 

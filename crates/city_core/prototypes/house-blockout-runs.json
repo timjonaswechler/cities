@@ -1,0 +1,2133 @@
+{
+  "version": 1,
+  "node": "v26.7.0",
+  "prototypeSha256": "39d949c925b00784bcfa1ee2cc1dbd7a50f98142eedadc564e93b5eab350374e",
+  "logicSha256": "5f63b28c2052309c11c8477ab8b994acbf82a7073b539a59f7c2dc5e7edbfedd",
+  "runs": [
+    {
+      "id": "village",
+      "closePassage": false,
+      "scene": {
+        "id": "village",
+        "config": {
+          "id": "village",
+          "title": "Dorfhaus mit Anbau",
+          "reference": 1,
+          "scale": 10,
+          "yaw": -0.65,
+          "intent": "Ein länglicher Hauptbau, ein niedrigerer Rückflügel und zwei lesbare Dachkörper. Keine gleichrangige Würfelsammlung.",
+          "note": "Aus dem ländlichen Straßenzug wird ein einfacher Hauptbau-/Anbautyp abgeleitet. Keine 1:1-Kopie eines vermessenen Hauses."
+        },
+        "parts": [
+          {
+            "id": "main",
+            "label": "Länglicher Hauptbau",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": -6,
+                "z": -2.8
+              },
+              {
+                "x": 5.8,
+                "z": -3.1
+              },
+              {
+                "x": 6.2,
+                "z": 2.4
+              },
+              {
+                "x": -5.5,
+                "z": 2.8
+              }
+            ],
+            "base": 0,
+            "wallTop": 3.8,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 2.4
+            }
+          },
+          {
+            "id": "annex",
+            "label": "Niedriger Rückflügel",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": 0.5840000000000005,
+                "z": 2.5919999999999996
+              },
+              {
+                "x": 5.615,
+                "z": 2.42
+              },
+              {
+                "x": 5.538121838387328,
+                "z": 6.024731577838641
+              },
+              {
+                "x": 0.9397750479075344,
+                "z": 5.681647895033735
+              }
+            ],
+            "base": 0,
+            "wallTop": 2.6,
+            "roof": {
+              "kind": "gable",
+              "rise": 1
+            },
+            "parentId": "main"
+          }
+        ],
+        "supports": [],
+        "passages": [],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Haus mit Rückflügel"
+          }
+        ],
+        "connections": [],
+        "closePassage": false
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 2,
+        "roofCount": 2,
+        "openingCount": 0,
+        "groundAreaM2": 81.4736966962318,
+        "projectionAreaM2": 81.4736966962318,
+        "maxHeightM": 6.199999999999999,
+        "mainCorners": [
+          86.3541933819815,
+          92.70328365937296,
+          87.7984251355214,
+          93.14409782312416
+        ]
+      }
+    },
+    {
+      "id": "townhouse",
+      "closePassage": false,
+      "scene": {
+        "id": "townhouse",
+        "config": {
+          "id": "townhouse",
+          "title": "Stadthaus mit Tor",
+          "reference": 11,
+          "scale": 11,
+          "yaw": 2.48,
+          "intent": "Ruhiger Hauptkörper, auskragendes Obergeschoss, kleiner Vorbau, Treppe und ein tatsächlich ausgesparter Torbogen.",
+          "note": "Bild 11: Geschossversätze, Treppe, Dach und seitlicher Durchgang. Fachwerk, Fensterdetails und Innenräume werden bewusst weggelassen."
+        },
+        "parts": [
+          {
+            "id": "plinth",
+            "label": "Erhöhter Sockel",
+            "houseId": "H1",
+            "role": "plinth",
+            "foot": [
+              {
+                "x": -3.6,
+                "z": -2.8
+              },
+              {
+                "x": 3.9,
+                "z": -2.7
+              },
+              {
+                "x": 3.5,
+                "z": 2.8
+              },
+              {
+                "x": -3.9,
+                "z": 2.6
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.1,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "main",
+            "label": "Unteres Geschoss",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": -3.6,
+                "z": -2.8
+              },
+              {
+                "x": 3.9,
+                "z": -2.7
+              },
+              {
+                "x": 3.5,
+                "z": 2.8
+              },
+              {
+                "x": -3.9,
+                "z": 2.6
+              }
+            ],
+            "base": 1.1,
+            "wallTop": 4.5,
+            "roof": {
+              "kind": "none"
+            },
+            "supportedBy": "plinth"
+          },
+          {
+            "id": "upper",
+            "label": "Vorspringendes Obergeschoss",
+            "houseId": "H1",
+            "role": "upper",
+            "foot": [
+              {
+                "x": -3.5583333333333336,
+                "z": -3.55
+              },
+              {
+                "x": 4.25,
+                "z": -3.4
+              },
+              {
+                "x": 3.85,
+                "z": 2.85
+              },
+              {
+                "x": -3.9,
+                "z": 2.6
+              }
+            ],
+            "base": 4.5,
+            "wallTop": 7.6,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 3
+            },
+            "supportedBy": "main"
+          },
+          {
+            "id": "bay",
+            "label": "Kleiner oberer Vorbau",
+            "houseId": "H1",
+            "role": "upper",
+            "foot": [
+              {
+                "x": 2.8445,
+                "z": -3.427
+              },
+              {
+                "x": 0.6581666666666663,
+                "z": -3.469
+              },
+              {
+                "x": 0.750636265600974,
+                "z": -4.11734356114095
+              },
+              {
+                "x": 2.778919783631404,
+                "z": -4.1783981868630296
+              }
+            ],
+            "base": 4.5,
+            "wallTop": 6.55,
+            "roof": {
+              "kind": "gable",
+              "rise": 0.8
+            },
+            "parentId": "upper"
+          },
+          {
+            "id": "step0",
+            "label": "Treppenstufe 5",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.4,
+                "z": -2.72
+              },
+              {
+                "x": 0.2250000000000001,
+                "z": -2.749
+              },
+              {
+                "x": 0.23219936008532077,
+                "z": -3.288952006399052
+              },
+              {
+                "x": 2.407466003051444,
+                "z": -3.2799502288582767
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.1,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step1",
+            "label": "Treppenstufe 4",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.407466003051444,
+                "z": -3.2799502288582767
+              },
+              {
+                "x": 0.23219936008532077,
+                "z": -3.288952006399052
+              },
+              {
+                "x": 0.23939872017064143,
+                "z": -3.8289040127981044
+              },
+              {
+                "x": 2.4149320061028874,
+                "z": -3.8399004577165528
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.8800000000000001,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step2",
+            "label": "Treppenstufe 3",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.4149320061028874,
+                "z": -3.8399004577165528
+              },
+              {
+                "x": 0.23939872017064143,
+                "z": -3.8289040127981044
+              },
+              {
+                "x": 0.2465980802559621,
+                "z": -4.368856019197157
+              },
+              {
+                "x": 2.4223980091543313,
+                "z": -4.399850686574829
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.66,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step3",
+            "label": "Treppenstufe 2",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.4223980091543313,
+                "z": -4.399850686574829
+              },
+              {
+                "x": 0.2465980802559621,
+                "z": -4.368856019197157
+              },
+              {
+                "x": 0.25379744034128277,
+                "z": -4.908808025596208
+              },
+              {
+                "x": 2.429864012205775,
+                "z": -4.959800915433106
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.44000000000000006,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step4",
+            "label": "Treppenstufe 1",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.429864012205775,
+                "z": -4.959800915433106
+              },
+              {
+                "x": 0.25379744034128277,
+                "z": -4.908808025596208
+              },
+              {
+                "x": 0.26099680042660345,
+                "z": -5.448760031995261
+              },
+              {
+                "x": 2.437330015257219,
+                "z": -5.519751144291382
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.22000000000000003,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "portal",
+            "label": "Torflügel mit offenem Bogen",
+            "houseId": "H1",
+            "role": "portal",
+            "foot": [
+              {
+                "x": -3.624,
+                "z": -2.368
+              },
+              {
+                "x": -3.876,
+                "z": 2.168000000000001
+              },
+              {
+                "x": -7.365064234256691,
+                "z": 1.8740088960006298
+              },
+              {
+                "x": -7.523542379463361,
+                "z": -2.484487041207298
+              }
+            ],
+            "base": 0,
+            "wallTop": 6,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 1.8
+            },
+            "parentId": "main",
+            "spring": 2.1,
+            "archRise": 1.15
+          }
+        ],
+        "supports": [
+          {
+            "id": "bracket0.23",
+            "parentId": "upper",
+            "anchor": {
+              "x": 2.175,
+              "z": -2.7230000000000003
+            },
+            "out": {
+              "x": 0.013332148306149386,
+              "z": -0.9999111229612074
+            },
+            "along": {
+              "x": -0.9999111229612074,
+              "z": -0.013332148306149386
+            },
+            "base": 3.5,
+            "top": 4.5,
+            "depth": 0.7,
+            "width": 0.3
+          },
+          {
+            "id": "bracket0.7",
+            "parentId": "upper",
+            "anchor": {
+              "x": -1.35,
+              "z": -2.77
+            },
+            "out": {
+              "x": 0.013332148306149386,
+              "z": -0.9999111229612074
+            },
+            "along": {
+              "x": -0.9999111229612074,
+              "z": -0.013332148306149386
+            },
+            "base": 3.5,
+            "top": 4.5,
+            "depth": 0.7,
+            "width": 0.3
+          }
+        ],
+        "passages": [
+          {
+            "id": "gate",
+            "label": "Tordurchgang",
+            "foot": [
+              {
+                "x": -4.520894747276573,
+                "z": -2.394792019477679
+              },
+              {
+                "x": -4.678484773879039,
+                "z": 2.1003820460801457
+              },
+              {
+                "x": -6.562579460377652,
+                "z": 1.9416268499204852
+              },
+              {
+                "x": -6.626647632186788,
+                "z": -2.457695021729619
+              }
+            ],
+            "floor": 0,
+            "height": 2
+          }
+        ],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Stadthaus mit Torflügel"
+          }
+        ],
+        "connections": [],
+        "closePassage": false
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 10,
+        "roofCount": 3,
+        "openingCount": 1,
+        "groundAreaM2": 52.554850459675876,
+        "projectionAreaM2": 69.45053427682403,
+        "maxHeightM": 10.6,
+        "mainCorners": [
+          92.41593165893424,
+          86.60425616721734,
+          92.61148459473468,
+          88.36832757911374
+        ]
+      }
+    },
+    {
+      "id": "townhouse",
+      "closePassage": true,
+      "scene": {
+        "id": "townhouse",
+        "config": {
+          "id": "townhouse",
+          "title": "Stadthaus mit Tor",
+          "reference": 11,
+          "scale": 11,
+          "yaw": 2.48,
+          "intent": "Ruhiger Hauptkörper, auskragendes Obergeschoss, kleiner Vorbau, Treppe und ein tatsächlich ausgesparter Torbogen.",
+          "note": "Bild 11: Geschossversätze, Treppe, Dach und seitlicher Durchgang. Fachwerk, Fensterdetails und Innenräume werden bewusst weggelassen."
+        },
+        "parts": [
+          {
+            "id": "plinth",
+            "label": "Erhöhter Sockel",
+            "houseId": "H1",
+            "role": "plinth",
+            "foot": [
+              {
+                "x": -3.6,
+                "z": -2.8
+              },
+              {
+                "x": 3.9,
+                "z": -2.7
+              },
+              {
+                "x": 3.5,
+                "z": 2.8
+              },
+              {
+                "x": -3.9,
+                "z": 2.6
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.1,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "main",
+            "label": "Unteres Geschoss",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": -3.6,
+                "z": -2.8
+              },
+              {
+                "x": 3.9,
+                "z": -2.7
+              },
+              {
+                "x": 3.5,
+                "z": 2.8
+              },
+              {
+                "x": -3.9,
+                "z": 2.6
+              }
+            ],
+            "base": 1.1,
+            "wallTop": 4.5,
+            "roof": {
+              "kind": "none"
+            },
+            "supportedBy": "plinth"
+          },
+          {
+            "id": "upper",
+            "label": "Vorspringendes Obergeschoss",
+            "houseId": "H1",
+            "role": "upper",
+            "foot": [
+              {
+                "x": -3.5583333333333336,
+                "z": -3.55
+              },
+              {
+                "x": 4.25,
+                "z": -3.4
+              },
+              {
+                "x": 3.85,
+                "z": 2.85
+              },
+              {
+                "x": -3.9,
+                "z": 2.6
+              }
+            ],
+            "base": 4.5,
+            "wallTop": 7.6,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 3
+            },
+            "supportedBy": "main"
+          },
+          {
+            "id": "bay",
+            "label": "Kleiner oberer Vorbau",
+            "houseId": "H1",
+            "role": "upper",
+            "foot": [
+              {
+                "x": 2.8445,
+                "z": -3.427
+              },
+              {
+                "x": 0.6581666666666663,
+                "z": -3.469
+              },
+              {
+                "x": 0.750636265600974,
+                "z": -4.11734356114095
+              },
+              {
+                "x": 2.778919783631404,
+                "z": -4.1783981868630296
+              }
+            ],
+            "base": 4.5,
+            "wallTop": 6.55,
+            "roof": {
+              "kind": "gable",
+              "rise": 0.8
+            },
+            "parentId": "upper"
+          },
+          {
+            "id": "step0",
+            "label": "Treppenstufe 5",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.4,
+                "z": -2.72
+              },
+              {
+                "x": 0.2250000000000001,
+                "z": -2.749
+              },
+              {
+                "x": 0.23219936008532077,
+                "z": -3.288952006399052
+              },
+              {
+                "x": 2.407466003051444,
+                "z": -3.2799502288582767
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.1,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step1",
+            "label": "Treppenstufe 4",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.407466003051444,
+                "z": -3.2799502288582767
+              },
+              {
+                "x": 0.23219936008532077,
+                "z": -3.288952006399052
+              },
+              {
+                "x": 0.23939872017064143,
+                "z": -3.8289040127981044
+              },
+              {
+                "x": 2.4149320061028874,
+                "z": -3.8399004577165528
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.8800000000000001,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step2",
+            "label": "Treppenstufe 3",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.4149320061028874,
+                "z": -3.8399004577165528
+              },
+              {
+                "x": 0.23939872017064143,
+                "z": -3.8289040127981044
+              },
+              {
+                "x": 0.2465980802559621,
+                "z": -4.368856019197157
+              },
+              {
+                "x": 2.4223980091543313,
+                "z": -4.399850686574829
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.66,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step3",
+            "label": "Treppenstufe 2",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.4223980091543313,
+                "z": -4.399850686574829
+              },
+              {
+                "x": 0.2465980802559621,
+                "z": -4.368856019197157
+              },
+              {
+                "x": 0.25379744034128277,
+                "z": -4.908808025596208
+              },
+              {
+                "x": 2.429864012205775,
+                "z": -4.959800915433106
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.44000000000000006,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "step4",
+            "label": "Treppenstufe 1",
+            "houseId": "H1",
+            "role": "stair",
+            "foot": [
+              {
+                "x": 2.429864012205775,
+                "z": -4.959800915433106
+              },
+              {
+                "x": 0.25379744034128277,
+                "z": -4.908808025596208
+              },
+              {
+                "x": 0.26099680042660345,
+                "z": -5.448760031995261
+              },
+              {
+                "x": 2.437330015257219,
+                "z": -5.519751144291382
+              }
+            ],
+            "base": 0,
+            "wallTop": 0.22000000000000003,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "portal",
+            "label": "Torflügel mit offenem Bogen",
+            "houseId": "H1",
+            "role": "portal",
+            "foot": [
+              {
+                "x": -3.624,
+                "z": -2.368
+              },
+              {
+                "x": -3.876,
+                "z": 2.168000000000001
+              },
+              {
+                "x": -7.365064234256691,
+                "z": 1.8740088960006298
+              },
+              {
+                "x": -7.523542379463361,
+                "z": -2.484487041207298
+              }
+            ],
+            "base": 0,
+            "wallTop": 6,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 1.8
+            },
+            "parentId": "main",
+            "spring": 2.1,
+            "archRise": 1.15
+          },
+          {
+            "id": "blocked-gate",
+            "label": "Absichtlich geschlossener Freiraum",
+            "houseId": null,
+            "role": "fault",
+            "foot": [
+              {
+                "x": -4.520894747276573,
+                "z": -2.394792019477679
+              },
+              {
+                "x": -4.678484773879039,
+                "z": 2.1003820460801457
+              },
+              {
+                "x": -6.562579460377652,
+                "z": 1.9416268499204852
+              },
+              {
+                "x": -6.626647632186788,
+                "z": -2.457695021729619
+              }
+            ],
+            "base": 0,
+            "wallTop": 2,
+            "roof": {
+              "kind": "none"
+            }
+          }
+        ],
+        "supports": [
+          {
+            "id": "bracket0.23",
+            "parentId": "upper",
+            "anchor": {
+              "x": 2.175,
+              "z": -2.7230000000000003
+            },
+            "out": {
+              "x": 0.013332148306149386,
+              "z": -0.9999111229612074
+            },
+            "along": {
+              "x": -0.9999111229612074,
+              "z": -0.013332148306149386
+            },
+            "base": 3.5,
+            "top": 4.5,
+            "depth": 0.7,
+            "width": 0.3
+          },
+          {
+            "id": "bracket0.7",
+            "parentId": "upper",
+            "anchor": {
+              "x": -1.35,
+              "z": -2.77
+            },
+            "out": {
+              "x": 0.013332148306149386,
+              "z": -0.9999111229612074
+            },
+            "along": {
+              "x": -0.9999111229612074,
+              "z": -0.013332148306149386
+            },
+            "base": 3.5,
+            "top": 4.5,
+            "depth": 0.7,
+            "width": 0.3
+          }
+        ],
+        "passages": [
+          {
+            "id": "gate",
+            "label": "Tordurchgang",
+            "foot": [
+              {
+                "x": -4.520894747276573,
+                "z": -2.394792019477679
+              },
+              {
+                "x": -4.678484773879039,
+                "z": 2.1003820460801457
+              },
+              {
+                "x": -6.562579460377652,
+                "z": 1.9416268499204852
+              },
+              {
+                "x": -6.626647632186788,
+                "z": -2.457695021729619
+              }
+            ],
+            "floor": 0,
+            "height": 2
+          }
+        ],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Stadthaus mit Torflügel"
+          }
+        ],
+        "connections": [],
+        "closePassage": true
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "blocked-gate",
+            "message": "Blockiert Tordurchgang."
+          }
+        ],
+        "houseCount": 1,
+        "partCount": 11,
+        "roofCount": 3,
+        "openingCount": 1,
+        "groundAreaM2": 61.43195368463096,
+        "projectionAreaM2": 69.45053427682403,
+        "maxHeightM": 10.6,
+        "mainCorners": [
+          92.41593165893424,
+          86.60425616721734,
+          92.61148459473468,
+          88.36832757911374
+        ]
+      }
+    },
+    {
+      "id": "connection",
+      "closePassage": false,
+      "scene": {
+        "id": "connection",
+        "config": {
+          "id": "connection",
+          "title": "Gedeckte Verbindung",
+          "reference": 8,
+          "scale": 14,
+          "yaw": 2.48,
+          "intent": "Zwei unterschiedlich geformte Häuser mit niedrigeren Anbauten und einer gedeckten Verbindung oberhalb eines freien Weges.",
+          "note": "Bild 8: Die akzeptierte Verbindungsidee bleibt erhalten. Hier werden Dächer, Haupthäuser und Nebenbauten ergänzt; die kleinen Türme der Vorlage fehlen noch."
+        },
+        "parts": [
+          {
+            "id": "main",
+            "label": "Höheres Haupthaus",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": 4.5,
+                "z": -3
+              },
+              {
+                "x": 11,
+                "z": -3.2
+              },
+              {
+                "x": 11.4,
+                "z": 3
+              },
+              {
+                "x": 4,
+                "z": 3.3
+              }
+            ],
+            "base": 0,
+            "wallTop": 8.8,
+            "roof": {
+              "kind": "gable",
+              "rise": 2.8
+            }
+          },
+          {
+            "id": "right",
+            "label": "Zweites Haus",
+            "houseId": "H2",
+            "role": "main",
+            "foot": [
+              {
+                "x": -10.2,
+                "z": -3.2
+              },
+              {
+                "x": -3.7,
+                "z": -3.7
+              },
+              {
+                "x": -4.1,
+                "z": 3.5
+              },
+              {
+                "x": -10.9,
+                "z": 4
+              }
+            ],
+            "base": 0,
+            "wallTop": 7.8,
+            "roof": {
+              "kind": "gable",
+              "rise": 2.6
+            }
+          },
+          {
+            "id": "leftAnnex",
+            "label": "Niedriger Seitenbau",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": 10.35,
+                "z": -3.18
+              },
+              {
+                "x": 6.58,
+                "z": -3.064
+              },
+              {
+                "x": 6.609216941997626,
+                "z": -5.365987482655001
+              },
+              {
+                "x": 10.170085146646201,
+                "z": -5.775694636420602
+              }
+            ],
+            "base": 0,
+            "wallTop": 3,
+            "roof": {
+              "kind": "shed",
+              "rise": 1
+            },
+            "parentId": "main"
+          },
+          {
+            "id": "rightAnnex",
+            "label": "Kleiner Vorbau",
+            "houseId": "H2",
+            "role": "annex",
+            "foot": [
+              {
+                "x": -6.3,
+                "z": -3.5
+              },
+              {
+                "x": -9.875,
+                "z": -3.225
+              },
+              {
+                "x": -10.135768096208107,
+                "z": -5.311144769664848
+              },
+              {
+                "x": -6.438053697992526,
+                "z": -5.294698073902847
+              }
+            ],
+            "base": 0,
+            "wallTop": 3.5,
+            "roof": {
+              "kind": "gable",
+              "rise": 1.2
+            },
+            "parentId": "right"
+          },
+          {
+            "id": "link",
+            "label": "Gedeckte Bogenverbindung",
+            "houseId": null,
+            "role": "connector",
+            "foot": [
+              {
+                "x": -3.824,
+                "z": -1.468
+              },
+              {
+                "x": 4.325,
+                "z": -0.7950000000000004
+              },
+              {
+                "x": 4.165,
+                "z": 1.221
+              },
+              {
+                "x": -3.948,
+                "z": 0.7639999999999998
+              }
+            ],
+            "base": 3,
+            "wallTop": 6.45,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 1
+            },
+            "arched": true,
+            "spring": 3,
+            "archRise": 1.3,
+            "walkFloor": 4.4
+          }
+        ],
+        "supports": [],
+        "passages": [
+          {
+            "id": "underpass",
+            "label": "Weg unter der Verbindung",
+            "foot": [
+              {
+                "x": -3.8426000000000005,
+                "z": -1.1332
+              },
+              {
+                "x": 4.301,
+                "z": -0.4926000000000003
+              },
+              {
+                "x": 4.189,
+                "z": 0.9185999999999999
+              },
+              {
+                "x": -3.9294,
+                "z": 0.4291999999999998
+              }
+            ],
+            "floor": 0,
+            "height": 3
+          }
+        ],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Höheres Haupthaus"
+          },
+          {
+            "id": "H2",
+            "label": "Zweites Haus"
+          }
+        ],
+        "connections": [
+          {
+            "partId": "link",
+            "from": "main",
+            "to": "right",
+            "floor": 4.4
+          }
+        ],
+        "closePassage": false
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 2,
+        "partCount": 5,
+        "roofCount": 5,
+        "openingCount": 1,
+        "groundAreaM2": 107.10771585289602,
+        "projectionAreaM2": 124.45818985289603,
+        "maxHeightM": 11.600000000000001,
+        "mainCorners": [
+          96.30016353156716,
+          91.92899496279077,
+          88.63014460338145,
+          83.14069690226063
+        ]
+      }
+    },
+    {
+      "id": "connection",
+      "closePassage": true,
+      "scene": {
+        "id": "connection",
+        "config": {
+          "id": "connection",
+          "title": "Gedeckte Verbindung",
+          "reference": 8,
+          "scale": 14,
+          "yaw": 2.48,
+          "intent": "Zwei unterschiedlich geformte Häuser mit niedrigeren Anbauten und einer gedeckten Verbindung oberhalb eines freien Weges.",
+          "note": "Bild 8: Die akzeptierte Verbindungsidee bleibt erhalten. Hier werden Dächer, Haupthäuser und Nebenbauten ergänzt; die kleinen Türme der Vorlage fehlen noch."
+        },
+        "parts": [
+          {
+            "id": "main",
+            "label": "Höheres Haupthaus",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": 4.5,
+                "z": -3
+              },
+              {
+                "x": 11,
+                "z": -3.2
+              },
+              {
+                "x": 11.4,
+                "z": 3
+              },
+              {
+                "x": 4,
+                "z": 3.3
+              }
+            ],
+            "base": 0,
+            "wallTop": 8.8,
+            "roof": {
+              "kind": "gable",
+              "rise": 2.8
+            }
+          },
+          {
+            "id": "right",
+            "label": "Zweites Haus",
+            "houseId": "H2",
+            "role": "main",
+            "foot": [
+              {
+                "x": -10.2,
+                "z": -3.2
+              },
+              {
+                "x": -3.7,
+                "z": -3.7
+              },
+              {
+                "x": -4.1,
+                "z": 3.5
+              },
+              {
+                "x": -10.9,
+                "z": 4
+              }
+            ],
+            "base": 0,
+            "wallTop": 7.8,
+            "roof": {
+              "kind": "gable",
+              "rise": 2.6
+            }
+          },
+          {
+            "id": "leftAnnex",
+            "label": "Niedriger Seitenbau",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": 10.35,
+                "z": -3.18
+              },
+              {
+                "x": 6.58,
+                "z": -3.064
+              },
+              {
+                "x": 6.609216941997626,
+                "z": -5.365987482655001
+              },
+              {
+                "x": 10.170085146646201,
+                "z": -5.775694636420602
+              }
+            ],
+            "base": 0,
+            "wallTop": 3,
+            "roof": {
+              "kind": "shed",
+              "rise": 1
+            },
+            "parentId": "main"
+          },
+          {
+            "id": "rightAnnex",
+            "label": "Kleiner Vorbau",
+            "houseId": "H2",
+            "role": "annex",
+            "foot": [
+              {
+                "x": -6.3,
+                "z": -3.5
+              },
+              {
+                "x": -9.875,
+                "z": -3.225
+              },
+              {
+                "x": -10.135768096208107,
+                "z": -5.311144769664848
+              },
+              {
+                "x": -6.438053697992526,
+                "z": -5.294698073902847
+              }
+            ],
+            "base": 0,
+            "wallTop": 3.5,
+            "roof": {
+              "kind": "gable",
+              "rise": 1.2
+            },
+            "parentId": "right"
+          },
+          {
+            "id": "link",
+            "label": "Gedeckte Bogenverbindung",
+            "houseId": null,
+            "role": "connector",
+            "foot": [
+              {
+                "x": -3.824,
+                "z": -1.468
+              },
+              {
+                "x": 4.325,
+                "z": -0.7950000000000004
+              },
+              {
+                "x": 4.165,
+                "z": 1.221
+              },
+              {
+                "x": -3.948,
+                "z": 0.7639999999999998
+              }
+            ],
+            "base": 3,
+            "wallTop": 6.45,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 1
+            },
+            "arched": true,
+            "spring": 3,
+            "archRise": 1.3,
+            "walkFloor": 4.4
+          },
+          {
+            "id": "blocked-underpass",
+            "label": "Absichtlich geschlossener Freiraum",
+            "houseId": null,
+            "role": "fault",
+            "foot": [
+              {
+                "x": -3.8426000000000005,
+                "z": -1.1332
+              },
+              {
+                "x": 4.301,
+                "z": -0.4926000000000003
+              },
+              {
+                "x": 4.189,
+                "z": 0.9185999999999999
+              },
+              {
+                "x": -3.9294,
+                "z": 0.4291999999999998
+              }
+            ],
+            "base": 0,
+            "wallTop": 3,
+            "roof": {
+              "kind": "none"
+            }
+          }
+        ],
+        "supports": [],
+        "passages": [
+          {
+            "id": "underpass",
+            "label": "Weg unter der Verbindung",
+            "foot": [
+              {
+                "x": -3.8426000000000005,
+                "z": -1.1332
+              },
+              {
+                "x": 4.301,
+                "z": -0.4926000000000003
+              },
+              {
+                "x": 4.189,
+                "z": 0.9185999999999999
+              },
+              {
+                "x": -3.9294,
+                "z": 0.4291999999999998
+              }
+            ],
+            "floor": 0,
+            "height": 3
+          }
+        ],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Höheres Haupthaus"
+          },
+          {
+            "id": "H2",
+            "label": "Zweites Haus"
+          }
+        ],
+        "connections": [
+          {
+            "partId": "link",
+            "from": "main",
+            "to": "right",
+            "floor": 4.4
+          }
+        ],
+        "closePassage": true
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "blocked-underpass",
+            "message": "Blockiert Weg unter der Verbindung."
+          }
+        ],
+        "houseCount": 2,
+        "partCount": 6,
+        "roofCount": 5,
+        "openingCount": 1,
+        "groundAreaM2": 119.25304765289602,
+        "projectionAreaM2": 124.45818985289601,
+        "maxHeightM": 11.600000000000001,
+        "mainCorners": [
+          96.30016353156716,
+          91.92899496279077,
+          88.63014460338145,
+          83.14069690226063
+        ]
+      }
+    },
+    {
+      "id": "courtyard",
+      "closePassage": false,
+      "scene": {
+        "id": "courtyard",
+        "config": {
+          "id": "courtyard",
+          "title": "Flügel und Hofraum",
+          "reference": 4,
+          "scale": 15,
+          "yaw": -0.65,
+          "intent": "Drei ungleich große Flügel und eine niedrige Umfassung ordnen einen bewusst freigelassenen Hof.",
+          "note": "Bild 4: Eine vereinfachte Flügel-/Hofstudie aus der umfassten Anlage. Einzelheiten der Gesamtanlage und der Geländeverlauf sind nicht rekonstruiert."
+        },
+        "parts": [
+          {
+            "id": "main",
+            "label": "Dominanter Rückflügel",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": -8,
+                "z": -5
+              },
+              {
+                "x": 8.2,
+                "z": -4.7
+              },
+              {
+                "x": 7.8,
+                "z": -0.6
+              },
+              {
+                "x": -7.6,
+                "z": -0.8
+              }
+            ],
+            "base": 0,
+            "wallTop": 6.2,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 2.4
+            }
+          },
+          {
+            "id": "left",
+            "label": "Längerer Seitenflügel",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": -7.445999999999999,
+                "z": -0.798
+              },
+              {
+                "x": -2.9799999999999978,
+                "z": -0.74
+              },
+              {
+                "x": -3.233874695227579,
+                "z": 7.257377547616662
+              },
+              {
+                "x": -7.593390168329055,
+                "z": 6.700718299701618
+              }
+            ],
+            "base": 0,
+            "wallTop": 4,
+            "roof": {
+              "kind": "gable",
+              "rise": 1.6
+            },
+            "parentId": "main"
+          },
+          {
+            "id": "right",
+            "label": "Kürzerer Seitenflügel",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": 3.4879999999999995,
+                "z": -0.656
+              },
+              {
+                "x": 7.492,
+                "z": -0.604
+              },
+              {
+                "x": 7.503687326123009,
+                "z": 6.196725211799701
+              },
+              {
+                "x": 3.2445140391039815,
+                "z": 6.54144500408628
+              }
+            ],
+            "base": 0,
+            "wallTop": 3.7,
+            "roof": {
+              "kind": "gable",
+              "rise": 1.6
+            },
+            "parentId": "main"
+          },
+          {
+            "id": "west",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": -10,
+                "z": -6.2
+              },
+              {
+                "x": -9.6,
+                "z": -6.2
+              },
+              {
+                "x": -9.6,
+                "z": 8.9
+              },
+              {
+                "x": -10,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "east",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": 9.4,
+                "z": -6.2
+              },
+              {
+                "x": 9.8,
+                "z": -6.2
+              },
+              {
+                "x": 9.8,
+                "z": 8.9
+              },
+              {
+                "x": 9.4,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "north",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": -9.6,
+                "z": -6.2
+              },
+              {
+                "x": 9.4,
+                "z": -6.2
+              },
+              {
+                "x": 9.4,
+                "z": -5.8
+              },
+              {
+                "x": -9.6,
+                "z": -5.8
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "frontLeft",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": -9.6,
+                "z": 8.5
+              },
+              {
+                "x": -2.2,
+                "z": 8.5
+              },
+              {
+                "x": -2.2,
+                "z": 8.9
+              },
+              {
+                "x": -9.6,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "frontRight",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": 1.8,
+                "z": 8.5
+              },
+              {
+                "x": 9.4,
+                "z": 8.5
+              },
+              {
+                "x": 9.4,
+                "z": 8.9
+              },
+              {
+                "x": 1.8,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          }
+        ],
+        "supports": [],
+        "passages": [
+          {
+            "id": "courtEntry",
+            "label": "Hofzugang",
+            "foot": [
+              {
+                "x": -2.1,
+                "z": 8.3
+              },
+              {
+                "x": 1.7,
+                "z": 8.3
+              },
+              {
+                "x": 1.7,
+                "z": 9.1
+              },
+              {
+                "x": -2.1,
+                "z": 9.1
+              }
+            ],
+            "floor": 0,
+            "height": 2
+          }
+        ],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Dreiflügelgruppe"
+          }
+        ],
+        "connections": [],
+        "closePassage": false
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 8,
+        "roofCount": 3,
+        "openingCount": 1,
+        "groundAreaM2": 154.40228224481268,
+        "projectionAreaM2": 154.40228224481268,
+        "maxHeightM": 8.6,
+        "mainCorners": [
+          83.49875627873027,
+          85.48871388630045,
+          94.8281386010751,
+          96.18439123389423
+        ]
+      }
+    },
+    {
+      "id": "courtyard",
+      "closePassage": true,
+      "scene": {
+        "id": "courtyard",
+        "config": {
+          "id": "courtyard",
+          "title": "Flügel und Hofraum",
+          "reference": 4,
+          "scale": 15,
+          "yaw": -0.65,
+          "intent": "Drei ungleich große Flügel und eine niedrige Umfassung ordnen einen bewusst freigelassenen Hof.",
+          "note": "Bild 4: Eine vereinfachte Flügel-/Hofstudie aus der umfassten Anlage. Einzelheiten der Gesamtanlage und der Geländeverlauf sind nicht rekonstruiert."
+        },
+        "parts": [
+          {
+            "id": "main",
+            "label": "Dominanter Rückflügel",
+            "houseId": "H1",
+            "role": "main",
+            "foot": [
+              {
+                "x": -8,
+                "z": -5
+              },
+              {
+                "x": 8.2,
+                "z": -4.7
+              },
+              {
+                "x": 7.8,
+                "z": -0.6
+              },
+              {
+                "x": -7.6,
+                "z": -0.8
+              }
+            ],
+            "base": 0,
+            "wallTop": 6.2,
+            "roof": {
+              "kind": "gable",
+              "axis": "across",
+              "rise": 2.4
+            }
+          },
+          {
+            "id": "left",
+            "label": "Längerer Seitenflügel",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": -7.445999999999999,
+                "z": -0.798
+              },
+              {
+                "x": -2.9799999999999978,
+                "z": -0.74
+              },
+              {
+                "x": -3.233874695227579,
+                "z": 7.257377547616662
+              },
+              {
+                "x": -7.593390168329055,
+                "z": 6.700718299701618
+              }
+            ],
+            "base": 0,
+            "wallTop": 4,
+            "roof": {
+              "kind": "gable",
+              "rise": 1.6
+            },
+            "parentId": "main"
+          },
+          {
+            "id": "right",
+            "label": "Kürzerer Seitenflügel",
+            "houseId": "H1",
+            "role": "annex",
+            "foot": [
+              {
+                "x": 3.4879999999999995,
+                "z": -0.656
+              },
+              {
+                "x": 7.492,
+                "z": -0.604
+              },
+              {
+                "x": 7.503687326123009,
+                "z": 6.196725211799701
+              },
+              {
+                "x": 3.2445140391039815,
+                "z": 6.54144500408628
+              }
+            ],
+            "base": 0,
+            "wallTop": 3.7,
+            "roof": {
+              "kind": "gable",
+              "rise": 1.6
+            },
+            "parentId": "main"
+          },
+          {
+            "id": "west",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": -10,
+                "z": -6.2
+              },
+              {
+                "x": -9.6,
+                "z": -6.2
+              },
+              {
+                "x": -9.6,
+                "z": 8.9
+              },
+              {
+                "x": -10,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "east",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": 9.4,
+                "z": -6.2
+              },
+              {
+                "x": 9.8,
+                "z": -6.2
+              },
+              {
+                "x": 9.8,
+                "z": 8.9
+              },
+              {
+                "x": 9.4,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "north",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": -9.6,
+                "z": -6.2
+              },
+              {
+                "x": 9.4,
+                "z": -6.2
+              },
+              {
+                "x": 9.4,
+                "z": -5.8
+              },
+              {
+                "x": -9.6,
+                "z": -5.8
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "frontLeft",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": -9.6,
+                "z": 8.5
+              },
+              {
+                "x": -2.2,
+                "z": 8.5
+              },
+              {
+                "x": -2.2,
+                "z": 8.9
+              },
+              {
+                "x": -9.6,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "frontRight",
+            "label": "Niedrige Umfassung",
+            "houseId": null,
+            "role": "enclosure",
+            "foot": [
+              {
+                "x": 1.8,
+                "z": 8.5
+              },
+              {
+                "x": 9.4,
+                "z": 8.5
+              },
+              {
+                "x": 9.4,
+                "z": 8.9
+              },
+              {
+                "x": 1.8,
+                "z": 8.9
+              }
+            ],
+            "base": 0,
+            "wallTop": 1.25,
+            "roof": {
+              "kind": "none"
+            }
+          },
+          {
+            "id": "blocked-courtEntry",
+            "label": "Absichtlich geschlossener Freiraum",
+            "houseId": null,
+            "role": "fault",
+            "foot": [
+              {
+                "x": -2.1,
+                "z": 8.3
+              },
+              {
+                "x": 1.7,
+                "z": 8.3
+              },
+              {
+                "x": 1.7,
+                "z": 9.1
+              },
+              {
+                "x": -2.1,
+                "z": 9.1
+              }
+            ],
+            "base": 0,
+            "wallTop": 2,
+            "roof": {
+              "kind": "none"
+            }
+          }
+        ],
+        "supports": [],
+        "passages": [
+          {
+            "id": "courtEntry",
+            "label": "Hofzugang",
+            "foot": [
+              {
+                "x": -2.1,
+                "z": 8.3
+              },
+              {
+                "x": 1.7,
+                "z": 8.3
+              },
+              {
+                "x": 1.7,
+                "z": 9.1
+              },
+              {
+                "x": -2.1,
+                "z": 9.1
+              }
+            ],
+            "floor": 0,
+            "height": 2
+          }
+        ],
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Dreiflügelgruppe"
+          }
+        ],
+        "connections": [],
+        "closePassage": true
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "blocked-courtEntry",
+            "message": "Blockiert Hofzugang."
+          }
+        ],
+        "houseCount": 1,
+        "partCount": 9,
+        "roofCount": 3,
+        "openingCount": 1,
+        "groundAreaM2": 157.4422822448127,
+        "projectionAreaM2": 157.4422822448127,
+        "maxHeightM": 8.6,
+        "mainCorners": [
+          83.49875627873027,
+          85.48871388630045,
+          94.8281386010751,
+          96.18439123389423
+        ]
+      }
+    }
+  ]
+}
