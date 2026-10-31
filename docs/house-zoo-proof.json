@@ -1,0 +1,184 @@
+{
+  "scope": "Eigenständiger Haus-Zoo, keine Änderung der Stadtgenerierung oder V1/V2-Regeln",
+  "githubRunnersUsed": false,
+  "localOnly": true,
+  "node": "v26.7.0",
+  "sourceAndImageSha256": {
+    "crates/city_core/prototypes/house-zoo.html": "150b9a81024febe1e660046c5d0e9e7c3fe2ca5c2d024c411612d449eaa3c5d2",
+    "crates/city_core/prototypes/run-house-zoo.mjs": "37b7c8dd12e3f7909ca5a7395e150aa80e79c8773afbbf3e5c2ed174d53544aa",
+    "crates/city_core/prototypes/house-zoo-runs.json": "fbf71e0f09b000e5c56bca319d993c376e3ac8a740eac22cb5afdc0b872bfc27",
+    "docs/house-zoo-gallery.png": "4cf8174a2c4efb4a4da19ec8c4e61dacbf4be5f319a63b944e72b91af0db7c66",
+    "docs/house-zoo-overhang.png": "c2b27feb1f7b61e5f939d5bc2ee8c64306180a578ba369ab8a331c89db865034",
+    "docs/house-zoo-bridge.png": "29aaa3a97e355af226756e243004edb9615e9571b6920ef1d8c2d7b78a007875"
+  },
+  "geometryMatrix": {
+    "node": "v26.7.0",
+    "validVariants": 306,
+    "partsMeasured": 1080,
+    "negativeCases": [
+      "corner",
+      "collision",
+      "floating",
+      "blocked"
+    ],
+    "checks": [
+      "determinism",
+      "input immutability",
+      "finite mesh",
+      "skew angles from actual points",
+      "area-preserving shear",
+      "separate ground/projection unions",
+      "two identities per bridge",
+      "thin declared rails allowed",
+      "negative signals"
+    ]
+  },
+  "browser": {
+    "checks": [
+      {
+        "case": "initial",
+        "valid": true,
+        "render": {
+          "webgl": true,
+          "vertices": 258,
+          "error": 0,
+          "width": 626,
+          "height": 420
+        },
+        "parts": 7,
+        "cards": 5
+      },
+      {
+        "case": "compact",
+        "valid": true,
+        "render": 0
+      },
+      {
+        "case": "annexes",
+        "valid": true,
+        "render": 0
+      },
+      {
+        "case": "courtyard",
+        "valid": true,
+        "render": 0
+      },
+      {
+        "case": "stacked",
+        "valid": true,
+        "render": 0
+      },
+      {
+        "case": "bridge",
+        "valid": true,
+        "render": 0
+      },
+      {
+        "case": "seed and selection",
+        "seed": 18
+      },
+      {
+        "case": "corner contact",
+        "valid": false
+      },
+      {
+        "case": "collision",
+        "valid": false
+      },
+      {
+        "case": "overhang",
+        "valid": true,
+        "ground": 48,
+        "projection": 69.2
+      },
+      {
+        "case": "floating",
+        "valid": false
+      },
+      {
+        "case": "open bridge",
+        "valid": true,
+        "houses": 2,
+        "parts": 5
+      },
+      {
+        "case": "blocked passage",
+        "valid": false
+      },
+      {
+        "case": "view filter",
+        "valid": true,
+        "upper": false,
+        "vertices": 84
+      },
+      {
+        "case": "orbit",
+        "yaw": -1,
+        "oldYaw": -0.65,
+        "error": 0
+      },
+      {
+        "case": "mobile",
+        "width": 390,
+        "documentWidth": 390,
+        "error": 0
+      },
+      {
+        "case": "download",
+        "parts": 3,
+        "valid": true,
+        "caseId": "bridge",
+        "viewIncluded": true
+      }
+    ],
+    "errors": []
+  },
+  "renderer": "Lokales Chromium, WebGL 1 über SwiftShader",
+  "captures": {
+    "gallery": {
+      "viewport": [
+        1000,
+        1000
+      ],
+      "caseId": "annexes",
+      "seed": 42,
+      "angle": 8,
+      "annexes": 6
+    },
+    "overhang": {
+      "viewport": [
+        1000,
+        1000
+      ],
+      "caseId": "stacked",
+      "seed": 42,
+      "angle": 8,
+      "overhang": 1
+    },
+    "bridge": {
+      "viewport": [
+        1000,
+        1000
+      ],
+      "caseId": "bridge",
+      "seed": 42,
+      "angle": 8,
+      "bridgeHeight": 4.5,
+      "openBridge": true
+    }
+  },
+  "workspaceChecks": {
+    "cargo test --workspace": "39 passed",
+    "cargo fmt --all --check": "passed",
+    "cargo clippy --workspace --all-targets -- -D warnings": "passed",
+    "node tools/verify-building-draft.mjs": "passed",
+    "node tools/verify-building-refinement.mjs": "passed",
+    "python3 tools/verify-archive.py": "64 recovered files/symlinks verified"
+  },
+  "limitations": [
+    "Volumenstudien: gestalterisch nicht freigegeben, keine Dachformen oder Statik",
+    "Kollisionen nur für gemeinsam gescherte Rechtecke und Höhenintervalle",
+    "Keine Türen, Raumerschließung, freie Hausorientierung oder Stadtintegration",
+    "Headless-WebGL kann Software-Rendering-/Readback-Warnungen ausgeben; im lokalen Browserlauf keine beobachteten JavaScript- oder WebGL-Fehler"
+  ]
+}

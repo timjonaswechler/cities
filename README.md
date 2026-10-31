@@ -78,6 +78,12 @@ Das benannte V1-Profil ist konfigurierbar. Das HTML-Stadtlabor bleibt als Refere
 
 Details, Profilformat und Nachfrage-Interface: [Marktplanung V1](docs/market-planning-v1.md). Quellen: [Recherche](docs/research-organic-cities.md). Die [Experimentierspur](docs/organic-city-experiments.md) hält die früheren Marktflächen-/Hof-/Vorstadtversuche und offenen Fragen fest; die HTML-Stadtlabore liegen unter `crates/city_core/prototypes/`.
 
+## Haus-Zoo · neues Ziel von PR #2
+
+Der [eigenständige Haus-Zoo](crates/city_core/prototypes/house-zoo.html) untersucht schiefwinklige Hauptkörper, viele Anbauten, gestaffelte Höhen, Überhänge und offene/geschlossene Brücken. Fünf feste Beispielrezepte mit Seed-Varianten, drehbarer Ansicht, getrennten Boden-/Überbauungsplänen und geführten Gegenproben. HTML herunterladen und öffnen; kein Server oder Paketdownload erforderlich.
+
+Noch keine Stadtintegration oder gestalterische Freigabe: Dies sind Volumenstudien, keine fertige Architektur. [Featurekatalog, Bedienung, Reihenfolge und Grenzen](docs/house-zoo.md). Alle Prüfungen laufen lokal, ohne GitHub Runner. Die vorhandene Marktplanung und die nachstehende V1-/V2-Bereinigung bleiben davon unabhängig verfügbar.
+
 ## Gebäudeformen V2
 
 Mit `B` oder `--buildings` zuschalten: zu kleine oder unbrauchbar schmale/spitze Restformen werden ausgelassen oder mit direkten Nachbarn vereinigt. Schmale Streifen werden entlang gemeinsamer Längswände aufgeteilt, statt am kurzen Ende als dünner Arm angehängt zu werden. V2 kürzt zusätzlich lange schmale Ausläufer auf eine breitere Abschlusskante (Standard 6 m) und bereinigt danach Kanten unter 2 m, ohne Fläche aufzufüllen. Genau 2 m lange Kanten bleiben erhalten. Flächenverlust, Zuordnungen und nicht sicher entfernbare Restkanten sind nachvollziehbar; der Originalmodus und das bisherige V1-Profil bleiben verfügbar.

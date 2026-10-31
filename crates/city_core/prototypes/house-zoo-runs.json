@@ -1,0 +1,1681 @@
+{
+  "version": 1,
+  "node": "v26.7.0",
+  "prototypeSha256": "150b9a81024febe1e660046c5d0e9e7c3fe2ca5c2d024c411612d449eaa3c5d2",
+  "logicSha256": "d1ab82d17b383445c64bafea4af4f2a9959143b82084c9bd538a9d8f414e45df",
+  "runs": [
+    {
+      "input": {
+        "caseId": "compact",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 0,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "compact",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 0,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Haus 1"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Vorderhaus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -4.050551875960082,
+              "z0": -2.9793162235990165,
+              "x1": 4.050551875960082,
+              "z1": 2.9793162235990165
+            },
+            "base": 0,
+            "top": 6.781972634792328,
+            "polygon": [
+              {
+                "x": -4.469267464867064,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 3.6318362870530994,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 4.469267464867064,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": -3.6318362870530994,
+                "y": 2.9793162235990165
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 1,
+        "groundAreaM2": 48.27149967430921,
+        "projectionAreaM2": 48.27149967430921,
+        "maxHeightM": 6.781972634792328,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "annexes",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "annexes",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Haus 1"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Vorderhaus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -4.050551875960082,
+              "z0": -2.9793162235990165,
+              "x1": 4.050551875960082,
+              "z1": 2.9793162235990165
+            },
+            "base": 0,
+            "top": 6.781972634792328,
+            "polygon": [
+              {
+                "x": -4.469267464867064,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 3.6318362870530994,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 4.469267464867064,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": -3.6318362870530994,
+                "y": 2.9793162235990165
+              }
+            ]
+          },
+          {
+            "id": "annex0",
+            "label": "Rückwärtiger Anbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": -3.4505518759600817,
+              "z0": -5.564183244318701,
+              "x1": -0.5,
+              "z1": -2.9793162235990165
+            },
+            "base": 0,
+            "top": 4.297402404691093,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": -4.232546833553693,
+                "y": -5.564183244318701
+              },
+              {
+                "x": -1.2819949575936107,
+                "y": -5.564183244318701
+              },
+              {
+                "x": -0.9187155889069825,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": -3.869267464867064,
+                "y": -2.9793162235990165
+              }
+            ]
+          },
+          {
+            "id": "annex1",
+            "label": "Zweiter Rückanbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": 0.5,
+              "z0": -4.816723172971979,
+              "x1": 3.650551875960082,
+              "z1": -2.9793162235990165
+            },
+            "base": 0,
+            "top": 3.874855095031671,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": -0.1769462952598333,
+                "y": -4.816723172971979
+              },
+              {
+                "x": 2.973605580700249,
+                "y": -4.816723172971979
+              },
+              {
+                "x": 3.2318362870530994,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 0.08128441109301748,
+                "y": -2.9793162235990165
+              }
+            ]
+          },
+          {
+            "id": "annex2",
+            "label": "Linker Seitenanbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": -6.76384814705234,
+              "z0": -1.3,
+              "x1": -4.050551875960082,
+              "z1": 1.3
+            },
+            "base": 0,
+            "top": 5.075911783636547,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": -6.946551232165449,
+                "y": -1.3
+              },
+              {
+                "x": -4.23325496107319,
+                "y": -1.3
+              },
+              {
+                "x": -3.8678487908469728,
+                "y": 1.3
+              },
+              {
+                "x": -6.581145061939232,
+                "y": 1.3
+              }
+            ]
+          },
+          {
+            "id": "annex3",
+            "label": "Rechter Seitenanbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": 4.050551875960082,
+              "z0": -1.7,
+              "x1": 6.237165873125195,
+              "z1": 1
+            },
+            "base": 0,
+            "top": 4.816901373467408,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": 3.8116324569660165,
+                "y": -1.7
+              },
+              {
+                "x": 5.99824645413113,
+                "y": -1.7
+              },
+              {
+                "x": 6.377706707827587,
+                "y": 1
+              },
+              {
+                "x": 4.191092710662473,
+                "y": 1
+              }
+            ]
+          },
+          {
+            "id": "annex4",
+            "label": "Vorderer Flügel",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": -4.050551875960082,
+              "z0": 2.9793162235990165,
+              "x1": -1.1,
+              "z1": 5.6416885505663235
+            },
+            "base": 0,
+            "top": 3.9833028755150734,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": -3.6318362870530994,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": -0.6812844110930176,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": -0.307112381972484,
+                "y": 5.6416885505663235
+              },
+              {
+                "x": -3.2576642579325656,
+                "y": 5.6416885505663235
+              }
+            ]
+          },
+          {
+            "id": "annex5",
+            "label": "Kleiner Vorbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": 1.1,
+              "z0": 2.9793162235990165,
+              "x1": 3.750551875960082,
+              "z1": 4.488958618091418
+            },
+            "base": 0,
+            "top": 3.774782292102463,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": 1.5187155889069825,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": 4.1692674648670645,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": 4.381433867091143,
+                "y": 4.488958618091418
+              },
+              {
+                "x": 1.7308819911310618,
+                "y": 4.488958618091418
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 7,
+        "groundAreaM2": 86.50241106442407,
+        "projectionAreaM2": 86.50241106442407,
+        "maxHeightM": 6.781972634792328,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "courtyard",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "courtyard",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Flügelhaus"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Rückwärtiger Hauptflügel",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -7,
+              "z0": -5,
+              "x1": 7,
+              "z1": -1
+            },
+            "base": 0,
+            "top": 7.050551875960082,
+            "polygon": [
+              {
+                "x": -7.7027041735119575,
+                "y": -5
+              },
+              {
+                "x": 6.2972958264880425,
+                "y": -5
+              },
+              {
+                "x": 6.859459165297609,
+                "y": -1
+              },
+              {
+                "x": -7.140540834702391,
+                "y": -1
+              }
+            ]
+          },
+          {
+            "id": "left",
+            "label": "Linker Flügel",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": -7,
+              "z0": -1,
+              "x1": -3,
+              "z1": 7
+            },
+            "base": 0,
+            "top": 5.4793162235990165,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": -7.140540834702391,
+                "y": -1
+              },
+              {
+                "x": -3.1405408347023913,
+                "y": -1
+              },
+              {
+                "x": -2.01621415708326,
+                "y": 7
+              },
+              {
+                "x": -6.01621415708326,
+                "y": 7
+              }
+            ]
+          },
+          {
+            "id": "right",
+            "label": "Rechter Flügel",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": 3,
+              "z0": -1,
+              "x1": 7,
+              "z1": 7
+            },
+            "base": 0,
+            "top": 4.640986317396164,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": 2.8594591652976087,
+                "y": -1
+              },
+              {
+                "x": 6.859459165297609,
+                "y": -1
+              },
+              {
+                "x": 7.98378584291674,
+                "y": 7
+              },
+              {
+                "x": 3.98378584291674,
+                "y": 7
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 3,
+        "groundAreaM2": 120,
+        "projectionAreaM2": 120,
+        "maxHeightM": 7.050551875960082,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "stacked",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "stacked",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Gestaffeltes Haus"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Unterer Hauptkörper",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -4,
+              "z0": -3,
+              "x1": 4,
+              "z1": 3
+            },
+            "base": 0,
+            "top": 6,
+            "polygon": [
+              {
+                "x": -4.421622504107175,
+                "y": -3
+              },
+              {
+                "x": 3.5783774958928256,
+                "y": -3
+              },
+              {
+                "x": 4.421622504107175,
+                "y": 3
+              },
+              {
+                "x": -3.5783774958928256,
+                "y": 3
+              }
+            ]
+          },
+          {
+            "id": "upper",
+            "label": "Versetztes Obergeschoss",
+            "houseId": "H1",
+            "kind": "upper",
+            "rect": {
+              "x0": -4.8,
+              "z0": -2.6,
+              "x1": 4.8,
+              "z1": 3.8
+            },
+            "base": 6,
+            "top": 9.43033112557605,
+            "supportIds": [
+              "main"
+            ],
+            "polygon": [
+              {
+                "x": -5.165406170226218,
+                "y": -2.6
+              },
+              {
+                "x": 4.434593829773782,
+                "y": -2.6
+              },
+              {
+                "x": 5.334055171869087,
+                "y": 3.8
+              },
+              {
+                "x": -4.2659448281309125,
+                "y": 3.8
+              }
+            ]
+          },
+          {
+            "id": "tower",
+            "label": "Kleiner Aufsatz",
+            "houseId": "H1",
+            "kind": "upper",
+            "rect": {
+              "x0": -2,
+              "z0": -2,
+              "x1": 1,
+              "z1": 1
+            },
+            "base": 9.43033112557605,
+            "top": 12.009647349175067,
+            "supportIds": [
+              "upper"
+            ],
+            "polygon": [
+              {
+                "x": -2.281081669404783,
+                "y": -2
+              },
+              {
+                "x": 0.7189183305952171,
+                "y": -2
+              },
+              {
+                "x": 1.1405408347023915,
+                "y": 1
+              },
+              {
+                "x": -1.8594591652976085,
+                "y": 1
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 1,
+        "partCount": 3,
+        "groundAreaM2": 48,
+        "projectionAreaM2": 64.64,
+        "maxHeightM": 12.009647349175067,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "bridge",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "bridge",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Linkes Haus"
+          },
+          {
+            "id": "H2",
+            "label": "Rechtes Haus"
+          }
+        ],
+        "parts": [
+          {
+            "id": "left",
+            "label": "Linkes Haus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -12,
+              "z0": -3.5,
+              "x1": -3,
+              "z1": 3.5
+            },
+            "base": 0,
+            "top": 8.550551875960082,
+            "polygon": [
+              {
+                "x": -12.491892921458371,
+                "y": -3.5
+              },
+              {
+                "x": -3.49189292145837,
+                "y": -3.5
+              },
+              {
+                "x": -2.50810707854163,
+                "y": 3.5
+              },
+              {
+                "x": -11.508107078541629,
+                "y": 3.5
+              }
+            ]
+          },
+          {
+            "id": "right",
+            "label": "Rechtes Haus",
+            "houseId": "H2",
+            "kind": "body",
+            "rect": {
+              "x0": 3,
+              "z0": -4,
+              "x1": 11,
+              "z1": 4
+            },
+            "base": 0,
+            "top": 8.97414527949877,
+            "polygon": [
+              {
+                "x": 2.4378366611904343,
+                "y": -4
+              },
+              {
+                "x": 10.437836661190435,
+                "y": -4
+              },
+              {
+                "x": 11.562163338809565,
+                "y": 4
+              },
+              {
+                "x": 3.5621633388095657,
+                "y": 4
+              }
+            ]
+          },
+          {
+            "id": "bridge",
+            "label": "Übergang",
+            "houseId": null,
+            "kind": "bridge",
+            "rect": {
+              "x0": -4.2,
+              "z0": -1.2,
+              "x1": 4.2,
+              "z1": 1.2
+            },
+            "base": 4.5,
+            "top": 6.9,
+            "supportIds": [
+              "left",
+              "right"
+            ],
+            "polygon": [
+              {
+                "x": -4.36864900164287,
+                "y": -1.2
+              },
+              {
+                "x": 4.03135099835713,
+                "y": -1.2
+              },
+              {
+                "x": 4.36864900164287,
+                "y": 1.2
+              },
+              {
+                "x": -4.03135099835713,
+                "y": 1.2
+              }
+            ]
+          }
+        ],
+        "connections": [
+          {
+            "id": "C1",
+            "fromHouseId": "H1",
+            "toHouseId": "H2",
+            "partId": "bridge",
+            "open": false
+          }
+        ],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": [
+          {
+            "label": "Versuchsdurchgang",
+            "rect": {
+              "x0": -3,
+              "z0": -8,
+              "x1": 3,
+              "z1": 8
+            },
+            "height": 3
+          }
+        ]
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 2,
+        "partCount": 3,
+        "groundAreaM2": 127,
+        "projectionAreaM2": 141.4,
+        "maxHeightM": 8.97414527949877,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 1
+      }
+    },
+    {
+      "input": {
+        "caseId": "bridge",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": true,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "bridge",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": true,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Linkes Haus"
+          },
+          {
+            "id": "H2",
+            "label": "Rechtes Haus"
+          }
+        ],
+        "parts": [
+          {
+            "id": "left",
+            "label": "Linkes Haus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -12,
+              "z0": -3.5,
+              "x1": -3,
+              "z1": 3.5
+            },
+            "base": 0,
+            "top": 8.550551875960082,
+            "polygon": [
+              {
+                "x": -12.491892921458371,
+                "y": -3.5
+              },
+              {
+                "x": -3.49189292145837,
+                "y": -3.5
+              },
+              {
+                "x": -2.50810707854163,
+                "y": 3.5
+              },
+              {
+                "x": -11.508107078541629,
+                "y": 3.5
+              }
+            ]
+          },
+          {
+            "id": "right",
+            "label": "Rechtes Haus",
+            "houseId": "H2",
+            "kind": "body",
+            "rect": {
+              "x0": 3,
+              "z0": -4,
+              "x1": 11,
+              "z1": 4
+            },
+            "base": 0,
+            "top": 8.97414527949877,
+            "polygon": [
+              {
+                "x": 2.4378366611904343,
+                "y": -4
+              },
+              {
+                "x": 10.437836661190435,
+                "y": -4
+              },
+              {
+                "x": 11.562163338809565,
+                "y": 4
+              },
+              {
+                "x": 3.5621633388095657,
+                "y": 4
+              }
+            ]
+          },
+          {
+            "id": "bridge",
+            "label": "Übergang",
+            "houseId": null,
+            "kind": "bridge",
+            "rect": {
+              "x0": -4.2,
+              "z0": -1.2,
+              "x1": 4.2,
+              "z1": 1.2
+            },
+            "base": 4.5,
+            "top": 4.85,
+            "supportIds": [
+              "left",
+              "right"
+            ],
+            "polygon": [
+              {
+                "x": -4.36864900164287,
+                "y": -1.2
+              },
+              {
+                "x": 4.03135099835713,
+                "y": -1.2
+              },
+              {
+                "x": 4.36864900164287,
+                "y": 1.2
+              },
+              {
+                "x": -4.03135099835713,
+                "y": 1.2
+              }
+            ]
+          },
+          {
+            "id": "railBack",
+            "label": "Geländer",
+            "houseId": null,
+            "kind": "detail",
+            "rect": {
+              "x0": -4.2,
+              "z0": -1.2,
+              "x1": 4.2,
+              "z1": -1.08
+            },
+            "base": 4.85,
+            "top": 5.85,
+            "parentId": "bridge",
+            "polygon": [
+              {
+                "x": -4.36864900164287,
+                "y": -1.2
+              },
+              {
+                "x": 4.03135099835713,
+                "y": -1.2
+              },
+              {
+                "x": 4.048215898521417,
+                "y": -1.08
+              },
+              {
+                "x": -4.351784101478583,
+                "y": -1.08
+              }
+            ]
+          },
+          {
+            "id": "railFront",
+            "label": "Geländer",
+            "houseId": null,
+            "kind": "detail",
+            "rect": {
+              "x0": -4.2,
+              "z0": 1.08,
+              "x1": 4.2,
+              "z1": 1.2
+            },
+            "base": 4.85,
+            "top": 5.85,
+            "parentId": "bridge",
+            "polygon": [
+              {
+                "x": -4.048215898521417,
+                "y": 1.08
+              },
+              {
+                "x": 4.351784101478583,
+                "y": 1.08
+              },
+              {
+                "x": 4.36864900164287,
+                "y": 1.2
+              },
+              {
+                "x": -4.03135099835713,
+                "y": 1.2
+              }
+            ]
+          }
+        ],
+        "connections": [
+          {
+            "id": "C1",
+            "fromHouseId": "H1",
+            "toHouseId": "H2",
+            "partId": "bridge",
+            "open": true
+          }
+        ],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": [
+          {
+            "label": "Versuchsdurchgang",
+            "rect": {
+              "x0": -3,
+              "z0": -8,
+              "x1": 3,
+              "z1": 8
+            },
+            "height": 3
+          }
+        ]
+      },
+      "report": {
+        "valid": true,
+        "issues": [],
+        "houseCount": 2,
+        "partCount": 5,
+        "groundAreaM2": 127,
+        "projectionAreaM2": 141.4,
+        "maxHeightM": 8.97414527949877,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 1
+      }
+    },
+    {
+      "input": {
+        "caseId": "annexes",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 1,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": "corner"
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "annexes",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 1,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": "corner"
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Haus 1"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Vorderhaus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -4.050551875960082,
+              "z0": -2.9793162235990165,
+              "x1": 4.050551875960082,
+              "z1": 2.9793162235990165
+            },
+            "base": 0,
+            "top": 6.781972634792328,
+            "polygon": [
+              {
+                "x": -4.469267464867064,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 3.6318362870530994,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 4.469267464867064,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": -3.6318362870530994,
+                "y": 2.9793162235990165
+              }
+            ]
+          },
+          {
+            "id": "annex0",
+            "label": "Rückwärtiger Anbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": 4.050551875960082,
+              "z0": 2.9793162235990165,
+              "x1": 7.050551875960082,
+              "z1": 4.9793162235990165
+            },
+            "base": 0,
+            "top": 4.297402404691093,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": 4.469267464867064,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": 7.469267464867064,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": 7.750349134271847,
+                "y": 4.9793162235990165
+              },
+              {
+                "x": 4.750349134271847,
+                "y": 4.9793162235990165
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "annex0",
+            "message": "Kein gemeinsamer Wandabschnitt: Eckberührung oder Abstand ist kein Anschluss."
+          }
+        ],
+        "houseCount": 1,
+        "partCount": 2,
+        "groundAreaM2": 54.27149967430921,
+        "projectionAreaM2": 54.27149967430921,
+        "maxHeightM": 6.781972634792328,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "annexes",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 1,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": "collision"
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "annexes",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 1,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": "collision"
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Haus 1"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Vorderhaus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -4.050551875960082,
+              "z0": -2.9793162235990165,
+              "x1": 4.050551875960082,
+              "z1": 2.9793162235990165
+            },
+            "base": 0,
+            "top": 6.781972634792328,
+            "polygon": [
+              {
+                "x": -4.469267464867064,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 3.6318362870530994,
+                "y": -2.9793162235990165
+              },
+              {
+                "x": 4.469267464867064,
+                "y": 2.9793162235990165
+              },
+              {
+                "x": -3.6318362870530994,
+                "y": 2.9793162235990165
+              }
+            ]
+          },
+          {
+            "id": "annex0",
+            "label": "Rückwärtiger Anbau",
+            "houseId": "H1",
+            "kind": "annex",
+            "rect": {
+              "x0": -1,
+              "z0": -1,
+              "x1": 2,
+              "z1": 2
+            },
+            "base": 0,
+            "top": 4.297402404691093,
+            "parentId": "main",
+            "polygon": [
+              {
+                "x": -1.1405408347023915,
+                "y": -1
+              },
+              {
+                "x": 1.8594591652976085,
+                "y": -1
+              },
+              {
+                "x": 2.281081669404783,
+                "y": 2
+              },
+              {
+                "x": -0.7189183305952171,
+                "y": 2
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "annex0",
+            "message": "Kein gemeinsamer Wandabschnitt: Eckberührung oder Abstand ist kein Anschluss."
+          },
+          {
+            "partId": "main",
+            "message": "Unbeabsichtigte räumliche Überschneidung mit Rückwärtiger Anbau."
+          }
+        ],
+        "houseCount": 1,
+        "partCount": 2,
+        "groundAreaM2": 48.27149967430921,
+        "projectionAreaM2": 48.27149967430921,
+        "maxHeightM": 6.781972634792328,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "stacked",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 4.5,
+        "openBridge": false,
+        "fault": "floating"
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "stacked",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 4.5,
+          "openBridge": false,
+          "fault": "floating"
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Gestaffeltes Haus"
+          }
+        ],
+        "parts": [
+          {
+            "id": "main",
+            "label": "Unterer Hauptkörper",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -4,
+              "z0": -3,
+              "x1": 4,
+              "z1": 3
+            },
+            "base": 0,
+            "top": 6,
+            "polygon": [
+              {
+                "x": -4.421622504107175,
+                "y": -3
+              },
+              {
+                "x": 3.5783774958928256,
+                "y": -3
+              },
+              {
+                "x": 4.421622504107175,
+                "y": 3
+              },
+              {
+                "x": -3.5783774958928256,
+                "y": 3
+              }
+            ]
+          },
+          {
+            "id": "upper",
+            "label": "Versetztes Obergeschoss",
+            "houseId": "H1",
+            "kind": "upper",
+            "rect": {
+              "x0": -4.8,
+              "z0": -2.6,
+              "x1": 4.8,
+              "z1": 3.8
+            },
+            "base": 8,
+            "top": 11.43033112557605,
+            "supportIds": [
+              "main"
+            ],
+            "polygon": [
+              {
+                "x": -5.165406170226218,
+                "y": -2.6
+              },
+              {
+                "x": 4.434593829773782,
+                "y": -2.6
+              },
+              {
+                "x": 5.334055171869087,
+                "y": 3.8
+              },
+              {
+                "x": -4.2659448281309125,
+                "y": 3.8
+              }
+            ]
+          },
+          {
+            "id": "tower",
+            "label": "Kleiner Aufsatz",
+            "houseId": "H1",
+            "kind": "upper",
+            "rect": {
+              "x0": -2,
+              "z0": -2,
+              "x1": 1,
+              "z1": 1
+            },
+            "base": 11.43033112557605,
+            "top": 14.009647349175067,
+            "supportIds": [
+              "upper"
+            ],
+            "polygon": [
+              {
+                "x": -2.281081669404783,
+                "y": -2
+              },
+              {
+                "x": 0.7189183305952171,
+                "y": -2
+              },
+              {
+                "x": 1.1405408347023915,
+                "y": 1
+              },
+              {
+                "x": -1.8594591652976085,
+                "y": 1
+              }
+            ]
+          }
+        ],
+        "connections": [],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": []
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "upper",
+            "message": "Zu wenig Auflager in diesem Versuchsmodell (mindestens die halbe Projektion)."
+          }
+        ],
+        "houseCount": 1,
+        "partCount": 3,
+        "groundAreaM2": 48,
+        "projectionAreaM2": 64.64,
+        "maxHeightM": 14.009647349175067,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 0
+      }
+    },
+    {
+      "input": {
+        "caseId": "bridge",
+        "seed": 42,
+        "angle": 8,
+        "annexes": 6,
+        "overhang": 0.8,
+        "bridgeHeight": 0,
+        "openBridge": false,
+        "fault": null
+      },
+      "scene": {
+        "parameters": {
+          "caseId": "bridge",
+          "seed": 42,
+          "angle": 8,
+          "annexes": 6,
+          "overhang": 0.8,
+          "bridgeHeight": 0,
+          "openBridge": false,
+          "fault": null
+        },
+        "houses": [
+          {
+            "id": "H1",
+            "label": "Linkes Haus"
+          },
+          {
+            "id": "H2",
+            "label": "Rechtes Haus"
+          }
+        ],
+        "parts": [
+          {
+            "id": "left",
+            "label": "Linkes Haus",
+            "houseId": "H1",
+            "kind": "body",
+            "rect": {
+              "x0": -12,
+              "z0": -3.5,
+              "x1": -3,
+              "z1": 3.5
+            },
+            "base": 0,
+            "top": 8.550551875960082,
+            "polygon": [
+              {
+                "x": -12.491892921458371,
+                "y": -3.5
+              },
+              {
+                "x": -3.49189292145837,
+                "y": -3.5
+              },
+              {
+                "x": -2.50810707854163,
+                "y": 3.5
+              },
+              {
+                "x": -11.508107078541629,
+                "y": 3.5
+              }
+            ]
+          },
+          {
+            "id": "right",
+            "label": "Rechtes Haus",
+            "houseId": "H2",
+            "kind": "body",
+            "rect": {
+              "x0": 3,
+              "z0": -4,
+              "x1": 11,
+              "z1": 4
+            },
+            "base": 0,
+            "top": 8.97414527949877,
+            "polygon": [
+              {
+                "x": 2.4378366611904343,
+                "y": -4
+              },
+              {
+                "x": 10.437836661190435,
+                "y": -4
+              },
+              {
+                "x": 11.562163338809565,
+                "y": 4
+              },
+              {
+                "x": 3.5621633388095657,
+                "y": 4
+              }
+            ]
+          },
+          {
+            "id": "bridge",
+            "label": "Übergang",
+            "houseId": null,
+            "kind": "bridge",
+            "rect": {
+              "x0": -4.2,
+              "z0": -1.2,
+              "x1": 4.2,
+              "z1": 1.2
+            },
+            "base": 0,
+            "top": 2.4,
+            "supportIds": [
+              "left",
+              "right"
+            ],
+            "polygon": [
+              {
+                "x": -4.36864900164287,
+                "y": -1.2
+              },
+              {
+                "x": 4.03135099835713,
+                "y": -1.2
+              },
+              {
+                "x": 4.36864900164287,
+                "y": 1.2
+              },
+              {
+                "x": -4.03135099835713,
+                "y": 1.2
+              }
+            ]
+          }
+        ],
+        "connections": [
+          {
+            "id": "C1",
+            "fromHouseId": "H1",
+            "toHouseId": "H2",
+            "partId": "bridge",
+            "open": false
+          }
+        ],
+        "shear": 0.14054083470239145,
+        "plot": {
+          "x0": -17,
+          "z0": -12,
+          "x1": 17,
+          "z1": 12
+        },
+        "passages": [
+          {
+            "label": "Versuchsdurchgang",
+            "rect": {
+              "x0": -3,
+              "z0": -8,
+              "x1": 3,
+              "z1": 8
+            },
+            "height": 3
+          }
+        ]
+      },
+      "report": {
+        "valid": false,
+        "issues": [
+          {
+            "partId": "bridge",
+            "message": "Blockiert den freizuhaltenden Versuchsdurchgang."
+          }
+        ],
+        "houseCount": 2,
+        "partCount": 3,
+        "groundAreaM2": 141.4,
+        "projectionAreaM2": 141.4,
+        "maxHeightM": 8.97414527949877,
+        "minCornerAngleDegrees": 82,
+        "connectionCount": 1
+      }
+    }
+  ]
+}
