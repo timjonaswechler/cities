@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "name": "Gebäudeformen V1",
+  "minAreaM2": 24.0,
+  "minWidthM": 6.0,
+  "minDepthM": 4.0,
+  "minAngleDegrees": 25.0,
+  "minContactM": 6.0
+}
