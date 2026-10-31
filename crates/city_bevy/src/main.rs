@@ -1099,12 +1099,13 @@ fn update_labels(
                 if state.economy_enabled { "[x]" } else { "[ ]" }
             ),
             Action::Buildings => format!(
-                "{} Gebäudeformen V1  [B]",
+                "{} Gebäudeformen V{}  [B]",
                 if state.buildings_enabled {
                     "[x]"
                 } else {
                     "[ ]"
-                }
+                },
+                state.building_profile.version
             ),
             Action::MarketSettings => {
                 if state.market_settings {
@@ -1159,8 +1160,9 @@ fn update_labels(
             .as_ref()
             .map(|p| {
                 format!(
-                    "\n{}: {} Teile zugeordnet · {:.1} m² ausgelassen",
-                    p.profile.name, p.summary.assigned_parts, p.summary.discarded_footprint_m2
+                    "\n{}: {} zugeordnet · {} bereinigt · {:.1} m² ausgelassen · {} kurze Restkanten",
+                    p.profile.name, p.summary.assigned_parts, p.summary.refined_buildings,
+                    p.summary.discarded_footprint_m2, p.summary.remaining_short_edges
                 )
             })
             .unwrap_or_default();

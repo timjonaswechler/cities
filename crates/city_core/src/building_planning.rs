@@ -1,5 +1,6 @@
 //! Opt-in footprint cleanup. The original generator and its random state are untouched.
 mod geometry;
+mod refinement;
 
 use crate::{Building, City, GenerationError, Point, Polygon, Ward};
 use geometry::{EPS, area, assess};
@@ -17,25 +18,53 @@ pub struct BuildingProfile {
     pub min_angle_degrees: f64,
     /// Minimum shared long wall for each allocated strip fragment (metres).
     pub min_contact_m: f64,
+    /// V2-only, subtractive refinement after neighbor allocation. V1 stays replayable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub refinement: Option<BuildingRefinementProfile>,
+}
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(default, deny_unknown_fields, rename_all = "camelCase")]
+pub struct BuildingRefinementProfile {
+    pub trim_tips: bool,
+    pub min_edge_m: f64,
+}
+impl Default for BuildingRefinementProfile {
+    fn default() -> Self {
+        Self {
+            trim_tips: true,
+            min_edge_m: 2.0,
+        }
+    }
 }
 impl Default for BuildingProfile {
     fn default() -> Self {
         Self {
-            version: 1,
-            name: "Gebäudeformen V1".into(),
+            version: 2,
+            name: "Gebäudeformen V2".into(),
             min_area_m2: 24.0,
             min_width_m: 6.0,
             min_depth_m: 4.0,
             min_angle_degrees: 25.0,
             min_contact_m: 6.0,
+            refinement: Some(BuildingRefinementProfile::default()),
         }
     }
 }
 impl BuildingProfile {
     pub fn validate(&self) -> Result<(), GenerationError> {
-        if self.version != 1 {
+        if !matches!(
+            (self.version, self.refinement.is_some()),
+            (1, false) | (2, true)
+        ) {
             return Err(GenerationError(
-                "Only building profile version 1 is supported".into(),
+                "Building profile must be version 1 without refinement or version 2 with refinement".into(),
+            ));
+        }
+        if let Some(refinement) = &self.refinement
+            && (!refinement.min_edge_m.is_finite() || refinement.min_edge_m < 0.0)
+        {
+            return Err(GenerationError(
+                "refinement.minEdgeM must be finite and nonnegative".into(),
             ));
         }
         for (name, value) in [
@@ -72,6 +101,8 @@ pub enum BuildingIssue {
     TooNarrow,
     TooShort,
     AcuteTip,
+    NarrowAppendage,
+    ShortEdge,
 }
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -79,6 +110,7 @@ pub enum BuildingDecisionKind {
     SideSplit,
     Merge,
     Omit,
+    Refine,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -106,6 +138,9 @@ pub struct BuildingDecision {
     pub measurements: BuildingMeasurements,
     pub assignments: Vec<BuildingAssignment>,
     pub discarded: Vec<DiscardedBuildingPart>,
+    /// Retained footprint for a subtractive refinement; no recipient assignment.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub polygon: Option<Polygon>,
 }
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -115,6 +150,10 @@ pub struct BuildingSummary {
     pub flagged_buildings: usize,
     pub assigned_parts: usize,
     pub omitted_buildings: usize,
+    #[serde(default)]
+    pub refined_buildings: usize,
+    #[serde(default)]
+    pub remaining_short_edges: usize,
     pub original_footprint_m2: f64,
     pub planned_footprint_m2: f64,
     pub discarded_footprint_m2: f64,
@@ -219,6 +258,7 @@ pub fn plan_buildings(
                 measurements: checks[i].0.clone(),
                 assignments,
                 discarded: work.discarded,
+                polygon: None,
             });
         }
         output.buildings = ward
@@ -240,6 +280,27 @@ pub fn plan_buildings(
                 b
             })
             .collect();
+        if let Some(settings) = &profile.refinement {
+            let indices = (0..ward.buildings.len()).filter(|i| !removed.contains(i));
+            for (i, building) in indices.zip(&mut output.buildings) {
+                if !ordinary(building) {
+                    continue;
+                }
+                let result = refinement::refine(&building.polygon, profile, settings);
+                if result.polygon != building.polygon {
+                    decisions.push(BuildingDecision {
+                        source_id: format!("{}:{i}", ward.id),
+                        kind: BuildingDecisionKind::Refine,
+                        issues: result.issues,
+                        measurements: assess(&building.polygon, profile).0,
+                        assignments: vec![],
+                        discarded: result.discarded,
+                        polygon: Some(result.polygon.clone()),
+                    });
+                    building.polygon = result.polygon;
+                }
+            }
+        }
     }
     let footprint = |c: &City| {
         c.wards
@@ -255,8 +316,21 @@ pub fn plan_buildings(
         assigned_parts: decisions.iter().map(|d| d.assignments.len()).sum(),
         omitted_buildings: decisions
             .iter()
-            .filter(|d| d.assignments.is_empty())
+            .filter(|d| d.kind == BuildingDecisionKind::Omit)
             .count(),
+        refined_buildings: decisions
+            .iter()
+            .filter(|d| d.kind == BuildingDecisionKind::Refine)
+            .count(),
+        remaining_short_edges: profile.refinement.as_ref().map_or(0, |settings| {
+            planned
+                .wards
+                .iter()
+                .flat_map(|w| &w.buildings)
+                .filter(|b| ordinary(b))
+                .map(|b| refinement::short_edges(&b.polygon, settings.min_edge_m).len())
+                .sum()
+        }),
         original_footprint_m2: footprint(city),
         planned_footprint_m2: footprint(&planned),
         discarded_footprint_m2: decisions

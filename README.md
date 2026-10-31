@@ -37,7 +37,7 @@ Die Seitenleiste steuert Seed, Stadtgröße, Zitadelle, innere Burg, Marktplatz,
 | `Enter` | Stadt erneut berechnen / Seed übernehmen |
 | `T` | Zwischen Draufsicht und Perspektive wechseln |
 | `E` | Marktplanung V1 ein-/ausschalten |
-| `B` | Gebäudeformen V1 ein-/ausschalten |
+| `B` | Gebäudeformen V2 ein-/ausschalten |
 | `Home` | Kamera zurücksetzen |
 | `+` / `−` | Stadtgröße ändern |
 | `Esc` | Seedeingabe abbrechen / Anwendung schließen |
@@ -78,20 +78,20 @@ Das benannte V1-Profil ist konfigurierbar. Das HTML-Stadtlabor bleibt als Refere
 
 Details, Profilformat und Nachfrage-Interface: [Marktplanung V1](docs/market-planning-v1.md). Quellen: [Recherche](docs/research-organic-cities.md). Die [Experimentierspur](docs/organic-city-experiments.md) hält die früheren Marktflächen-/Hof-/Vorstadtversuche und offenen Fragen fest; die HTML-Stadtlabore liegen unter `crates/city_core/prototypes/`.
 
-## Gebäudeformen V1
+## Gebäudeformen V2
 
-Mit `B` oder `--buildings` zuschalten: zu kleine oder unbrauchbar schmale/spitze Restformen werden ausgelassen oder mit direkten Nachbarn vereinigt. Schmale Streifen werden entlang gemeinsamer Längswände aufgeteilt, statt am kurzen Ende als dünner Arm angehängt zu werden. Flächenverlust und Zuordnungen sind nachvollziehbar; der Originalmodus bleibt unverändert verfügbar.
+Mit `B` oder `--buildings` zuschalten: zu kleine oder unbrauchbar schmale/spitze Restformen werden ausgelassen oder mit direkten Nachbarn vereinigt. Schmale Streifen werden entlang gemeinsamer Längswände aufgeteilt, statt am kurzen Ende als dünner Arm angehängt zu werden. V2 kürzt zusätzlich lange schmale Ausläufer auf eine breitere Abschlusskante (Standard 6 m) und bereinigt danach Kanten unter 2 m, ohne Fläche aufzufüllen. Genau 2 m lange Kanten bleiben erhalten. Flächenverlust, Zuordnungen und nicht sicher entfernbare Restkanten sind nachvollziehbar; der Originalmodus und das bisherige V1-Profil bleiben verfügbar.
 
 ```sh
 cargo run -- --seed 42 --size 25 --economy --buildings
-cargo run -- --seed 42 --size 25 --economy --building-profile assets/building-profiles/buildings-v1.json
+cargo run -- --seed 42 --size 25 --economy --building-profile assets/building-profiles/buildings-v2.json
 cargo run -- --write-building-profile exports/building-profile.json
 cargo run -- --seed 42 --size 25 --economy --buildings --export exports/planned-city.json
 ```
 
-Für die Abnahme bleibt **Purplechurch mit Seed 42 und Größe 25 aus PR #1** die Vergleichsbasis. Der [HTML-Vergleich](docs/building-planning-v1-comparison.html) zeigt Original und Planung bei identischen Optionen und identischer Kamera, einschließlich Detailmarkierung; herunterladen und per Doppelklick öffnen. Stormwind dient nur als zusätzlicher Aufteilungs-Testfall.
+Für die Abnahme bleibt **Purplechurch mit Seed 42 und Größe 25 aus PR #1** die Vergleichsbasis. Der [HTML-Vergleich](docs/building-planning-v2-comparison.html) zeigt Original und Planung bei identischen Optionen und identischer Kamera, einschließlich Detailmarkierung; herunterladen und per Doppelklick öffnen. Stormwind dient nur als zusätzlicher Aufteilungs-Testfall.
 
-Die Marktplanung wird bei gemeinsamer Aktivierung auf den tatsächlich angezeigten Grundrissen neu berechnet. Die Formgrenzen sind konfigurierbare Versuchswerte, keine zertifizierten Raummaße. Komplexe lokale Engstellen, tatsächliche Nutzung und Eigentumsrechte bleiben offen. Details, Exportversion und Prüfnachweise: [Gebäudeformen V1](docs/building-planning-v1.md).
+Die Marktplanung wird bei gemeinsamer Aktivierung auf den tatsächlich angezeigten Grundrissen neu berechnet. Die Formgrenzen sind konfigurierbare Versuchswerte, keine zertifizierten Raummaße. Komplexe lokale Engstellen, tatsächliche Nutzung und Eigentumsrechte bleiben offen. Details, Exportversion und Prüfnachweise: [Gebäudeformen V2](docs/building-planning-v1.md).
 
 ## Generator verwenden
 
@@ -121,6 +121,7 @@ cargo fmt --all --check
 cargo clippy --workspace --all-targets -- -D warnings
 python3 tools/verify-archive.py
 node tools/verify-building-draft.mjs
+node tools/verify-building-refinement.mjs
 ```
 
 Die Referenzen stammen aus dem unabhängig ausgeführten vollständigen Originalbundle, Version **0.11.5, Build 2431**. Verglichen werden vollständige kanonische Modelle mit exakten `f64`-Werten, ohne Rundungstoleranz. Die Referenzumgebung ist Node 26.7.0 auf macOS ARM64. Verschiedene JavaScript-Laufzeiten lieferten bereits im Original unterschiedliche Ergebnisse einzelner Math-Funktionen; deshalb bedeutet dieser Vergleich keine pauschale Bitgleichheit mit jeder Browser-/CPU-Kombination.

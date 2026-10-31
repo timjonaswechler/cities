@@ -250,7 +250,7 @@ pub(super) fn unite(a: &[Point], b: &[Point]) -> Option<(Polygon, f64)> {
     (simple(&result) && (area(&result) - area(&a) - area(&b)).abs() <= 1e-5)
         .then_some((result, shared * SCALE))
 }
-fn clip(p: &[Point], axis: Point, bound: f64, less: bool) -> Polygon {
+pub(super) fn clip(p: &[Point], axis: Point, bound: f64, less: bool) -> Polygon {
     let value = |p| dot(p, axis);
     let keep = |p| {
         if less {
@@ -271,6 +271,21 @@ fn clip(p: &[Point], axis: Point, bound: f64, less: bool) -> Polygon {
         }
     }
     dedup(out)
+}
+/// A replacement chord must stay on/in the old boundary, not fill a concave notch.
+pub(super) fn chord_inside(p: &[Point], a: Point, b: Point) -> bool {
+    inside(a.lerp(b, 0.5), p, true)
+        && !edges(p).any(|(c, d)| {
+            let r = b.minus(a);
+            let s = d.minus(c);
+            let v = cross(r, s);
+            if v.abs() < EPS {
+                return false;
+            }
+            let t = cross(c.minus(a), s) / v;
+            let u = cross(c.minus(a), r) / v;
+            t > EPS && t < 1.0 - EPS && u > EPS && u < 1.0 - EPS
+        })
 }
 pub(super) fn slab(p: &[Point], axis: Point, lo: f64, hi: f64) -> Polygon {
     clip(&clip(p, axis, lo, false), axis, hi, true)

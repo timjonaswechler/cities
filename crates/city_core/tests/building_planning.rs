@@ -4,6 +4,12 @@ use city_core::{
 };
 use serde_json::Value;
 
+fn legacy_profile() -> BuildingProfile {
+    serde_json::from_str(include_str!(
+        "../../../assets/building-profiles/buildings-v1.json"
+    ))
+    .unwrap()
+}
 fn stormwind() -> City {
     serde_json::from_str(include_str!("building-fixtures/stormwind.json")).unwrap()
 }
@@ -35,7 +41,7 @@ fn polygon_matches(a: &[Point], b: &[Point]) -> bool {
 fn accepted_strip_is_split_sideways_instead_of_becoming_an_arm() {
     let city = stormwind();
     let original = serde_json::to_value(&city).unwrap();
-    let plan = plan_buildings(&city, &BuildingProfile::default()).unwrap();
+    let plan = plan_buildings(&city, &legacy_profile()).unwrap();
     let decision = plan
         .decisions
         .iter()
@@ -69,7 +75,7 @@ fn accepted_strip_is_split_sideways_instead_of_becoming_an_arm() {
     );
     assert_eq!(
         serde_json::to_value(&plan).unwrap(),
-        serde_json::to_value(plan_buildings(&city, &BuildingProfile::default()).unwrap()).unwrap()
+        serde_json::to_value(plan_buildings(&city, &legacy_profile()).unwrap()).unwrap()
     );
     assert_eq!(plan.building_origins.len(), plan.city.building_count());
     let mut seen = std::collections::BTreeSet::new();
@@ -115,7 +121,7 @@ fn rust_matches_all_nine_accepted_draft_cases() {
     for case in expected["cases"].as_array().unwrap() {
         let profile = BuildingProfile {
             min_contact_m: case["minContactM"].as_f64().unwrap(),
-            ..Default::default()
+            ..legacy_profile()
         };
         let plan = plan_buildings(&city, &profile).unwrap();
         let d = plan
@@ -237,7 +243,12 @@ fn named_profile_and_unflagged_irregular_buildings_are_preserved() {
         "../../../assets/building-profiles/buildings-v1.json"
     ))
     .unwrap();
-    assert_eq!(profile, BuildingProfile::default());
+    assert_eq!(profile, legacy_profile());
+    let original: Value = serde_json::from_str(include_str!(
+        "../../../assets/building-profiles/buildings-v1.json"
+    ))
+    .unwrap();
+    assert_eq!(serde_json::to_value(&profile).unwrap(), original);
     let mut building = rectangle(0., 0., 4., 4.);
     building.polygon = vec![
         Point { x: 0., y: 0. },
@@ -289,7 +300,11 @@ fn planning_is_finite_and_balanced_on_mixed_generated_cities() {
         );
         assert_eq!(serde_json::to_value(&city).unwrap(), original);
         assert_eq!(
-            p.city.building_count() + p.summary.flagged_buildings,
+            p.city.building_count()
+                + p.decisions
+                    .iter()
+                    .filter(|d| d.kind != BuildingDecisionKind::Refine)
+                    .count(),
             city.building_count()
         );
     }
@@ -299,7 +314,7 @@ fn profile_is_validated_and_original_generation_stays_reproducible() {
     let city = stormwind();
     for profile in [
         BuildingProfile {
-            version: 2,
+            version: 3,
             ..Default::default()
         },
         BuildingProfile {

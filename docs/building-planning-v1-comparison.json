@@ -112,7 +112,7 @@
   },
   "captureCommands": [
     "target/debug/city_bevy --seed 42 --size 25 --market-profile assets/market-profiles/market-v1.json --screenshot docs/building-planning-v1-original.png --smoke-test",
-    "target/debug/city_bevy --seed 42 --size 25 --market-profile assets/market-profiles/market-v1.json --buildings --screenshot docs/building-planning-v1-preview.png --smoke-test"
+    "target/debug/city_bevy --seed 42 --size 25 --market-profile assets/market-profiles/market-v1.json --building-profile assets/building-profiles/buildings-v1.json --screenshot docs/building-planning-v1-preview.png --smoke-test"
   ],
   "imageSha256": {
     "market-v1-preview.png": "ee33a11cab3c49b4a53ab1b5c4e3b2a35fa9c92fb3e577c29e87e759bf379443",
