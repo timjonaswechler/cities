@@ -1,0 +1,30 @@
+   Compiling city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-e3f6a454/crates/city_bevy)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.60s
+     Running tests/city_building_types.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/city_building_types-70e57d2802d4a6b3)
+
+running 3 tests
+test hard_limits_beat_preferences_and_reservations ... FAILED
+test protected_and_invalid_contours_are_not_repaired ... ok
+test real_sites_both_types_variation_and_immutable_original ... FAILED
+
+failures:
+
+---- hard_limits_beat_preferences_and_reservations stdout ----
+
+thread 'hard_limits_beat_preferences_and_reservations' (2840112) panicked at crates/city_bevy/tests/city_building_types.rs:46:42:
+called `Result::unwrap()` on an `Err` value: "original contour overlaps existing building 3:3; original retained"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- real_sites_both_types_variation_and_immutable_original stdout ----
+
+thread 'real_sites_both_types_variation_and_immutable_original' (2840114) panicked at crates/city_bevy/tests/city_building_types.rs:25:38:
+called `Option::unwrap()` on a `None` value
+
+
+failures:
+    hard_limits_beat_preferences_and_reservations
+    real_sites_both_types_variation_and_immutable_original
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.78s
+
+error: test failed, to rerun pass `-p city_bevy --test city_building_types`

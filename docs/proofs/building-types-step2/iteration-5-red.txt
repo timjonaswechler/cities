@@ -1,0 +1,22 @@
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 10.08s
+     Running tests/townhouse_profile_limits.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/townhouse_profile_limits-068ff87d73cfee95)
+
+running 1 test
+test gate_roof_cannot_overtop_main_roof ... FAILED
+
+failures:
+
+---- gate_roof_cannot_overtop_main_roof stdout ----
+
+thread 'gate_roof_cannot_overtop_main_roof' (2619699) panicked at crates/building_core/tests/townhouse_profile_limits.rs:11:5:
+gate ridge 10.8 m must not tower over the main ridge at 8.8 m
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    gate_roof_cannot_overtop_main_roof
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p building_core --test townhouse_profile_limits`

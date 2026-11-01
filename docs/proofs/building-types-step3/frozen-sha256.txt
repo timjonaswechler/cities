@@ -1,0 +1,4 @@
+444b0a2838d44bbefb7c3465658692d475895c71d86516961efe81c43f94fad5  crates/city_bevy/tests/fixtures/city-building-types-v1.json
+6c77135d5554241cf26ac1b8a18279441a735a39cb88a933bdc69fa559a2a68b  assets/building-types/purplechurch.json
+481b1f520b5b0c2697e2640e14e11ef65c8f67ca41d726c3fc4c28ab9dab09c4  crates/building_core/tests/fixtures/generation-v1.json
+c5bc78952d2d6f649e59d6d3b3a5a78c420fe27c74755ee4f449052b8c2e11de  crates/building_core/tests/fixtures/townhouse-v1.json

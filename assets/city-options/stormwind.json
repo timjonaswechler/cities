@@ -1,0 +1,18 @@
+{
+  "seed": 1855362386,
+  "size": 15,
+  "citadel": true,
+  "urban_castle": true,
+  "plaza": false,
+  "temple": true,
+  "walls": true,
+  "shantytown": false,
+  "coast": false,
+  "river": false,
+  "greens": true,
+  "gates": -1,
+  "hub": true,
+  "sea": 0.0,
+  "name": null,
+  "population": null
+}

@@ -1,0 +1,54 @@
+{
+  "base": "6ea9dd29c9653035aa077e246ed13769a38b6bc2",
+  "method": "Compared bytes of git show BASE:path to working file for every pre-existing tracked path except the three permitted Cargo files.",
+  "allowed_existing_path_changes": [
+    "Cargo.lock",
+    "Cargo.toml",
+    "crates/city_bevy/Cargo.toml"
+  ],
+  "checked_existing_file_count": 184,
+  "unchanged": true,
+  "unexpected_changes": [],
+  "critical_files": [
+    {
+      "path": "crates/city_bevy/src/main.rs",
+      "sha256": "f03455905724e49d7143429fe6de8a2c8199de7830e588fac4076412719a988a",
+      "unchanged": true
+    },
+    {
+      "path": "crates/city_bevy/src/mesh.rs",
+      "sha256": "57b8f0774a08b8db263727f2e2ef66c67eaa2387ec7d4ab792bdfd1464e17b3c",
+      "unchanged": true
+    },
+    {
+      "path": "crates/city_core/prototypes/README.md",
+      "sha256": "d9404002dc0a66d189649fdca5260161d46a7bb33c839409ca332064793affe9",
+      "unchanged": true
+    },
+    {
+      "path": "crates/city_core/prototypes/house-blockout-lab.html",
+      "sha256": "39d949c925b00784bcfa1ee2cc1dbd7a50f98142eedadc564e93b5eab350374e",
+      "unchanged": true
+    },
+    {
+      "path": "docs/house-blockout-lab.md",
+      "sha256": "79985f67d6d11428b2ae2e0a230d3448ccee69dc28e881d051905f168f2c9a6d",
+      "unchanged": true
+    },
+    {
+      "path": "docs/house-blockout-proof.json",
+      "sha256": "d45063ded56b3bafb8470d0b0186697e863d58444584883119e11fe4d491366d",
+      "unchanged": true
+    },
+    {
+      "path": "docs/house-blockout-village.png",
+      "sha256": "d24ed2b586095e88cf07b26c0e7da526ea43fa6992ef11cca51db10d98a30c24",
+      "unchanged": true
+    },
+    {
+      "path": "docs/social-settlement-design.md",
+      "sha256": "096d72ac30f91882b39f87d9c609e6772c0e7128455a3521b5ad993b27ea725d",
+      "unchanged": true
+    }
+  ]
+}

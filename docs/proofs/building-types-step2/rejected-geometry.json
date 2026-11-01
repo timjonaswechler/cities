@@ -1,0 +1,100 @@
+{
+  "corpus_version": 1,
+  "type": "TownhouseWithGate",
+  "profile_name": "town_standard",
+  "site_name": "town_blocked",
+  "seed": 7,
+  "profile": {
+    "length": [
+      8.0,
+      8.8
+    ],
+    "depth": [
+      5.0,
+      5.6
+    ],
+    "lower_height": 3.5,
+    "upper_height": 2.8,
+    "roof_rise": 2.5,
+    "overhang": [
+      0.4,
+      0.6
+    ],
+    "gate_span": 4.0,
+    "gate_pier": 0.65,
+    "gate_spring": 2.2,
+    "gate_rise": 1.0,
+    "gate_wall_top": 4.8,
+    "gate_roof_rise": 1.5,
+    "setback": 1.2
+  },
+  "site": {
+    "ground": [
+      {
+        "x": -10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": 8.0
+      },
+      {
+        "x": -10.0,
+        "z": 8.0
+      }
+    ],
+    "envelope": [
+      {
+        "x": -10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": 8.0
+      },
+      {
+        "x": -10.0,
+        "z": 8.0
+      }
+    ],
+    "max_height": 11.0,
+    "annex_allowed": false,
+    "max_overhang": 0.8,
+    "access": [
+      {
+        "footprint": [
+          {
+            "x": -10.0,
+            "z": -7.0
+          },
+          {
+            "x": 10.0,
+            "z": -7.0
+          },
+          {
+            "x": 10.0,
+            "z": 8.0
+          },
+          {
+            "x": -10.0,
+            "z": 8.0
+          }
+        ],
+        "clearance": 2.0
+      }
+    ]
+  },
+  "result": {
+    "Err": {
+      "NoFit": "Storeys or gate violate ground contact, upper projection, roof height or reserved passage clearance"
+    }
+  }
+}

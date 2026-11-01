@@ -1,0 +1,10 @@
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.27s
+     Running `/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/examples/building_zoo --type townhouse-with-gate --site town_rectangle --profile town_standard --seed 91 --camera oblique --screenshot docs/proofs/building-types-step2/town_rectangle-town_standard-91-oblique.png --smoke-test --export docs/proofs/building-types-step2/town_rectangle-town_standard-91-oblique.json`
+type=TownhouseWithGate profile=town_standard site=town_rectangle seed=91: 3 parts; []
+[2m2026-11-01T21:57:40.107849Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 27.2", kernel: "27.2.0", cpu: "Apple M1 Pro", core_count: "10", memory: "16.0 GiB" }
+[2m2026-11-01T21:57:40.213281Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T21:57:40.255139Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T21:57:40.255198Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T21:57:40.291109Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window building_core · synthetic prototype zoo (67v0)
+[2m2026-11-01T21:57:48.394887Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m CAPTURE saved docs/proofs/building-types-step2/town_rectangle-town_standard-91-oblique.png
+[2m2026-11-01T21:57:48.398866Z[0m [33m WARN[0m [2mbevy_winit::state[0m[2m:[0m Skipped event Destroyed for unknown winit Window Id WindowId(515880994048)

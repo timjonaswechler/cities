@@ -1,0 +1,11 @@
+town_rectangle-town_standard-7-oblique: exit 0
+town_rectangle-town_standard-7-rear: exit 0
+town_rectangle-town_standard-7-top: exit 0
+town_rectangle-town_standard-91-oblique: exit 0
+town_rectangle-town_compact-7-oblique: exit 0
+town_irregular-town_standard-7-oblique: exit 0
+town_access-town_access_profile-7-rear: exit 0
+town_no_overhang-town_flush-7-rear: exit 0
+irregular-standard-7-oblique: exit 0
+[2m2026-11-01T21:58:54.191797Z[0m [31mERROR[0m [2mbuilding_zoo[0m[2m:[0m CAPTURE failed: File exists (os error 17)
+PASS: capture save failure returned exit 1

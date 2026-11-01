@@ -1,0 +1,14 @@
+VERDICT: CHANGES
+
+S1 [should] crates/building_core/src/generation/townhouse_with_gate.rs:32
+The hierarchy guard compares wall heights only, allowing the supposedly lower
+gate wing to tower above the main roof. Verified with town_rectangle /
+town_standard, seed 7, changing only gate_roof_rise to 6.0:
+generation succeeds with gate ridge 10.8 m, versus main ridge 8.8 m.
+Minimal fix: validate gate/main roof-height hierarchy and add this regression case.
+
+All eight scoped core tests passed independently; frozen fixture SHA256 matches.
+Pending runtime captures were not treated as passed.
+Provider/model/options verified in delegate response:
+pi / openai-codex/gpt-6.1-sol / thinking=high.
+Usage not exposed.

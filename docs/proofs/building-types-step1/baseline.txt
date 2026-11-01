@@ -1,0 +1,51 @@
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-a02c8549/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.42s
+     Running tests/generation_contract.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/generation_contract-95af500ad19130e7)
+
+running 3 tests
+test rejects_non_finite_invalid_profiles_and_degenerate_sites ... FAILED
+test frozen_synthetic_contract ... FAILED
+test real_variation_and_rigid_equivariance ... FAILED
+
+failures:
+
+---- rejects_non_finite_invalid_profiles_and_degenerate_sites stdout ----
+
+thread 'rejects_non_finite_invalid_profiles_and_degenerate_sites' (2424308) panicked at crates/building_core/tests/generation_contract.rs:224:9:
+assertion failed: matches!(generate(BuildingType::HouseWithAnnex, &bad, p, 7),
+    Err(Rejection::InvalidInput(_)))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- frozen_synthetic_contract stdout ----
+
+thread 'frozen_synthetic_contract' (2424306) panicked at crates/building_core/tests/generation_contract.rs:169:5:
+synthetic-01: expected annex, got Err(NotImplemented)
+synthetic-02: expected annex, got Err(NotImplemented)
+synthetic-03: expected annex, got Err(NotImplemented)
+synthetic-04: expected annex, got Err(NotImplemented)
+synthetic-05: expected annex, got Err(NotImplemented)
+synthetic-06: expected annex, got Err(NotImplemented)
+synthetic-07: expected main, got Err(NotImplemented)
+synthetic-08: expected main, got Err(NotImplemented)
+synthetic-09: expected main, got Err(NotImplemented)
+synthetic-10: expected NoFit, got Err(NotImplemented)
+synthetic-11: expected NoFit, got Err(NotImplemented)
+synthetic-12: expected NoFit, got Err(NotImplemented)
+synthetic-13: expected NoFit, got Err(NotImplemented)
+synthetic-14: expected InvalidInput, got Err(NotImplemented)
+synthetic-15: expected NoFit, got Err(NotImplemented)
+
+---- real_variation_and_rigid_equivariance stdout ----
+
+thread 'real_variation_and_rigid_equivariance' (2424307) panicked at crates/building_core/tests/generation_contract.rs:176:79:
+called `Result::unwrap()` on an `Err` value: NotImplemented
+
+
+failures:
+    frozen_synthetic_contract
+    real_variation_and_rigid_equivariance
+    rejects_non_finite_invalid_profiles_and_degenerate_sites
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p building_core --test generation_contract`

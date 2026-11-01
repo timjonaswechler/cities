@@ -1,0 +1,105 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde v1.0.229
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.3
+   Compiling serde_json v1.0.154
+   Compiling foldhash v0.2.0
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling indexmap v2.14.2
+   Compiling syn v3.0.9
+   Compiling syn v3.0.9
+   Compiling serde_json v1.0.154
+   Compiling serde_derive v1.0.229
+    Blocking waiting for file lock on build directory
+   Compiling serde v1.0.229
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3m 47s
+     Running tests/townhouse_contract.rs (/tmp/cities-building-core-step2/debug/deps/townhouse_contract-31dd64a96c0f877e)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 21s
+     Running tests/townhouse_contract.rs (/tmp/cities-building-core-step2/debug/deps/townhouse_contract-31dd64a96c0f877e)
+
+running 3 tests
+
+running 3 tests
+test frozen_townhouse_contract ... FAILED
+test variants_and_frontage_frame ... FAILED
+test frozen_townhouse_contract ... FAILED
+test independent_headroom_and_parameter_checks ... FAILED
+test variants_and_frontage_frame ... FAILED
+
+failures:
+
+---- frozen_townhouse_contract stdout ----
+
+thread 'frozen_townhouse_contract' (2592914) panicked at crates/building_core/tests/townhouse_contract.rs:225:5:
+suitable expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+other-seed expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+compact expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+rotated expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+local-contour expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+flush-permitted expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+required-access expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+upper-outside-ground expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- independent_headroom_and_parameter_checks stdout ----
+
+thread 'independent_headroom_and_parameter_checks' (2592915) panicked at crates/building_core/tests/townhouse_contract.rs:232:65:
+called `Result::unwrap()` on an `Err` value: NoFit("Townhouse generator not implemented yet")
+
+---- variants_and_frontage_frame stdout ----
+
+thread 'variants_and_frontage_frame' (2592916) panicked at crates/building_core/tests/townhouse_contract.rs:266:10:
+called `Result::unwrap()` on an `Err` value: NoFit("Townhouse generator not implemented yet")
+
+
+failures:
+    frozen_townhouse_contract
+    independent_headroom_and_parameter_checks
+    variants_and_frontage_frame
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p building_core --test townhouse_contract`
+test independent_headroom_and_parameter_checks ... FAILED
+
+failures:
+
+---- frozen_townhouse_contract stdout ----
+
+thread 'frozen_townhouse_contract' (2592913) panicked at crates/building_core/tests/townhouse_contract.rs:225:5:
+suitable expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+other-seed expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+compact expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+rotated expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+local-contour expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+flush-permitted expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+required-access expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+upper-outside-ground expected ok, got Err(NoFit("Townhouse generator not implemented yet"))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- variants_and_frontage_frame stdout ----
+
+thread 'variants_and_frontage_frame' (2592918) panicked at crates/building_core/tests/townhouse_contract.rs:266:10:
+called `Result::unwrap()` on an `Err` value: NoFit("Townhouse generator not implemented yet")
+
+---- independent_headroom_and_parameter_checks stdout ----
+
+thread 'independent_headroom_and_parameter_checks' (2592917) panicked at crates/building_core/tests/townhouse_contract.rs:232:65:
+called `Result::unwrap()` on an `Err` value: NoFit("Townhouse generator not implemented yet")
+
+
+failures:
+    frozen_townhouse_contract
+    independent_headroom_and_parameter_checks
+    variants_and_frontage_frame
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p building_core --test townhouse_contract`
+red baseline exit=101

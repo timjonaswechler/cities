@@ -1,0 +1,17 @@
+{
+  "base": "65e606a06a730f0b5a837fb2c383f53fd3298290",
+  "protected_tracked_paths": [
+    "crates/city_core",
+    "crates/city_bevy/src/main.rs",
+    "crates/city_bevy/src/mesh.rs",
+    "crates/city_bevy/src/building_adapter.rs",
+    "docs/proofs/building-types-step1",
+    "docs/house-blockout-lab.md",
+    "docs/house-blockout-townhouse.png",
+    "docs/social-settlement-design.md",
+    "docs/building-shapes-comparison.md",
+    "docs/courtyard-groups-round-1.md"
+  ],
+  "changed": [],
+  "passed": true
+}

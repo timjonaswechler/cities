@@ -1,0 +1,201 @@
+{
+  "purpose": "Native Umsetzung des akzeptierten B-/2-m-Drafts auf der PR-#1-Abnahmestadt",
+  "implementationBaseCommit": "bc7c801a78965d60c70ec90258991e2e42223764",
+  "implementationSourceSha256": {
+    "crates/city_core/src/building_planning.rs": "f6406c2a0d5b209866480bcffee1ee7de537ba9478184408008933d8b7a02196",
+    "crates/city_core/src/building_planning/geometry.rs": "a2739a1a1650d29e6d98af59b37bac19bca93c2ec40873266cba731a4a9d0683",
+    "crates/city_core/src/building_planning/refinement.rs": "2f095d3dbc1dd8e801185927c5e427bea839657b5f2ed609085fc66d7d021fa5",
+    "crates/city_bevy/src/main.rs": "f03455905724e49d7143429fe6de8a2c8199de7830e588fac4076412719a988a"
+  },
+  "referencePr": "https://github.com/timjonaswechler/cities/pull/1",
+  "cityOptions": {
+    "seed": 42,
+    "size": 25,
+    "citadel": true,
+    "urban_castle": false,
+    "plaza": true,
+    "temple": true,
+    "walls": true,
+    "shantytown": false,
+    "coast": false,
+    "river": false,
+    "greens": false,
+    "gates": -1,
+    "hub": false,
+    "sea": 0.0,
+    "name": null,
+    "population": null
+  },
+  "marketProfile": {
+    "version": 1,
+    "name": "Marktplanung V1",
+    "mainMin": 200.0,
+    "sideMin": 160.0,
+    "service": 240.0,
+    "districtWeight": 1.0,
+    "minBeneficiaries": 12,
+    "maxMarkets": 3
+  },
+  "buildingProfile": {
+    "version": 2,
+    "name": "Gebäudeformen V2",
+    "minAreaM2": 24.0,
+    "minWidthM": 6.0,
+    "minDepthM": 4.0,
+    "minAngleDegrees": 25.0,
+    "minContactM": 6.0,
+    "refinement": {
+      "trimTips": true,
+      "minEdgeM": 2.0
+    }
+  },
+  "camera": {
+    "preset": "orbit_for(city), unchanged default",
+    "yaw": 0.15,
+    "pitch": 0.95,
+    "bounds": {
+      "x": -114.94061815944019,
+      "y": -127.32576200477774,
+      "width": 206.38315204524002,
+      "height": 219.76315614814803
+    },
+    "viewport": [
+      1440,
+      960
+    ],
+    "inputDisabledForCapture": true
+  },
+  "originalMatchesSavedPr1CityAndEconomy": true,
+  "cityHashes": {
+    "canonicalization": "Python json sort_keys=True, ensure_ascii=False, separators=comma/colon; UTF-8",
+    "original": "60822f869d8444692a5f7c1b9cd36f3c464e3c898a0cd22e479264e4e07092de",
+    "planned": "d986bfc01aa03c9f165d45b46608451119177e18e9e9df53d7edd25d859fc4f2"
+  },
+  "summary": {
+    "originalBuildings": 422,
+    "plannedBuildings": 421,
+    "flaggedBuildings": 55,
+    "assignedParts": 0,
+    "omittedBuildings": 1,
+    "refinedBuildings": 54,
+    "remainingShortEdges": 0,
+    "originalFootprintM2": 172542.4679692601,
+    "plannedFootprintM2": 171827.62393284516,
+    "discardedFootprintM2": 714.8440364148832
+  },
+  "acceptedDraftSha256": "7e351ebcae264522196f6d56d766d8780dd7d2c89bd0c24665dd2df8c02e5f3f",
+  "decision": {
+    "sourceId": "21:7",
+    "kind": "refine",
+    "issues": [
+      "narrowAppendage",
+      "shortEdge"
+    ],
+    "measurements": {
+      "areaM2": 236.44043523434084,
+      "widthM": 14.219611269190821,
+      "depthM": 27.22053010676234,
+      "minAngleDegrees": 80.77533178222814
+    },
+    "assignments": [],
+    "discarded": [
+      {
+        "polygon": [
+          {
+            "x": 36.25240360993212,
+            "y": 59.93926386134497
+          },
+          {
+            "x": 36.653536875248584,
+            "y": 59.426098586777506
+          },
+          {
+            "x": 38.461456186392965,
+            "y": 61.07839826345356
+          },
+          {
+            "x": 37.44952096458607,
+            "y": 62.185641250277996
+          },
+          {
+            "x": 36.66592222838072,
+            "y": 60.166499112657306
+          }
+        ],
+        "areaM2": 36.25880287610562,
+        "reason": "Long narrow end trimmed"
+      },
+      {
+        "polygon": [
+          {
+            "x": 37.58160738881525,
+            "y": 62.52599563402841
+          },
+          {
+            "x": 37.44952096458607,
+            "y": 62.185641250277996
+          },
+          {
+            "x": 38.461456186392965,
+            "y": 61.07839826345356
+          }
+        ],
+        "areaM2": 3.9253468455681286,
+        "reason": "Short edge simplified without extending footprint"
+      },
+      {
+        "polygon": [
+          {
+            "x": 41.676827135356895,
+            "y": 64.01700085850177
+          },
+          {
+            "x": 39.22995239472768,
+            "y": 66.31605633945448
+          },
+          {
+            "x": 38.928564891673055,
+            "y": 66.32118413560845
+          }
+        ],
+        "areaM2": 5.442876127232012,
+        "reason": "Short edge simplified without extending footprint"
+      }
+    ],
+    "polygon": [
+      {
+        "x": 38.461456186392965,
+        "y": 61.07839826345356
+      },
+      {
+        "x": 41.676827135356895,
+        "y": 64.01700085850177
+      },
+      {
+        "x": 38.928564891673055,
+        "y": 66.32118413560845
+      },
+      {
+        "x": 37.18469118770077,
+        "y": 63.692629070284795
+      },
+      {
+        "x": 37.58160738881525,
+        "y": 62.52599563402841
+      }
+    ]
+  },
+  "captureCommands": [
+    "target/debug/city_bevy --seed 42 --size 25 --market-profile assets/market-profiles/market-v1.json --screenshot docs/building-planning-v2-original.png --smoke-test",
+    "target/debug/city_bevy --seed 42 --size 25 --market-profile assets/market-profiles/market-v1.json --buildings --screenshot docs/building-planning-v2-preview.png --smoke-test"
+  ],
+  "imageSha256": {
+    "building-planning-v2-original.png": "304735f1d98db26dee24d572b77958d818078c62027b1b4dea8365b121bd0ee0",
+    "building-planning-v2-preview.png": "a990761dcc13b92fe1e75d43816e053cd30773b7db8b738c5169f3c461bf2a3e"
+  },
+  "htmlPreviewEncoding": {
+    "format": "WebP",
+    "quality": 88,
+    "note": "Komprimierte HTML-Vorschauen; separate PNG-Dateien sind verlustfrei optimiert."
+  }
+}

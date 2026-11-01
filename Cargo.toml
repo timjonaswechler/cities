@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/city_core", "crates/city_bevy"]
+members = ["crates/city_core", "crates/city_bevy", "crates/building_core"]
 default-members = ["crates/city_bevy"]
 resolver = "3"
 

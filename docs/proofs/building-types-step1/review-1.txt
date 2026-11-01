@@ -1,0 +1,16 @@
+VERDICT: CHANGES
+Reviewer: provider pi, model openai-codex/gpt-6.1-sol, thinking=high (verified in delegate response).
+Usage: not exposed.
+
+S1 [should] crates/city_bevy/examples/building_zoo.rs:239-240:
+App::run() returns AppExit but the result is discarded. Capture failure and
+timeout therefore return shell exit 0. Independently reproduced with
+--screenshot /dev/null/building-review.png --smoke-test:
+CAPTURE failed: File exists (os error 17), process exit 0.
+Smallest fix: propagate unsuccessful AppExit to main's existing error exit;
+add a focused regression.
+
+Independent checks: core contract 3/3; profile regression 1/1; adapter/zoo 1+2;
+frozen hashes match; all 184 protected existing files byte-identical to base.
+No edits, children, remote jobs, or workspace-wide suite.
+Technical checks do not constitute design/user approval.
