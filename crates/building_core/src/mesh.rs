@@ -47,24 +47,32 @@ pub fn derive_meshes(design: &Design) -> Vec<SurfaceMesh> {
     let mut walls = empty(Material::Wall);
     let mut roofs = empty(Material::Roof);
     for part in &design.parts {
-        let p = part.footprint;
-        for i in 0..4 {
-            let a = p[i];
-            let b = p[(i + 1) % 4];
-            face(
-                &mut walls,
-                &[
-                    at(a, part.base),
-                    at(b, part.base),
-                    at(b, part.wall_top),
-                    at(a, part.wall_top),
-                ],
-                [b.z - a.z, 0., a.x - b.x],
-            );
+        for cell in crate::solid::cells(part) {
+            let p = cell.footprint;
+            for i in 0..4 {
+                let a = p[i];
+                let b = p[(i + 1) % 4];
+                face(
+                    &mut walls,
+                    &[
+                        at(a, cell.bottom[i]),
+                        at(b, cell.bottom[(i + 1) % 4]),
+                        at(b, cell.top[(i + 1) % 4]),
+                        at(a, cell.top[i]),
+                    ],
+                    [b.z - a.z, 0., a.x - b.x],
+                );
+            }
+            let bottom = std::array::from_fn::<_, 4, _>(|i| at(p[i], cell.bottom[i]));
+            face(&mut walls, &bottom, [0., -1., 0.]);
+            if part.roof.is_none() {
+                let top = std::array::from_fn::<_, 4, _>(|i| at(p[i], cell.top[i]));
+                face(&mut walls, &top, [0., 1., 0.]);
+            }
         }
-        face(&mut walls, &p.map(|p| at(p, part.base)), [0., -1., 0.]);
-        let q = roof_order(p, part.roof.axis).map(|p| at(p, part.wall_top));
-        let [a, b] = part.roof.ridge;
+        let Some(roof) = &part.roof else { continue };
+        let q = roof_order(part.footprint, roof.axis).map(|p| at(p, part.wall_top));
+        let [a, b] = roof.ridge;
         face(&mut roofs, &[q[0], q[3], b, a], [0., 1., 0.]);
         face(&mut roofs, &[q[1], q[2], b, a], [0., 1., 0.]);
         for (i, j, r) in [(0, 1, a), (2, 3, b)] {

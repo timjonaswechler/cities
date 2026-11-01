@@ -10,10 +10,28 @@ use serde::Deserialize;
 use std::collections::BTreeMap;
 
 const CORPUS: &str = include_str!("../../building_core/tests/fixtures/generation-v1.json");
+const TOWN_CORPUS: &str = include_str!("../../building_core/tests/fixtures/townhouse-v1.json");
+const DEMOS: &[(&str, &str, &str)] = &[
+    (CORPUS, "standard", "rectangle"),
+    (TOWN_CORPUS, "town_standard", "town_rectangle"),
+];
 #[derive(Deserialize, Resource)]
 struct Demos {
     profiles: BTreeMap<String, ResolvedProfile>,
     sites: BTreeMap<String, Site>,
+}
+impl Demos {
+    fn for_type(
+        kind: BuildingType,
+    ) -> Result<(Self, &'static str, &'static str), Box<dyn std::error::Error>> {
+        for &(json, profile, site) in DEMOS {
+            let demos: Self = serde_json::from_str(json)?;
+            if demos.profiles.values().all(|p| p.building_type() == kind) {
+                return Ok((demos, profile, site));
+            }
+        }
+        Err("no demo corpus for catalog type".into())
+    }
 }
 #[derive(Resource)]
 struct Zoo {
@@ -115,10 +133,10 @@ fn main() {
     }
 }
 fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let demos: Demos = serde_json::from_str(CORPUS)?;
-    let mut kind = BuildingType::HouseWithAnnex;
-    let mut profile = "standard".to_string();
-    let mut site = "rectangle".to_string();
+    let mut kind = REGISTRY[0].0;
+    let mut profile = String::new();
+    let mut site = String::new();
+    let mut help = false;
     let mut seed = 7;
     let mut view = "oblique".to_string();
     let mut capture = Capture::default();
@@ -153,16 +171,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             }
             "--export" => export = Some(args.next().ok_or("--export requires a JSON path")?),
             "--geometry-only" => geometry_only = true,
-            "--help" | "-h" => {
-                println!(
-                    "cargo run -p city_bevy --example building_zoo -- [--type house-with-annex] [--profile NAME] [--site NAME] [--seed N] [--camera oblique|rear|top] [--screenshot FILE.png --smoke-test] [--interaction-smoke] [--export FILE.json] [--geometry-only]\nProfiles: {:?}\nSites: {:?}\nRight drag: orbit; wheel: zoom; Home: reset; N: next seed; P: next profile; B: next site; Escape: quit",
-                    demos.profiles.keys().collect::<Vec<_>>(),
-                    demos.sites.keys().collect::<Vec<_>>()
-                );
-                return Ok(());
-            }
+            "--help" | "-h" => help = true,
             _ => return Err(format!("unknown argument {arg}").into()),
         }
+    }
+    let (demos, default_profile, default_site) = Demos::for_type(kind)?;
+    if profile.is_empty() {
+        profile = default_profile.into();
+    }
+    if site.is_empty() {
+        site = default_site.into();
+    }
+    if help {
+        println!(
+            "cargo run -p city_bevy --example building_zoo -- [--type NAME] [--profile NAME] [--site NAME] [--seed N] [--camera oblique|rear|top] [--screenshot FILE.png --smoke-test] [--interaction-smoke] [--export FILE.json] [--geometry-only]\nTypes: {:?}\nProfiles for {kind:?}: {:?}\nSites: {:?}\nRight drag: orbit; wheel: zoom; Home: reset; N: next seed; P: next profile; B: next site; Escape: quit",
+            REGISTRY.iter().map(|(_, name)| name).collect::<Vec<_>>(),
+            demos.profiles.keys().collect::<Vec<_>>(),
+            demos.sites.keys().collect::<Vec<_>>()
+        );
+        return Ok(());
     }
     if !["oblique", "rear", "top"].contains(&view.as_str()) {
         return Err("unknown camera view".into());
@@ -196,6 +223,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     synchronous_pipeline_compilation: capture.smoke,
                     ..default()
                 })
+                // Avoid the observed pipelined-render teardown stall in this
+                // isolated zoo; interactive and capture modes use the same path.
+                .disable::<bevy::render::pipelined_rendering::PipelinedRenderingPlugin>()
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "building_core · synthetic prototype zoo".into(),
@@ -625,7 +655,12 @@ mod tests {
     #[test]
     fn cli_demo_corpus_and_selection_are_shared() {
         let demos: Demos = serde_json::from_str(CORPUS).unwrap();
-        assert_eq!(REGISTRY.len(), 1);
+        assert_eq!(REGISTRY.len(), 2);
+        for &(kind, _) in REGISTRY {
+            let (demos, profile, site) = Demos::for_type(kind).unwrap();
+            assert!(generate(kind, &demos.sites[site], &demos.profiles[profile], 7).is_ok());
+            assert!(demos.profiles.values().all(|p| p.building_type() == kind));
+        }
         assert_eq!(next_key(&demos.profiles, "standard"), "access");
         assert!(
             generate(

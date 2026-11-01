@@ -17,6 +17,18 @@ struct Case {
     seed: u64,
     expect: String,
 }
+fn house(p: &ResolvedProfile) -> &HouseWithAnnexProfile {
+    let ResolvedProfile::HouseWithAnnex(p) = p else {
+        panic!("expected house profile")
+    };
+    p
+}
+fn house_mut(p: &mut ResolvedProfile) -> &mut HouseWithAnnexProfile {
+    let ResolvedProfile::HouseWithAnnex(p) = p else {
+        panic!("expected house profile")
+    };
+    p
+}
 fn corpus() -> Corpus {
     serde_json::from_str(include_str!("fixtures/generation-v1.json")).unwrap()
 }
@@ -76,7 +88,7 @@ fn validate(d: &Design, s: &Site) {
                 );
             }
         }
-        for r in part.roof.ridge {
+        for r in part.roof.as_ref().unwrap().ridge {
             assert!(r.iter().all(|v| v.is_finite()));
             assert!(r[1] > part.wall_top && r[1] <= s.max_height + 1e-7);
             assert!(inside(Point { x: r[0], z: r[2] }, &part.footprint));
@@ -118,7 +130,15 @@ fn validate(d: &Design, s: &Site) {
         assert_eq!(main.role, PartRole::Main);
         assert_eq!(annex.role, PartRole::Annex);
         assert!(area(&main.footprint) > area(&annex.footprint) * 1.5);
-        assert!(annex.roof.ridge.iter().all(|p| p[1] < main.wall_top));
+        assert!(
+            annex
+                .roof
+                .as_ref()
+                .unwrap()
+                .ridge
+                .iter()
+                .all(|p| p[1] < main.wall_top)
+        );
         assert!(!overlap(&main.footprint, &annex.footprint));
         // The annex's whole base edge lies on the parent's rear wall, not just a point.
         for p in &annex.footprint[..2] {
@@ -154,7 +174,7 @@ fn frozen_synthetic_contract() {
                     result,
                     generate(BuildingType::HouseWithAnnex, site, profile, case.seed)
                 );
-                if d.parts.len() == 1 && profile.annex == AnnexPolicy::Optional {
+                if d.parts.len() == 1 && house(profile).annex == AnnexPolicy::Optional {
                     assert!(!d.notes.is_empty());
                 }
             }
@@ -226,7 +246,7 @@ fn rejects_non_finite_invalid_profiles_and_degenerate_sites() {
             Err(Rejection::InvalidInput(_))
         ));
         let mut bad = p.clone();
-        bad.roof_rise = value;
+        house_mut(&mut bad).roof_rise = value;
         assert!(matches!(
             generate(BuildingType::HouseWithAnnex, s, &bad, 7),
             Err(Rejection::InvalidInput(_))
@@ -239,7 +259,7 @@ fn rejects_non_finite_invalid_profiles_and_degenerate_sites() {
         Err(Rejection::InvalidInput(_))
     ));
     let mut bad = p.clone();
-    bad.length = [12., 8.];
+    house_mut(&mut bad).length = [12., 8.];
     assert!(matches!(
         generate(BuildingType::HouseWithAnnex, s, &bad, 7),
         Err(Rejection::InvalidInput(_))

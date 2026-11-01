@@ -9,8 +9,12 @@ pub struct Point {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BuildingType {
     HouseWithAnnex,
+    TownhouseWithGate,
 }
-pub const REGISTRY: &[(BuildingType, &str)] = &[(BuildingType::HouseWithAnnex, "house-with-annex")];
+pub const REGISTRY: &[(BuildingType, &str)] = &[
+    (BuildingType::HouseWithAnnex, "house-with-annex"),
+    (BuildingType::TownhouseWithGate, "townhouse-with-gate"),
+];
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum AnnexPolicy {
     Forbidden,
@@ -18,7 +22,37 @@ pub enum AnnexPolicy {
     Required,
 }
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ResolvedProfile {
+#[serde(untagged)]
+pub enum ResolvedProfile {
+    HouseWithAnnex(HouseWithAnnexProfile),
+    TownhouseWithGate(TownhouseWithGateProfile),
+}
+impl ResolvedProfile {
+    pub fn building_type(&self) -> BuildingType {
+        match self {
+            Self::HouseWithAnnex(_) => BuildingType::HouseWithAnnex,
+            Self::TownhouseWithGate(_) => BuildingType::TownhouseWithGate,
+        }
+    }
+}
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct TownhouseWithGateProfile {
+    pub length: [f64; 2],
+    pub depth: [f64; 2],
+    pub lower_height: f64,
+    pub upper_height: f64,
+    pub roof_rise: f64,
+    pub overhang: [f64; 2],
+    pub gate_span: f64,
+    pub gate_pier: f64,
+    pub gate_spring: f64,
+    pub gate_rise: f64,
+    pub gate_wall_top: f64,
+    pub gate_roof_rise: f64,
+    pub setback: f64,
+}
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct HouseWithAnnexProfile {
     /// Inclusive main-body front/rear section interval, metres.
     pub length: [f64; 2],
     /// Depth perpendicular to the frontage, metres.
@@ -45,12 +79,18 @@ pub struct Site {
     pub envelope: Vec<Point>,
     pub max_height: f64,
     pub annex_allowed: bool,
+    /// Hard upper-storey projection beyond its supporting lower body, metres.
+    #[serde(default)]
+    pub max_overhang: f64,
     pub access: Vec<ReservedAccess>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PartRole {
     Main,
     Annex,
+    LowerStorey,
+    UpperStorey,
+    Gate,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RidgeAxis {
@@ -70,7 +110,18 @@ pub struct Part {
     pub footprint: [Point; 4],
     pub base: f64,
     pub wall_top: f64,
-    pub roof: Roof,
+    /// None for roofless storeys; never an internal dummy roof.
+    pub roof: Option<Roof>,
+    /// Through-opening along edge 0→1, continuing to edge 3→2.
+    pub opening: Option<ArchOpening>,
+}
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ArchOpening {
+    /// Fractions along the front and rear edges, strictly between 0 and 1.
+    pub interval: [f64; 2],
+    /// Absolute spring height and additional arch rise, metres.
+    pub spring: f64,
+    pub rise: f64,
 }
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Design {
@@ -104,6 +155,7 @@ impl std::error::Error for Rejection {}
 mod generation;
 mod geometry;
 mod mesh;
+mod solid;
 
 pub use generation::generate;
 pub use mesh::derive_meshes;

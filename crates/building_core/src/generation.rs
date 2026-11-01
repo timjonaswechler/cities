@@ -22,27 +22,39 @@ fn no_fit(reason: &str) -> Rejection {
 fn positive(v: f64) -> bool {
     v.is_finite() && v > 0. && v <= 1e4
 }
-fn validate(s: &Site, p: &ResolvedProfile) -> Result<(), Rejection> {
+mod house_with_annex;
+mod townhouse_with_gate;
+
+fn interval(r: [f64; 2]) -> bool {
+    positive(r[0]) && positive(r[1]) && r[0] <= r[1]
+}
+fn validate_site(s: &Site) -> Result<(), Rejection> {
     if s.ground.len() != 4 || !convex(&s.ground) || !convex(&s.envelope) {
         return Err(invalid(
             "Ground must be a strict convex CCW quadrilateral; envelope a convex CCW polygon",
         ));
     }
     if !positive(s.max_height)
+        || !s.max_overhang.is_finite()
+        || s.max_overhang < 0.
+        || s.max_overhang > 1e4
         || s.access
             .iter()
             .any(|a| !convex(&a.footprint) || !positive(a.clearance))
     {
         return Err(invalid(
-            "Height and reserved-access polygons/clearances must be finite and positive",
+            "Height, overhang limit and reserved access must be finite and valid",
         ));
     }
+    Ok(())
+}
+fn validate_house(p: &HouseWithAnnexProfile) -> Result<(), Rejection> {
     if [p.length, p.depth, p.annex_width, p.annex_depth]
         .into_iter()
-        .any(|r| !positive(r[0]) || !positive(r[1]) || r[0] > r[1])
-        || !positive(p.wall_height)
-        || !positive(p.roof_rise)
-        || !positive(p.setback)
+        .any(|r| !interval(r))
+        || [p.wall_height, p.roof_rise, p.setback]
+            .into_iter()
+            .any(|v| !positive(v))
     {
         return Err(invalid(
             "Resolved profile requires finite positive ordered dimensions, heights and setback",
@@ -76,40 +88,20 @@ pub(crate) fn roof_order(p: [Point; 4], axis: RidgeAxis) -> [Point; 4] {
         RidgeAxis::IntoSite => p,
     }
 }
-fn fits(part: &Part, s: &Site) -> bool {
-    convex(&part.footprint)
-        && area(&part.footprint) > 1.
-        && part
-            .footprint
-            .iter()
-            .all(|&p| inside(p, &s.ground) && inside(p, &s.envelope))
-        && part.roof.ridge.iter().all(|r| {
-            r.iter().all(|v| v.is_finite())
-                && r[1] > part.wall_top
-                && r[1] <= s.max_height + EPS
-                && inside(Point { x: r[0], z: r[2] }, &part.footprint)
-        })
-        && !s
-            .access
-            .iter()
-            .any(|a| part.base < a.clearance && overlap(&part.footprint, &a.footprint))
-}
 
-/// Generate a complete design or a reasoned rejection. No I/O or shared RNG.
-/// Coordinates/heights are metres. Ground vertices start with the frontage.
-pub fn generate(
-    kind: BuildingType,
-    s: &Site,
-    p: &ResolvedProfile,
-    seed: u64,
-) -> Result<Design, Rejection> {
-    validate(s, p)?;
-    match kind {
-        BuildingType::HouseWithAnnex => house(s, p, seed),
-    }
+enum SectionSampling {
+    Front,
+    Both,
 }
-fn house(s: &Site, p: &ResolvedProfile, seed: u64) -> Result<Design, Rejection> {
-    let mut rng = Rng(seed);
+fn place(
+    s: &Site,
+    length_range: [f64; 2],
+    depth_range: [f64; 2],
+    setback: f64,
+    reserve: f64,
+    sampling: SectionSampling,
+    rng: &mut Rng,
+) -> Result<[Point; 4], Rejection> {
     let origin = s.ground[0];
     let u = mul(
         sub(s.ground[1], origin),
@@ -127,22 +119,52 @@ fn house(s: &Site, p: &ResolvedProfile, seed: u64) -> Result<Design, Rejection> 
             "Rear corners must lie behind the frontage for this type",
         ));
     }
-    let length = rng.range(p.length);
-    let depth = rng.range(p.depth);
-    let front = p.setback;
+    let length = rng.range(length_range);
+    let depth = rng.range(depth_range);
+    let front = setback;
     let back = front + depth;
     // Sample the two *independent* local side limits at the front and rear.
     // Their tapered section is retained rather than repaired into a rectangle.
-    let left = |y: f64| q[3].x * y / q[3].z + p.setback;
-    let right = |y: f64| q[1].x + (q[2].x - q[1].x) * y / q[2].z - p.setback;
+    let left = |y: f64| q[3].x * y / q[3].z + setback;
+    let right = |y: f64| q[1].x + (q[2].x - q[1].x) * y / q[2].z - setback;
     let span = right(front) - left(front);
+    let length = match sampling {
+        SectionSampling::Front => length,
+        SectionSampling::Both => {
+            let ratio = (right(back) - left(back)) / span;
+            let feasible = [
+                length_range[0].max(length_range[0] / ratio),
+                length_range[1].min(length_range[1] / ratio),
+            ];
+            if !ratio.is_finite() || ratio <= 0. || feasible[0] > feasible[1] {
+                return Err(no_fit(
+                    "No section length can satisfy both local front and rear limits",
+                ));
+            }
+            let unit = if length_range[1] > length_range[0] {
+                (length - length_range[0]) / (length_range[1] - length_range[0])
+            } else {
+                0.
+            };
+            feasible[0] + (feasible[1] - feasible[0]) * unit
+        }
+    };
     if span < length {
         return Err(no_fit(
             "Frontage is too narrow for the resolved main-body dimensions",
         ));
     }
-    let fraction = length / span;
-    let start = (1. - fraction) * rng.range([0.25, 0.75]);
+    let fraction = (length + reserve) / span;
+    if fraction > 1. {
+        return Err(no_fit("Frontage cannot fit main body and side wing"));
+    }
+    let main_fraction = length / span;
+    let lateral = rng.range([0.25, 0.75]);
+    let start = (1. - fraction)
+        * match sampling {
+            SectionSampling::Front => lateral,
+            SectionSampling::Both => 0.5,
+        };
     let point = |y: f64, t: f64| {
         world(Point {
             x: left(y) + (right(y) - left(y)) * t,
@@ -151,87 +173,76 @@ fn house(s: &Site, p: &ResolvedProfile, seed: u64) -> Result<Design, Rejection> 
     };
     let foot = [
         point(front, start),
-        point(front, start + fraction),
-        point(back, start + fraction),
+        point(front, start + main_fraction),
+        point(back, start + main_fraction),
         point(back, start),
     ];
     let rear_length = crate::geometry::length(sub(foot[2], foot[3]));
-    if rear_length < p.length[0] || rear_length > p.length[1] {
+    let tolerance = match sampling {
+        SectionSampling::Front => 0., // Preserve the first type's exact replay contract.
+        SectionSampling::Both => EPS,
+    };
+    if rear_length < length_range[0] - tolerance || rear_length > length_range[1] + tolerance {
         return Err(no_fit(
             "Local taper puts the rear main-body length outside the resolved profile interval",
         ));
     }
-    let main = Part {
-        role: PartRole::Main,
-        footprint: foot,
-        base: 0.,
-        wall_top: p.wall_height,
-        roof: roof(foot, p.wall_height, p.roof_rise, RidgeAxis::AlongFront),
-    };
-    if !fits(&main, s) {
-        return Err(no_fit(
-            "Main body including roof violates ground, upper envelope, height or reserved access",
-        ));
+    Ok(foot)
+}
+fn fits(part: &Part, s: &Site) -> bool {
+    if !convex(&part.footprint)
+        || area(&part.footprint) <= 1.
+        || !part.base.is_finite()
+        || part.base < 0.
+        || !part.wall_top.is_finite()
+        || part.wall_top <= part.base
+        || part.wall_top > s.max_height + EPS
+        || !part.footprint.iter().all(|&p| inside(p, &s.envelope))
+    {
+        return false;
     }
-    let mut design = Design {
-        building_type: BuildingType::HouseWithAnnex,
-        parts: vec![main],
-        notes: vec![],
-    };
-    if p.annex == AnnexPolicy::Forbidden {
-        return Ok(design);
+    if let Some(r) = &part.roof {
+        if !r.ridge.iter().all(|r| {
+            r.iter().all(|v| v.is_finite())
+                && r[1] > part.wall_top
+                && r[1] <= s.max_height + EPS
+                && inside(Point { x: r[0], z: r[2] }, &part.footprint)
+        }) {
+            return false;
+        }
     }
-    let annex_result = (|| {
-        if !s.annex_allowed {
-            return Err(no_fit("Annex forbidden by the site's hard feature limit"));
+    let cells = crate::solid::cells(part);
+    cells.iter().all(|cell| {
+        cell.footprint
+            .iter()
+            .zip(cell.bottom)
+            .all(|(&p, y)| y > EPS || inside(p, &s.ground))
+            && !s.access.iter().any(|a| {
+                cell.bottom.iter().copied().fold(f64::INFINITY, f64::min) < a.clearance
+                    && overlap(&cell.footprint, &a.footprint)
+            })
+    }) && !s.access.iter().any(|a| {
+        part.roof.is_some() && a.clearance > part.wall_top && overlap(&part.footprint, &a.footprint)
+    })
+}
+
+/// Generate a complete design or a reasoned rejection. No I/O or shared RNG.
+/// Coordinates/heights are metres. Ground vertices start with the frontage.
+pub fn generate(
+    kind: BuildingType,
+    s: &Site,
+    p: &ResolvedProfile,
+    seed: u64,
+) -> Result<Design, Rejection> {
+    validate_site(s)?;
+    match (kind, p) {
+        (BuildingType::HouseWithAnnex, ResolvedProfile::HouseWithAnnex(p)) => {
+            validate_house(p)?;
+            house_with_annex::generate(s, p, seed)
         }
-        let width = rng.range(p.annex_width);
-        let depth = rng.range(p.annex_depth);
-        let rear = crate::geometry::length(sub(foot[3], foot[2]));
-        if width >= rear * 0.6 {
-            return Err(no_fit(
-                "Annex is too wide to remain subordinate to the main body",
-            ));
+        (BuildingType::TownhouseWithGate, ResolvedProfile::TownhouseWithGate(p)) => {
+            townhouse_with_gate::generate(s, p, seed)
         }
-        let t = rng.range([0.10, 0.30]);
-        if t + width / rear >= 0.95 {
-            return Err(no_fit(
-                "No wall interval remains for the required annex width",
-            ));
-        }
-        let a = lerp(foot[2], foot[3], t);
-        let b = lerp(foot[2], foot[3], t + width / rear);
-        let edge = mul(sub(foot[3], foot[2]), 1. / rear);
-        let out = Point {
-            x: edge.z,
-            z: -edge.x,
-        };
-        let annex_foot = [b, a, add(a, mul(out, depth)), add(b, mul(out, depth))];
-        let wall = p.wall_height * 0.62;
-        let annex = Part {
-            role: PartRole::Annex,
-            footprint: annex_foot,
-            base: 0.,
-            wall_top: wall,
-            roof: roof(annex_foot, wall, p.roof_rise * 0.42, RidgeAxis::IntoSite),
-        };
-        if !fits(&annex, s)
-            || overlap(&foot, &annex_foot)
-            || area(&foot) <= area(&annex_foot) * 1.5
-            || annex.roof.ridge.iter().any(|r| r[1] >= p.wall_height)
-        {
-            return Err(no_fit(
-                "Annex including roof cannot fit with free access and a lower wall-bound roof connection",
-            ));
-        }
-        Ok(annex)
-    })();
-    match annex_result {
-        Ok(annex) => design.parts.push(annex),
-        Err(e) if p.annex == AnnexPolicy::Optional => {
-            design.notes.push(format!("Optional annex omitted: {e}"))
-        }
-        Err(e) => return Err(e),
+        _ => Err(invalid("Building type and resolved profile do not match")),
     }
-    Ok(design)
 }

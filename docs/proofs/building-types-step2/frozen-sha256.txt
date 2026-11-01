@@ -1,0 +1,2 @@
+c5bc78952d2d6f649e59d6d3b3a5a78c420fe27c74755ee4f449052b8c2e11de  crates/building_core/tests/fixtures/townhouse-v1.json
+3bda4c8c0b835fce0a7a08cc5873247aa2b84fbdebcf0764a8d67a23a10873c9  crates/building_core/tests/townhouse_contract.rs

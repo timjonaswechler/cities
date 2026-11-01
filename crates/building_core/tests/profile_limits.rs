@@ -7,7 +7,10 @@ fn rejects_local_taper_that_stretches_past_resolved_length() {
     let mut site: Site = serde_json::from_value(corpus["sites"]["rectangle"].clone()).unwrap();
     let mut profile: ResolvedProfile =
         serde_json::from_value(corpus["profiles"]["standard"].clone()).unwrap();
-    profile.annex = AnnexPolicy::Forbidden;
+    let ResolvedProfile::HouseWithAnnex(ref mut house) = profile else {
+        panic!("expected house profile")
+    };
+    house.annex = AnnexPolicy::Forbidden;
     // This ground fans out sharply. Respect it by rejection, not by stretching
     // a sampled 10..12.5 m main body into a much broader rear section.
     site.ground[2].x = 30.;

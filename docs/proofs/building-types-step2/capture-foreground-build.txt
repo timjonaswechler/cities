@@ -1,0 +1,2 @@
+   Compiling city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_bevy)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 17.58s

@@ -1,0 +1,47 @@
+    Blocking waiting for file lock on package cache
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 19.36s
+     Running tests/generation_contract.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/generation_contract-95af500ad19130e7)
+
+running 3 tests
+test frozen_synthetic_contract ... ok
+test real_variation_and_rigid_equivariance ... ok
+test rejects_non_finite_invalid_profiles_and_degenerate_sites ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 9.44s
+     Running tests/profile_limits.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/profile_limits-83d1bf65702dd491)
+
+running 1 test
+test rejects_local_taper_that_stretches_past_resolved_length ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Checking city_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_core)
+    Checking building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/building_core)
+    Checking city_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_core)
+    Checking city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_bevy)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 46s
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/building_core)
+   Compiling city_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_core)
+   Compiling city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_bevy)
+   Compiling city_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_core)
+   Compiling city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-59dce73d/crates/city_bevy)
+error[E0599]: no method named `building_type` found for reference `&ResolvedProfile` in the current scope
+  --> crates/city_bevy/examples/building_zoo.rs:29:50
+   |
+29 |             if demos.profiles.values().all(|p| p.building_type() == kind) {
+   |                                                  ^^^^^^^^^^^^^ method not found in `&ResolvedProfile`
+
+error[E0599]: no method named `building_type` found for reference `&ResolvedProfile` in the current scope
+   --> crates/city_bevy/examples/building_zoo.rs:659:55
+    |
+659 |             assert!(demos.profiles.values().all(|p| p.building_type() == kind));
+    |                                                       ^^^^^^^^^^^^^ method not found in `&ResolvedProfile`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `city_bevy` (example "building_zoo" test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+baseline adapter exit=101

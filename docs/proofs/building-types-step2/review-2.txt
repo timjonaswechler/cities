@@ -1,0 +1,12 @@
+VERDICT APPROVE
+
+S1 resolved: townhouse_with_gate.rs:34 now rejects gate ridges at or above
+the main ridge. Dedicated regression passes; red-before-fix evidence checked.
+Zoo plugin disable applies to both modes, preserving native generic rendering
+and AppExit error handling. Capture success/failure logs support the workaround.
+Independently reran all 9 focused core tests: passed.
+
+No new substantive findings. No files changed.
+Provider/model/options verified in delegate response:
+pi / openai-codex/gpt-6.1-sol / thinking=high.
+Usage not exposed.
