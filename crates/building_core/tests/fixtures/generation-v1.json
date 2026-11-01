@@ -1,0 +1,638 @@
+{
+  "version": 1,
+  "provenance": "Synthetic prototype inputs in metres; not measured architecture or image-derived norms.",
+  "profiles": {
+    "standard": {
+      "length": [
+        10,
+        12.5
+      ],
+      "depth": [
+        5,
+        6.4
+      ],
+      "wall_height": 4,
+      "roof_rise": 2.6,
+      "annex_width": [
+        3,
+        4.2
+      ],
+      "annex_depth": [
+        3,
+        4.2
+      ],
+      "annex": "Required",
+      "setback": 0.8
+    },
+    "compact": {
+      "length": [
+        8,
+        9.5
+      ],
+      "depth": [
+        4.5,
+        5.2
+      ],
+      "wall_height": 3.5,
+      "roof_rise": 2.2,
+      "annex_width": [
+        2.6,
+        3.2
+      ],
+      "annex_depth": [
+        2.8,
+        3.5
+      ],
+      "annex": "Required",
+      "setback": 0.8
+    },
+    "optional": {
+      "length": [
+        10,
+        12.5
+      ],
+      "depth": [
+        5,
+        6.4
+      ],
+      "wall_height": 4,
+      "roof_rise": 2.6,
+      "annex_width": [
+        3,
+        4.2
+      ],
+      "annex_depth": [
+        3,
+        4.2
+      ],
+      "annex": "Optional",
+      "setback": 0.8
+    },
+    "forbidden": {
+      "length": [
+        10,
+        12.5
+      ],
+      "depth": [
+        5,
+        6.4
+      ],
+      "wall_height": 4,
+      "roof_rise": 2.6,
+      "annex_width": [
+        3,
+        4.2
+      ],
+      "annex_depth": [
+        3,
+        4.2
+      ],
+      "annex": "Forbidden",
+      "setback": 0.8
+    },
+    "access": {
+      "length": [
+        10,
+        12.5
+      ],
+      "depth": [
+        5,
+        5
+      ],
+      "wall_height": 4,
+      "roof_rise": 2.6,
+      "annex_width": [
+        3,
+        4.2
+      ],
+      "annex_depth": [
+        3.4,
+        3.4
+      ],
+      "annex": "Optional",
+      "setback": 0.8
+    },
+    "access_required": {
+      "length": [
+        10,
+        12.5
+      ],
+      "depth": [
+        5,
+        5
+      ],
+      "wall_height": 4,
+      "roof_rise": 2.6,
+      "annex_width": [
+        3,
+        4.2
+      ],
+      "annex_depth": [
+        3.4,
+        3.4
+      ],
+      "annex": "Required",
+      "setback": 0.8
+    }
+  },
+  "sites": {
+    "rectangle": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": []
+    },
+    "irregular": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 8.8,
+          "z": 8
+        },
+        {
+          "x": -8,
+          "z": 7
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 8.8,
+          "z": 8
+        },
+        {
+          "x": -8,
+          "z": 7
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": []
+    },
+    "transformed": {
+      "ground": [
+        {
+          "x": 39.22635006159141,
+          "z": -38.60859880185153
+        },
+        {
+          "x": 55.199060262537266,
+          "z": -26.57229833881057
+        },
+        {
+          "x": 45.21347230319979,
+          "z": -15.314943715883633
+        },
+        {
+          "x": 32.39821075755732,
+          "z": -26.22407161488534
+        }
+      ],
+      "envelope": [
+        {
+          "x": 39.22635006159141,
+          "z": -38.60859880185153
+        },
+        {
+          "x": 55.199060262537266,
+          "z": -26.57229833881057
+        },
+        {
+          "x": 45.21347230319979,
+          "z": -15.314943715883633
+        },
+        {
+          "x": 32.39821075755732,
+          "z": -26.22407161488534
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": []
+    },
+    "no_annex": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": false,
+      "access": []
+    },
+    "rear_access": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": [
+        {
+          "footprint": [
+            {
+              "x": -10,
+              "z": 0.3
+            },
+            {
+              "x": 10,
+              "z": 0.3
+            },
+            {
+              "x": 10,
+              "z": 8
+            },
+            {
+              "x": -10,
+              "z": 8
+            }
+          ],
+          "clearance": 3
+        }
+      ]
+    },
+    "narrow": {
+      "ground": [
+        {
+          "x": -1.5,
+          "z": -7
+        },
+        {
+          "x": 1.5,
+          "z": -7
+        },
+        {
+          "x": 1.5,
+          "z": 8
+        },
+        {
+          "x": -1.5,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -1.5,
+          "z": -7
+        },
+        {
+          "x": 1.5,
+          "z": -7
+        },
+        {
+          "x": 1.5,
+          "z": 8
+        },
+        {
+          "x": -1.5,
+          "z": 8
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": []
+    },
+    "low": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 4,
+      "annex_allowed": true,
+      "access": []
+    },
+    "bad_quad": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": -2,
+          "z": -1
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": -2,
+          "z": -1
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": []
+    },
+    "tight_envelope": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -2,
+          "z": -2
+        },
+        {
+          "x": 2,
+          "z": -2
+        },
+        {
+          "x": 2,
+          "z": 2
+        },
+        {
+          "x": -2,
+          "z": 2
+        }
+      ],
+      "max_height": 10,
+      "annex_allowed": true,
+      "access": []
+    }
+  },
+  "cases": [
+    {
+      "id": "synthetic-01",
+      "site": "rectangle",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "annex"
+    },
+    {
+      "id": "synthetic-02",
+      "site": "irregular",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "annex"
+    },
+    {
+      "id": "synthetic-03",
+      "site": "transformed",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "annex"
+    },
+    {
+      "id": "synthetic-04",
+      "site": "rectangle",
+      "profile": "standard",
+      "seed": 91,
+      "expect": "annex"
+    },
+    {
+      "id": "synthetic-05",
+      "site": "rectangle",
+      "profile": "compact",
+      "seed": 7,
+      "expect": "annex"
+    },
+    {
+      "id": "synthetic-06",
+      "site": "rectangle",
+      "profile": "optional",
+      "seed": 7,
+      "expect": "annex"
+    },
+    {
+      "id": "synthetic-07",
+      "site": "rectangle",
+      "profile": "forbidden",
+      "seed": 7,
+      "expect": "main"
+    },
+    {
+      "id": "synthetic-08",
+      "site": "no_annex",
+      "profile": "optional",
+      "seed": 7,
+      "expect": "main"
+    },
+    {
+      "id": "synthetic-09",
+      "site": "rear_access",
+      "profile": "access",
+      "seed": 7,
+      "expect": "main"
+    },
+    {
+      "id": "synthetic-10",
+      "site": "no_annex",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "synthetic-11",
+      "site": "rear_access",
+      "profile": "access_required",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "synthetic-12",
+      "site": "narrow",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "synthetic-13",
+      "site": "low",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "synthetic-14",
+      "site": "bad_quad",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "InvalidInput"
+    },
+    {
+      "id": "synthetic-15",
+      "site": "tight_envelope",
+      "profile": "standard",
+      "seed": 7,
+      "expect": "NoFit"
+    }
+  ]
+}

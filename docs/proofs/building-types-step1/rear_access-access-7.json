@@ -1,0 +1,140 @@
+{
+  "corpus_version": 1,
+  "type": "HouseWithAnnex",
+  "profile_name": "access",
+  "site_name": "rear_access",
+  "seed": 7,
+  "profile": {
+    "length": [
+      10.0,
+      12.5
+    ],
+    "depth": [
+      5.0,
+      5.0
+    ],
+    "wall_height": 4.0,
+    "roof_rise": 2.6,
+    "annex_width": [
+      3.0,
+      4.2
+    ],
+    "annex_depth": [
+      3.4,
+      3.4
+    ],
+    "annex": "Optional",
+    "setback": 0.8
+  },
+  "site": {
+    "ground": [
+      {
+        "x": -10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": 8.0
+      },
+      {
+        "x": -10.0,
+        "z": 8.0
+      }
+    ],
+    "envelope": [
+      {
+        "x": -10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": -7.0
+      },
+      {
+        "x": 10.0,
+        "z": 8.0
+      },
+      {
+        "x": -10.0,
+        "z": 8.0
+      }
+    ],
+    "max_height": 10.0,
+    "annex_allowed": true,
+    "access": [
+      {
+        "footprint": [
+          {
+            "x": -10.0,
+            "z": 0.3
+          },
+          {
+            "x": 10.0,
+            "z": 0.3
+          },
+          {
+            "x": 10.0,
+            "z": 8.0
+          },
+          {
+            "x": -10.0,
+            "z": 8.0
+          }
+        ],
+        "clearance": 3.0
+      }
+    ]
+  },
+  "result": {
+    "Ok": {
+      "building_type": "HouseWithAnnex",
+      "parts": [
+        {
+          "role": "Main",
+          "footprint": [
+            {
+              "x": -3.999377871047801,
+              "z": -6.2
+            },
+            {
+              "x": 6.97519649993038,
+              "z": -6.2
+            },
+            {
+              "x": 6.97519649993038,
+              "z": -1.2000000000000002
+            },
+            {
+              "x": -3.999377871047801,
+              "z": -1.2000000000000002
+            }
+          ],
+          "base": 0.0,
+          "wall_top": 4.0,
+          "roof": {
+            "axis": "AlongFront",
+            "ridge": [
+              [
+                6.97519649993038,
+                6.6,
+                -3.7
+              ],
+              [
+                -3.999377871047801,
+                6.6,
+                -3.7
+              ]
+            ]
+          }
+        }
+      ],
+      "notes": [
+        "Optional annex omitted: NoFit(\"Annex including roof cannot fit with free access and a lower wall-bound roof connection\")"
+      ]
+    }
+  }
+}

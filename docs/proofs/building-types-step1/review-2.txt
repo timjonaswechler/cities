@@ -1,0 +1,15 @@
+VERDICT: APPROVE
+Reviewer: provider pi, model openai-codex/gpt-6.1-sol, thinking=high (verified in delegate response).
+Usage: not exposed.
+
+S1 resolved — crates/city_bevy/examples/building_zoo.rs:240 now propagates
+unsuccessful AppExit through main's existing exit-1 path.
+
+Independently verified:
+- Invalid screenshot path: CAPTURE failed, process exit 1; regression script passes.
+- Valid capture + export with interaction smoke: process exit 0, PNG produced,
+  interaction assertions pass.
+- Timeout uses the same corrected error-return path; not independently forced.
+
+No new findings or regressions identified in the focused scope.
+No repository edits, children, remote jobs, or full-suite runs.

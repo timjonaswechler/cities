@@ -1,0 +1,10 @@
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-a02c8549/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.41s
+     Running tests/generation_contract.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/generation_contract-95af500ad19130e7)
+
+running 3 tests
+test rejects_non_finite_invalid_profiles_and_degenerate_sites ... ok
+test real_variation_and_rigid_equivariance ... ok
+test frozen_synthetic_contract ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
