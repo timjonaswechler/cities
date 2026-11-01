@@ -1,0 +1,14 @@
+seed 7 candidate 0: exact Zoo/City design AND mesh equality
+seed 7 candidate 1: exact Zoo/City design AND mesh equality
+seed 91 candidate 0: exact Zoo/City design AND mesh equality
+seed 91 candidate 1: exact Zoo/City design AND mesh equality
+original: complete canonical JSON matches pre-edit baseline
+snapshot: complete canonical JSON matches pre-edit baseline
+market: complete canonical JSON matches pre-edit baseline
+v1: complete canonical JSON matches pre-edit baseline
+v2: complete canonical JSON matches pre-edit baseline
+CLI rejects unsupported combination --economy
+CLI rejects unsupported combination --buildings
+CLI rejects unsupported combination --building-profile
+CLI rejects unsupported combination --market-profile
+CLI rejects unsupported combination --snapshot

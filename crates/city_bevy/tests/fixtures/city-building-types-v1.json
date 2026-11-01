@@ -1,0 +1,290 @@
+{
+  "city_options": {
+    "seed": 42,
+    "size": 25,
+    "citadel": true,
+    "urban_castle": false,
+    "plaza": true,
+    "temple": true,
+    "walls": true,
+    "shantytown": false,
+    "coast": false,
+    "river": false,
+    "greens": false,
+    "gates": -1,
+    "hub": false,
+    "sea": 0.0,
+    "name": null,
+    "population": null
+  },
+  "lots": [
+    {
+      "ward_id": 3,
+      "building_index": 0,
+      "polygon": [
+        {
+          "x": 4.324342494820731,
+          "y": 41.89400335066602
+        },
+        {
+          "x": -0.6338422741624576,
+          "y": 39.70914086987339
+        },
+        {
+          "x": 1.1948426521984323,
+          "y": 35.559242270368685
+        },
+        {
+          "x": 6.5995231859637205,
+          "y": 37.60301899865599
+        }
+      ]
+    },
+    {
+      "ward_id": 3,
+      "building_index": 2,
+      "polygon": [
+        {
+          "x": -5.372919906953781,
+          "y": 32.35202015116994
+        },
+        {
+          "x": 1.4681687687711644,
+          "y": 34.93897376373727
+        },
+        {
+          "x": -0.6123081433404653,
+          "y": 39.66027271437457
+        },
+        {
+          "x": -7.195197952408025,
+          "y": 37.17095684961634
+        }
+      ]
+    },
+    {
+      "ward_id": 3,
+      "building_index": 1,
+      "polygon": [
+        {
+          "x": 2.739921429103016,
+          "y": 44.99087534004886
+        },
+        {
+          "x": 2.772950586506185,
+          "y": 45.0498966786529
+        },
+        {
+          "x": -0.9891962244084942,
+          "y": 46.418358727097285
+        },
+        {
+          "x": -1.0480164859375853,
+          "y": 46.12137014402224
+        },
+        {
+          "x": -3.0193777333099607,
+          "y": 45.12271984035554
+        },
+        {
+          "x": -0.6338422741624576,
+          "y": 39.70914086987339
+        },
+        {
+          "x": 4.371044022322592,
+          "y": 41.91458274009758
+        }
+      ]
+    }
+  ],
+  "config": {
+    "lots": [
+      {
+        "ward_id": 3,
+        "building_index": 0,
+        "max_height": 12,
+        "annex_allowed": true,
+        "max_overhang": 0.6,
+        "seed": 7,
+        "preferences": [
+          {
+            "weight": 10,
+            "profile": {
+              "length": [
+                10,
+                12.5
+              ],
+              "depth": [
+                5,
+                6.4
+              ],
+              "wall_height": 4,
+              "roof_rise": 2.6,
+              "annex_width": [
+                3,
+                4.2
+              ],
+              "annex_depth": [
+                3,
+                4.2
+              ],
+              "annex": "Required",
+              "setback": 0.8
+            }
+          },
+          {
+            "weight": 1,
+            "profile": {
+              "length": [
+                8,
+                8.8
+              ],
+              "depth": [
+                5,
+                5.6
+              ],
+              "lower_height": 3.5,
+              "upper_height": 2.8,
+              "roof_rise": 2.5,
+              "overhang": [
+                0.4,
+                0.6
+              ],
+              "gate_span": 4,
+              "gate_pier": 0.65,
+              "gate_spring": 2.2,
+              "gate_rise": 1,
+              "gate_wall_top": 4.8,
+              "gate_roof_rise": 1.5,
+              "setback": 1.2
+            }
+          }
+        ]
+      },
+      {
+        "ward_id": 3,
+        "building_index": 2,
+        "max_height": 12,
+        "annex_allowed": true,
+        "max_overhang": 0.6,
+        "seed": 7,
+        "preferences": [
+          {
+            "weight": 10,
+            "profile": {
+              "length": [
+                8,
+                8.8
+              ],
+              "depth": [
+                5,
+                5.6
+              ],
+              "lower_height": 3.5,
+              "upper_height": 2.8,
+              "roof_rise": 2.5,
+              "overhang": [
+                0.4,
+                0.6
+              ],
+              "gate_span": 4,
+              "gate_pier": 0.65,
+              "gate_spring": 2.2,
+              "gate_rise": 1,
+              "gate_wall_top": 4.8,
+              "gate_roof_rise": 1.5,
+              "setback": 1.2
+            }
+          },
+          {
+            "weight": 1,
+            "profile": {
+              "length": [
+                10,
+                12.5
+              ],
+              "depth": [
+                5,
+                6.4
+              ],
+              "wall_height": 4,
+              "roof_rise": 2.6,
+              "annex_width": [
+                3,
+                4.2
+              ],
+              "annex_depth": [
+                3,
+                4.2
+              ],
+              "annex": "Required",
+              "setback": 0.8
+            }
+          }
+        ]
+      },
+      {
+        "ward_id": 3,
+        "building_index": 1,
+        "max_height": 12,
+        "annex_allowed": true,
+        "max_overhang": 0.6,
+        "seed": 7,
+        "preferences": [
+          {
+            "weight": 10,
+            "profile": {
+              "length": [
+                10,
+                12.5
+              ],
+              "depth": [
+                5,
+                6.4
+              ],
+              "wall_height": 4,
+              "roof_rise": 2.6,
+              "annex_width": [
+                3,
+                4.2
+              ],
+              "annex_depth": [
+                3,
+                4.2
+              ],
+              "annex": "Required",
+              "setback": 0.8
+            }
+          },
+          {
+            "weight": 1,
+            "profile": {
+              "length": [
+                8,
+                8.8
+              ],
+              "depth": [
+                5,
+                5.6
+              ],
+              "lower_height": 3.5,
+              "upper_height": 2.8,
+              "roof_rise": 2.5,
+              "overhang": [
+                0.4,
+                0.6
+              ],
+              "gate_span": 4,
+              "gate_pier": 0.65,
+              "gate_spring": 2.2,
+              "gate_rise": 1,
+              "gate_wall_top": 4.8,
+              "gate_roof_rise": 1.5,
+              "setback": 1.2
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

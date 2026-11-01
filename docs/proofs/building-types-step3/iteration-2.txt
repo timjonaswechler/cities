@@ -1,0 +1,10 @@
+   Compiling city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-e3f6a454/crates/city_bevy)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.06s
+     Running tests/city_building_types.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/city_building_types-70e57d2802d4a6b3)
+
+running 3 tests
+test hard_limits_beat_preferences_and_reservations ... ok
+test protected_and_invalid_contours_are_not_repaired ... ok
+test real_sites_both_types_variation_and_immutable_original ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.95s

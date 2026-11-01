@@ -142,6 +142,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut capture = Capture::default();
     let mut export = None;
     let mut geometry_only = false;
+    let mut request = None;
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
@@ -171,11 +172,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             }
             "--export" => export = Some(args.next().ok_or("--export requires a JSON path")?),
             "--geometry-only" => geometry_only = true,
+            "--request" => {
+                request = Some(serde_json::from_str::<city_bevy::city_buildings::Request>(
+                    &std::fs::read_to_string(args.next().ok_or("--request requires a JSON file")?)?,
+                )?);
+            }
             "--help" | "-h" => help = true,
             _ => return Err(format!("unknown argument {arg}").into()),
         }
     }
-    let (demos, default_profile, default_site) = Demos::for_type(kind)?;
+    let (mut demos, default_profile, default_site) = Demos::for_type(kind)?;
     if profile.is_empty() {
         profile = default_profile.into();
     }
@@ -184,7 +190,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
     if help {
         println!(
-            "cargo run -p city_bevy --example building_zoo -- [--type NAME] [--profile NAME] [--site NAME] [--seed N] [--camera oblique|rear|top] [--screenshot FILE.png --smoke-test] [--interaction-smoke] [--export FILE.json] [--geometry-only]\nTypes: {:?}\nProfiles for {kind:?}: {:?}\nSites: {:?}\nRight drag: orbit; wheel: zoom; Home: reset; N: next seed; P: next profile; B: next site; Escape: quit",
+            "cargo run -p city_bevy --example building_zoo -- [--type NAME] [--profile NAME] [--site NAME] [--seed N] [--camera oblique|rear|top] [--screenshot FILE.png --smoke-test] [--interaction-smoke] [--export FILE.json] [--geometry-only] [--request FILE.json]\nTypes: {:?}\nProfiles for {kind:?}: {:?}\nSites: {:?}\nRight drag: orbit; wheel: zoom; Home: reset; N: next seed; P: next profile; B: next site; Escape: quit",
             REGISTRY.iter().map(|(_, name)| name).collect::<Vec<_>>(),
             demos.profiles.keys().collect::<Vec<_>>(),
             demos.sites.keys().collect::<Vec<_>>()
@@ -197,6 +203,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     if capture.smoke && capture.path.is_none() {
         return Err("--smoke-test requires --screenshot".into());
     }
+    let imported = request.is_some();
+    if let Some(request) = request {
+        kind = request.profile.building_type();
+        seed = request.seed;
+        profile = "imported-request".into();
+        site = "imported-request".into();
+        demos.profiles = BTreeMap::from([(profile.clone(), request.profile)]);
+        demos.sites = BTreeMap::from([(site.clone(), request.site)]);
+    }
     let s = demos.sites.get(&site).ok_or("unknown site")?;
     let p = demos.profiles.get(&profile).ok_or("unknown profile")?;
     let design = generate(kind, s, p, seed);
@@ -208,14 +223,30 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         }
     );
     if let Some(path) = export {
-        let data = serde_json::json!({"corpus_version":1,"type":kind,"profile_name":profile,"site_name":site,"seed":seed,"profile":p,"site":s,"result":design});
+        let data = serde_json::json!({"corpus_version":1,"type":kind,"profile_name":profile,"site_name":site,"seed":seed,"profile":p,"site":s,"result":design,"meshes":design.as_ref().map(building_core::derive_meshes).unwrap_or_default()});
         std::fs::write(path, serde_json::to_vec_pretty(&data)?)?;
     }
     if geometry_only {
         design?;
         return Ok(());
     }
-    let orbit = Orbit::for_site(s, &view);
+    let mut orbit = Orbit::for_site(s, &view);
+    if imported && let Ok(design) = &design {
+        // Real sites can be much larger than their one candidate. Frame the
+        // derived geometry without changing synthetic reference cameras.
+        let mut min = Vec3::splat(f32::INFINITY);
+        let mut max = Vec3::splat(f32::NEG_INFINITY);
+        for surface in building_core::derive_meshes(design) {
+            for p in surface.positions {
+                let p = Vec3::from_array(p.map(|v| v as f32));
+                min = min.min(p);
+                max = max.max(p);
+            }
+        }
+        orbit.target = (min + max) / 2.;
+        orbit.distance = ((max - min).max_element() * 2.5).clamp(20., 80.);
+        orbit.initial[2] = orbit.distance;
+    }
     let exit = App::new()
         .add_plugins(
             DefaultPlugins
@@ -433,7 +464,7 @@ fn draw(
     };
     for mut text in &mut status {
         text.0 = format!(
-            "Synthetic prototype | {:?}\n{} / {} / seed {} | {}\nRight drag: orbit | Wheel: zoom | Home: reset | N: seed | P: profile | B: site",
+            "Building-core prototype | {:?}\n{} / {} / seed {} | {}\nRight drag: orbit | Wheel: zoom | Home: reset | N: seed | P: profile | B: site",
             zoo.kind, zoo.profile, zoo.site, zoo.seed, message
         );
     }

@@ -10,6 +10,7 @@ use bevy::{
     render::view::screenshot::{Screenshot, ScreenshotCaptured, save_to_disk},
     ui_widgets::{Activate, Button},
 };
+use city_bevy::city_buildings::{self, Config as TypeConfig, Placement};
 use city_core::{
     BuildingPlan, BuildingProfile, City, CityOptions, GenerationError, MarketPlan, MarketProfile,
     generate_city, generate_snapshot, plan_buildings, plan_markets,
@@ -31,6 +32,7 @@ struct CityState {
     buildings_enabled: bool,
     building_profile: BuildingProfile,
     building_plan: Option<BuildingPlan>,
+    prototype: Option<Vec<Placement>>,
 }
 impl CityState {
     fn visible_city(&self) -> &City {
@@ -222,12 +224,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut building_profile = BuildingProfile::default();
     let mut write_building_profile = None;
     let mut capture = Capture::default();
+    let mut type_config: Option<TypeConfig> = None;
+    let mut type_seed: Option<u64> = None;
+    let mut detail_lot = None;
+    let mut detail_rear = false;
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--help" | "-h" => {
                 println!(
-                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE] [--economy]\n             [--market-profile FILE] [--write-market-profile FILE]\n             [--buildings] [--building-profile FILE] [--write-building-profile FILE]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · E: economy overlay · B: building planning · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
+                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE] [--economy]\n             [--market-profile FILE] [--write-market-profile FILE]\n             [--buildings] [--building-profile FILE] [--write-building-profile FILE]\n             [--building-types FILE] [--type-seed N] [--detail-lot W:I --detail-rear]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · E: economy overlay · B: building planning · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
                 );
                 return Ok(());
             }
@@ -238,6 +244,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             }
             "--seed" => options.seed = args.next().ok_or("--seed requires a number")?.parse()?,
             "--size" => options.size = args.next().ok_or("--size requires a number")?.parse()?,
+            "--building-types" => {
+                type_config = Some(serde_json::from_str(&std::fs::read_to_string(
+                    args.next()
+                        .ok_or("--building-types requires a config file")?,
+                )?)?);
+            }
+            "--detail-rear" => detail_rear = true,
+            "--type-seed" => {
+                type_seed = Some(
+                    args.next()
+                        .ok_or("--type-seed requires an integer")?
+                        .parse()?,
+                )
+            }
+            "--detail-lot" => {
+                detail_lot = Some(parse_lot(
+                    &args.next().ok_or("--detail-lot requires ward:index")?,
+                )?)
+            }
             "--economy" => economy_enabled = true,
             "--buildings" => buildings_enabled = true,
             "--building-profile" => {
@@ -277,6 +302,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             _ => return Err(format!("Unknown argument {arg}; use --help").into()),
         }
     }
+    validate_type_mode(
+        type_config.is_some(),
+        economy_enabled,
+        buildings_enabled,
+        snapshot.is_some(),
+    )?;
+    if type_seed.is_some() && type_config.is_none() {
+        return Err("--type-seed requires --building-types".into());
+    }
     options.validate()?;
     market_profile.validate()?;
     building_profile.validate()?;
@@ -310,8 +344,31 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         &market_profile,
         buildings_enabled.then_some(&building_profile),
     )?;
+    let prototype = if let Some(mut config) = type_config {
+        if let Some(seed) = type_seed {
+            for lot in &mut config.lots {
+                lot.seed = seed;
+            }
+        }
+        let placements = city_buildings::plan(&city, &config)?;
+        for p in &placements {
+            println!(
+                "PROTOTYPE {}:{}: {}",
+                p.ward_id,
+                p.building_index,
+                p.attempts.join("; ")
+            );
+        }
+        Some(placements)
+    } else {
+        None
+    };
     if let Some(path) = output {
-        write_city(&path, &city, economy.as_ref(), building_plan.as_ref())?;
+        if let Some(placements) = &prototype {
+            write_type_city(&path, &city, placements)?;
+        } else {
+            write_city(&path, &city, economy.as_ref(), building_plan.as_ref())?;
+        }
         println!(
             "{} · {} buildings → {path}",
             city.name,
@@ -322,8 +379,20 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         );
         return Ok(());
     }
-    let orbit = orbit_for(&city);
-    App::new()
+    let mut orbit = orbit_for(&city);
+    if let Some(id) = detail_lot {
+        orbit = detail_orbit(&city, id)?;
+    }
+    if detail_rear {
+        if detail_lot.is_none() {
+            return Err("--detail-rear requires --detail-lot".into());
+        }
+        orbit.yaw += std::f32::consts::PI;
+        orbit.pitch = 0.65;
+        orbit.distance = 55.;
+    }
+    let prototype_active = prototype.is_some();
+    let exit = App::new()
         .add_plugins(
             DefaultPlugins
                 .set(bevy::render::RenderPlugin {
@@ -347,9 +416,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             ..default()
         })
         .insert_resource(CityState {
+            prototype,
             city,
             options,
-            message: "Bereit".into(),
+            message: if prototype_active {
+                "PROTOTYP: wenige optische Ersetzungen; keine Wirtschaft; E/B/R/Enter gesperrt"
+                    .into()
+            } else {
+                "Bereit".into()
+            },
             job: None,
             seed_edit: None,
             market_settings: economy_enabled,
@@ -382,7 +457,52 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 .chain(),
         )
         .run();
+    if exit.is_error() {
+        return Err("native city exited unsuccessfully".into());
+    }
     Ok(())
+}
+fn validate_type_mode(
+    active: bool,
+    economy: bool,
+    buildings: bool,
+    snapshot: bool,
+) -> Result<(), String> {
+    if active && (economy || buildings || snapshot) {
+        Err("--building-types is a visual prototype; incompatible with economy, V1/V2 building planning and original snapshots".into())
+    } else {
+        Ok(())
+    }
+}
+fn parse_lot(s: &str) -> Result<(usize, usize), Box<dyn std::error::Error>> {
+    let (w, b) = s.split_once(':').ok_or("expected ward:index")?;
+    Ok((w.parse()?, b.parse()?))
+}
+fn write_type_city(
+    path: &str,
+    city: &City,
+    placements: &[Placement],
+) -> Result<(), Box<dyn std::error::Error>> {
+    write_json(
+        path,
+        &serde_json::json!({"format":"building-types-city-prototype","version":1,"originalCity":city,"placements":placements,"analysis":"visual replacements only; no economic/occupancy analysis"}),
+    )
+}
+fn detail_orbit(city: &City, id: (usize, usize)) -> Result<Orbit, String> {
+    let b = city
+        .wards
+        .iter()
+        .find(|w| w.id == id.0)
+        .and_then(|w| w.buildings.get(id.1))
+        .ok_or("unknown detail lot")?;
+    let mut orbit = orbit_for(city);
+    orbit.target = Vec3::new(
+        (b.polygon.iter().map(|p| p.x).sum::<f64>() / b.polygon.len() as f64 * 4.) as f32,
+        2.,
+        (b.polygon.iter().map(|p| p.y).sum::<f64>() / b.polygon.len() as f64 * 4.) as f32,
+    );
+    orbit.distance = 85.;
+    Ok(orbit)
 }
 fn write_json(path: &str, value: &impl serde::Serialize) -> Result<(), Box<dyn std::error::Error>> {
     let p = std::path::Path::new(path);
@@ -449,6 +569,7 @@ fn setup_scene(
             .building_plan
             .as_ref()
             .map(|p| p.building_origins.as_slice()),
+        state.prototype.as_deref(),
     );
     // A smoke test must render even when the desktop is locked or the window
     // is occluded. An image target does not depend on a window swap chain.
@@ -865,6 +986,15 @@ fn apply_actions(
     mut orbit: ResMut<Orbit>,
 ) {
     for action in actions.0.drain(..) {
+        if state.prototype.is_some()
+            && !matches!(
+                action,
+                Action::Top | Action::Reset | Action::Json | Action::Png
+            )
+        {
+            state.message="PROTOTYP: E/B/Enter/R und Stadt-/Marktänderungen gesperrt; ohne --building-types neu starten".into();
+            continue;
+        }
         let mut regenerate = false;
         match action {
             Action::New => {
@@ -971,12 +1101,17 @@ fn apply_actions(
             Action::Reset => *orbit = orbit_for(&state.city),
             Action::Json => {
                 let path = format!("exports/city-{}.json", state.city.options.seed);
-                state.message = match write_city(
-                    &path,
-                    &state.city,
-                    state.economy.as_ref(),
-                    state.building_plan.as_ref(),
-                ) {
+                let result = if let Some(p) = &state.prototype {
+                    write_type_city(&path, &state.city, p)
+                } else {
+                    write_city(
+                        &path,
+                        &state.city,
+                        state.economy.as_ref(),
+                        state.building_plan.as_ref(),
+                    )
+                };
+                state.message = match result {
                     Ok(_) => format!("Gespeichert: {path}"),
                     Err(e) => e.to_string(),
                 };
@@ -1029,6 +1164,7 @@ fn poll_generation(
                 building_plan
                     .as_ref()
                     .map(|p| p.building_origins.as_slice()),
+                None,
             );
             state.city = city;
             state.economy = economy;
@@ -1144,8 +1280,13 @@ fn update_labels(
         }
     }
     for mut text in &mut title {
-        if text.0 != state.city.name {
-            text.0 = state.city.name.clone();
+        let value = if state.prototype.is_some() {
+            format!("{} · BAUTYP-PROTOTYP", state.city.name)
+        } else {
+            state.city.name.clone()
+        };
+        if text.0 != value {
+            text.0 = value;
         }
     }
     for mut text in &mut status {
@@ -1316,6 +1457,112 @@ mod tests {
     use super::*;
 
     #[test]
+    fn prototype_guards_real_keyboard_actions_and_export() {
+        let options = CityOptions {
+            seed: 42,
+            size: 25,
+            ..Default::default()
+        };
+        let city = generate_city(&options).unwrap();
+        let original = serde_json::to_value(&city).unwrap();
+        let config: TypeConfig = serde_json::from_str(include_str!(
+            "../../../assets/building-types/purplechurch.json"
+        ))
+        .unwrap();
+        let placements = city_buildings::plan(&city, &config).unwrap();
+        let orbit = orbit_for(&city);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled: false,
+            building_profile: BuildingProfile::default(),
+            building_plan: None,
+            prototype: Some(placements),
+        })
+        .insert_resource(orbit)
+        .init_resource::<Actions>()
+        .init_resource::<Capture>()
+        .init_resource::<ButtonInput<KeyCode>>()
+        .add_message::<KeyboardInput>()
+        .add_message::<AppExit>()
+        .add_systems(Update, (keyboard, apply_actions).chain());
+        for key in [KeyCode::KeyE, KeyCode::KeyB, KeyCode::Enter, KeyCode::KeyR] {
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .press(key);
+            app.update();
+            let state = app.world().resource::<CityState>();
+            assert!(state.job.is_none());
+            assert!(!state.economy_enabled);
+            assert!(!state.buildings_enabled);
+            assert!(state.economy.is_none());
+            assert!(state.building_plan.is_none());
+            assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+            assert_eq!(state.options.seed, 42);
+            assert!(state.message.contains("gesperrt"));
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .reset_all();
+        }
+        for action in [
+            Action::Seed,
+            Action::Smaller,
+            Action::Larger,
+            Action::Feature(0),
+            Action::Gates,
+            Action::MarketSettings,
+            Action::MarketParam(MarketParameter::Main, 1),
+            Action::MarketDefaults,
+        ] {
+            app.world_mut().resource_mut::<Actions>().0.push(action);
+            app.update();
+            let s = app.world().resource::<CityState>();
+            assert!(s.job.is_none());
+            assert!(s.seed_edit.is_none());
+            assert!(!s.economy_enabled);
+        }
+        let state = app.world().resource::<CityState>();
+        let p = std::env::temp_dir().join(format!("city-types-{}.json", std::process::id()));
+        write_type_city(
+            p.to_str().unwrap(),
+            &state.city,
+            state.prototype.as_ref().unwrap(),
+        )
+        .unwrap();
+        let value: serde_json::Value = serde_json::from_slice(&std::fs::read(&p).unwrap()).unwrap();
+        std::fs::remove_file(p).unwrap();
+        assert_eq!(value["originalCity"], original);
+        assert!(value.get("economy").is_none());
+        assert!(value.get("city").is_none());
+        assert_eq!(
+            value["placements"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|p| !p["design"].is_null())
+                .count(),
+            2
+        );
+        for (economy, buildings, snapshot) in [
+            (true, false, false),
+            (false, true, false),
+            (false, false, true),
+        ] {
+            assert!(validate_type_mode(true, economy, buildings, snapshot).is_err());
+            assert!(validate_type_mode(false, economy, buildings, snapshot).is_ok());
+        }
+    }
+
+    #[test]
     fn economy_toggle_and_export_preserve_original_city() {
         let options = CityOptions {
             size: 5,
@@ -1340,6 +1587,7 @@ mod tests {
             buildings_enabled: false,
             building_profile: BuildingProfile::default(),
             building_plan: None,
+            prototype: None,
         })
         .insert_resource(orbit)
         .insert_resource(Actions::default())
@@ -1407,6 +1655,7 @@ mod tests {
             buildings_enabled: false,
             building_profile: BuildingProfile::default(),
             building_plan: None,
+            prototype: None,
         })
         .insert_resource(orbit)
         .insert_resource(Actions::default())
@@ -1490,6 +1739,7 @@ mod tests {
             buildings_enabled: false,
             building_profile: BuildingProfile::default(),
             building_plan: None,
+            prototype: None,
         })
         .insert_resource(orbit)
         .insert_resource(Actions::default())
@@ -1562,6 +1812,7 @@ mod tests {
             buildings_enabled: false,
             building_profile: BuildingProfile::default(),
             building_plan: None,
+            prototype: None,
         })
         .insert_resource(orbit)
         .insert_resource(Actions(vec![Action::Feature(4)]))

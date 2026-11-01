@@ -219,6 +219,7 @@ pub fn spawn_city(
     economy: Option<&MarketPlan>,
     view: &MarketView,
     origins: Option<&[BuildingOrigin]>,
+    prototype: Option<&[city_bevy::city_buildings::Placement]>,
 ) {
     let style_indices: BTreeMap<_, _> = origins
         .into_iter()
@@ -295,6 +296,12 @@ pub fn spawn_city(
             }
         }
         for (i, building) in ward.buildings.iter().enumerate() {
+            if prototype.is_some_and(|p| {
+                p.iter()
+                    .any(|p| p.ward_id == ward.id && p.building_index == i && p.design.is_some())
+            }) {
+                continue;
+            }
             let original_index = style_indices.get(&(ward.id, i)).copied().unwrap_or(i);
             let bucket = (ward.seed as usize + original_index * 31) % 4;
             let height = match building.role.as_str() {
@@ -313,6 +320,17 @@ pub fn spawn_city(
                     economic_roofs[i].polygon(&building.polygon, height + 0.03);
                 } else {
                     houses[bucket].polygon(&building.polygon, height + 0.02);
+                }
+            }
+        }
+    }
+    if let Some(placements) = prototype {
+        for placement in placements {
+            if let Some(design) = &placement.design {
+                for entity in
+                    city_bevy::building_adapter::spawn_design(commands, meshes, materials, design)
+                {
+                    commands.entity(entity).insert(CityMesh);
                 }
             }
         }

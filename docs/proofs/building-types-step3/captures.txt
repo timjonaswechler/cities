@@ -1,0 +1,24 @@
+   Compiling city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-e3f6a454/crates/city_bevy)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 4.58s
+PROTOTYPE 3:0: HouseWithAnnex: accepted (weight 10)
+PROTOTYPE 3:2: TownhouseWithGate: accepted (weight 10)
+PROTOTYPE 3:1: requires strict convex quadrilateral; original retained, no repair
+Purplechurch · 422 buildings → docs/proofs/building-types-step3/city-7.json
+PROTOTYPE 3:0: HouseWithAnnex: accepted (weight 10)
+PROTOTYPE 3:2: TownhouseWithGate: accepted (weight 10)
+PROTOTYPE 3:1: requires strict convex quadrilateral; original retained, no repair
+Purplechurch · 422 buildings → docs/proofs/building-types-step3/city-91.json
+seed 7 candidate 0: exact Zoo/City design AND mesh equality
+seed 7 candidate 1: exact Zoo/City design AND mesh equality
+seed 91 candidate 0: exact Zoo/City design AND mesh equality
+seed 91 candidate 1: exact Zoo/City design AND mesh equality
+original: complete canonical JSON matches pre-edit baseline
+snapshot: complete canonical JSON matches pre-edit baseline
+market: complete canonical JSON matches pre-edit baseline
+v1: complete canonical JSON matches pre-edit baseline
+v2: complete canonical JSON matches pre-edit baseline
+CLI rejects unsupported combination --economy
+CLI rejects unsupported combination --buildings
+CLI rejects unsupported combination --building-profile
+CLI rejects unsupported combination --market-profile
+CLI rejects unsupported combination --snapshot
