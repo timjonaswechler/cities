@@ -1,0 +1,9 @@
+[2m2026-11-01T22:35:39.654181Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 27.2", kernel: "27.2.0", cpu: "Apple M1 Pro", core_count: "10", memory: "16.0 GiB" }
+[2m2026-11-01T22:35:39.738694Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T22:35:39.765453Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T22:35:39.765512Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T22:35:39.805302Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window New Cities · Rust / Bevy 0.20.0 (67v0)
+[2m2026-11-01T22:35:40.075795Z[0m [32m INFO[0m [2mcity_bevy[0m[2m:[0m Render pipelines ready: 46
+[2m2026-11-01T22:35:47.906535Z[0m [32m INFO[0m [2mcity_bevy[0m[2m:[0m Render pipelines ready: 47
+[2m2026-11-01T22:35:47.940088Z[0m [32m INFO[0m [2mbevy_render::view::window::screenshot[0m[2m:[0m Screenshot saved to docs/proofs/building-types-step3/original-detail.png
+[2m2026-11-01T22:35:47.941664Z[0m [33m WARN[0m [2mbevy_winit::state[0m[2m:[0m Skipped event Destroyed for unknown winit Window Id WindowId(527422686464)

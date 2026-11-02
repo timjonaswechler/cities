@@ -1,0 +1,20 @@
+{
+  "base": "65e606a06a730f0b5a837fb2c383f53fd3298290",
+  "sha256": {
+    "crates/building_core/src/generation.rs": "73da8b600b26ffe580df26d168cbfce790336f87cd3846d13b86fce45b2a0030",
+    "crates/building_core/src/generation/house_with_annex.rs": "ad5d026e2b1ad9fb7122c93c0e179eb1a121dcf6d124db17039651103da1a353",
+    "crates/building_core/src/generation/townhouse_with_gate.rs": "d72439132565ea591146a0f2df8bb7b7f66407aa19e077076e593e266719d690",
+    "crates/building_core/src/lib.rs": "1636c430d92e09b99b10a9277c71019ad23d68004bc9fadb0e2e2a7c5e75ca80",
+    "crates/building_core/src/mesh.rs": "08bffa8803951e99692688c1ebcaae5e1bf514b0b7ba66f1295c1a2503479eb0",
+    "crates/building_core/src/solid.rs": "babc430f2105f4fa1af71002fa78775982df0800eadf47085d4af895f4f2e547",
+    "crates/building_core/tests/fixtures/townhouse-v1.json": "c5bc78952d2d6f649e59d6d3b3a5a78c420fe27c74755ee4f449052b8c2e11de",
+    "crates/building_core/tests/generation_contract.rs": "7c14e3d5d692d943995346e00b484b6e1e84e9da9b10d45d9bf036f08b126b36",
+    "crates/building_core/tests/legacy_replay.rs": "82b37eba5b7ea822f00e86ac0946acd6626a805aad94b25365cd7eb784ca0bcc",
+    "crates/building_core/tests/profile_limits.rs": "eb9d02990cb47b7fa8816441f9728e24ca73c632e5f4f39db955c825533ba076",
+    "crates/building_core/tests/townhouse_contract.rs": "3bda4c8c0b835fce0a7a08cc5873247aa2b84fbdebcf0764a8d67a23a10873c9",
+    "crates/building_core/tests/townhouse_profile_limits.rs": "3f643ee46ecf302635649d43ba85ad5d24998e30c034909e3231003224d1489d",
+    "crates/city_bevy/examples/building_zoo.rs": "19258c352b95901129283649d5138e5b3bea6ae8e5aae088f9eee85e0abd4b63",
+    "docs/building-types-prototype.md": "46be46718794fbb485cd5f72f7aa57081a3acb0cdd942397c6bb4117b17cec06",
+    "crates/building_core/tests/fixtures/generation-v1.json": "481b1f520b5b0c2697e2640e14e11ef65c8f67ca41d726c3fc4c28ab9dab09c4"
+  }
+}

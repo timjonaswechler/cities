@@ -1,0 +1,298 @@
+{
+  "scope": "Vier feste Referenz-Blockouts ersetzen den verworfenen Haus-Zoo; keine Stadtintegration",
+  "githubRunnersUsed": false,
+  "localOnly": true,
+  "sourceAndImageSha256": {
+    "crates/city_core/prototypes/house-blockout-lab.html": "39d949c925b00784bcfa1ee2cc1dbd7a50f98142eedadc564e93b5eab350374e",
+    "crates/city_core/prototypes/run-house-blockout-lab.mjs": "c55866d194781600bed6da726f8a7929e69c44a16908f3b266441102643ccad3",
+    "crates/city_core/prototypes/house-blockout-runs.json": "40b885faa25cf2f40582415242cc70b5a871ac8a6ae499203db851e40024d458",
+    "docs/house-blockout-village.png": "d24ed2b586095e88cf07b26c0e7da526ea43fa6992ef11cca51db10d98a30c24",
+    "docs/house-blockout-townhouse.png": "b3f65223434c7ef6716c3f7a6136aca8f9bd99f8d1cd353b66355a66798ccf12",
+    "docs/house-blockout-connection.png": "2f5e6d8e2f051d95b45782117870d7b111201b8d06a8426480a09956a0366358",
+    "docs/house-blockout-courtyard.png": "6c6d3f103300d2aa00a172a40efaaebb0eec2617e609f278d4fa90e7c4f8c95c"
+  },
+  "references": {
+    "village": {
+      "number": 1,
+      "sourceSha256": "e333decb491d93ea0a2842880d29b1bbf024f9ee1635e5a9d97b6628d59b9cc4",
+      "previewFormat": "WebP; full source image, resized within 420x420, quality 80"
+    },
+    "townhouse": {
+      "number": 11,
+      "sourceSha256": "251b055b5a7701bbfa0e43dfbba25343d8d0a696cc07b187bb61c7b32fa49fd0",
+      "previewFormat": "WebP; full source image, resized within 420x420, quality 80"
+    },
+    "connection": {
+      "number": 8,
+      "sourceSha256": "f831d40fd5cafe2562b0e7ac93413895f3a9b0c977bb07db572c0f9d91b22ac4",
+      "previewFormat": "WebP; full source image, resized within 420x420, quality 80"
+    },
+    "courtyard": {
+      "number": 4,
+      "sourceSha256": "1d9eb248962810491f30e1d0cfe7557c54237bc334a8a4ed2c30e740baf1860f",
+      "previewFormat": "WebP; full source image, resized within 420x420, quality 80"
+    }
+  },
+  "geometry": {
+    "node": "v26.7.0",
+    "studies": 4,
+    "partCount": 25,
+    "roofPlanes": 25,
+    "triangles": 584,
+    "freeSamples": 27,
+    "blockedSamples": 27,
+    "checks": [
+      "repeatable fixed geometry",
+      "actual non-paired corner angles",
+      "independent inclusion-exclusion area unions",
+      "planar gable and shed faces",
+      "finite nondegenerate triangles",
+      "vertical ray checks of real openings and closed counterexamples"
+    ],
+    "results": [
+      {
+        "id": "village",
+        "valid": true,
+        "mainCorners": [
+          86.3541933819815,
+          92.70328365937296,
+          87.7984251355214,
+          93.14409782312416
+        ],
+        "partCount": 2,
+        "roofs": 2
+      },
+      {
+        "id": "townhouse",
+        "valid": true,
+        "mainCorners": [
+          92.41593165893424,
+          86.60425616721734,
+          92.61148459473468,
+          88.36832757911374
+        ],
+        "partCount": 10,
+        "roofs": 3
+      },
+      {
+        "id": "connection",
+        "valid": true,
+        "mainCorners": [
+          96.30016353156716,
+          91.92899496279077,
+          88.63014460338145,
+          83.14069690226063
+        ],
+        "partCount": 5,
+        "roofs": 5
+      },
+      {
+        "id": "courtyard",
+        "valid": true,
+        "mainCorners": [
+          83.49875627873027,
+          85.48871388630045,
+          94.8281386010751,
+          96.18439123389423
+        ],
+        "partCount": 8,
+        "roofs": 3
+      }
+    ]
+  },
+  "browser": {
+    "checks": [
+      {
+        "case": "village",
+        "valid": true,
+        "houses": 1,
+        "roofs": 2,
+        "corners": [
+          86.3541933819815,
+          92.70328365937296,
+          87.7984251355214,
+          93.14409782312416
+        ],
+        "render": {
+          "webgl": true,
+          "error": 0,
+          "triangles": 32,
+          "width": 623,
+          "height": 420
+        },
+        "referenceLoaded": true
+      },
+      {
+        "case": "townhouse",
+        "valid": true,
+        "houses": 1,
+        "roofs": 3,
+        "corners": [
+          92.41593165893424,
+          86.60425616721734,
+          92.61148459473468,
+          88.36832757911374
+        ],
+        "render": {
+          "webgl": true,
+          "error": 0,
+          "triangles": 258,
+          "width": 623,
+          "height": 420
+        },
+        "referenceLoaded": true
+      },
+      {
+        "case": "connection",
+        "valid": true,
+        "houses": 2,
+        "roofs": 5,
+        "corners": [
+          96.30016353156716,
+          91.92899496279077,
+          88.63014460338145,
+          83.14069690226063
+        ],
+        "render": {
+          "webgl": true,
+          "error": 0,
+          "triangles": 186,
+          "width": 623,
+          "height": 420
+        },
+        "referenceLoaded": true
+      },
+      {
+        "case": "courtyard",
+        "valid": true,
+        "houses": 1,
+        "roofs": 3,
+        "corners": [
+          83.49875627873027,
+          85.48871388630045,
+          94.8281386010751,
+          96.18439123389423
+        ],
+        "render": {
+          "webgl": true,
+          "error": 0,
+          "triangles": 108,
+          "width": 623,
+          "height": 420
+        },
+        "referenceLoaded": true
+      },
+      {
+        "case": "walls stage",
+        "triangles": 228,
+        "stage": "walls"
+      },
+      {
+        "case": "full stage",
+        "triangles": 258,
+        "stage": "full"
+      },
+      {
+        "case": "gate blocked",
+        "valid": false,
+        "issues": [
+          {
+            "partId": "blocked-gate",
+            "message": "Blockiert Tordurchgang."
+          }
+        ]
+      },
+      {
+        "case": "gate restored",
+        "valid": true
+      },
+      {
+        "case": "blocked connection",
+        "valid": false
+      },
+      {
+        "case": "blocked courtyard",
+        "valid": false
+      },
+      {
+        "case": "orbit",
+        "yaw": -1,
+        "oldYaw": -0.65,
+        "error": 0
+      },
+      {
+        "case": "mobile",
+        "width": 390,
+        "documentWidth": 390,
+        "error": 0
+      },
+      {
+        "case": "download",
+        "id": "courtyard",
+        "valid": true,
+        "viewIncluded": true
+      }
+    ],
+    "errors": []
+  },
+  "renderer": "Lokales Chromium, WebGL 1 über SwiftShader",
+  "captures": {
+    "viewport": [
+      1000,
+      1000
+    ],
+    "caseIds": [
+      "village",
+      "townhouse",
+      "connection",
+      "courtyard"
+    ],
+    "stage": "full",
+    "closePassage": false,
+    "note": "PNG-Ausschnitte des oberen Seitenbereichs inklusive Vorlage und Blockout"
+  },
+  "workspaceChecks": {
+    "cargo test --workspace": "39 passed",
+    "cargo fmt --all --check": "passed",
+    "cargo clippy --workspace --all-targets -- -D warnings": "passed",
+    "node tools/verify-building-draft.mjs": "passed",
+    "node tools/verify-building-refinement.mjs": "passed",
+    "python3 tools/verify-archive.py": "64 recovered files/symlinks verified"
+  },
+  "limitations": [
+    "Keine gestalterische Abnahme oder historische Validierung",
+    "Feste abgeleitete Entwürfe, keine vermessenen Rekonstruktionen oder Zufallsgenerierung",
+    "Keine allgemeine Kollisions-, Dachverschnitts- oder Statikprüfung",
+    "Keine Innenräume, Geländevariation, runden Türme oder Stadtintegration",
+    "Software-WebGL-/Readback-Warnungen in Headless-Renderern möglich; keine beobachteten JS- oder GL-Fehler"
+  ],
+  "cameraResetRegression": {
+    "finding": "S1",
+    "reproducedBeforeFix": true,
+    "change": "Only reset camera, draw and save view; no selectCase/model reset.",
+    "geometryLogicUnchanged": true,
+    "cases": [
+      {
+        "id": "townhouse",
+        "modelPreserved": true,
+        "stagePreserved": true,
+        "counterexamplePreserved": true,
+        "cameraRestored": true
+      },
+      {
+        "id": "connection",
+        "modelPreserved": true,
+        "stagePreserved": true,
+        "counterexamplePreserved": true,
+        "cameraRestored": true
+      },
+      {
+        "id": "courtyard",
+        "modelPreserved": true,
+        "stagePreserved": true,
+        "counterexamplePreserved": true,
+        "cameraRestored": true
+      }
+    ]
+  }
+}

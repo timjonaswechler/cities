@@ -1,0 +1,15 @@
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.68s
+     Running `/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/examples/building_zoo --type townhouse-with-gate --help`
+cargo run -p city_bevy --example building_zoo -- [--type NAME] [--profile NAME] [--site NAME] [--seed N] [--camera oblique|rear|top] [--screenshot FILE.png --smoke-test] [--interaction-smoke] [--export FILE.json] [--geometry-only]
+Types: ["house-with-annex", "townhouse-with-gate"]
+Profiles for TownhouseWithGate: ["town_access_profile", "town_compact", "town_flush", "town_outside", "town_standard", "town_tall_clearance"]
+Sites: ["town_access", "town_blocked", "town_ground_tight", "town_irregular", "town_low", "town_no_overhang", "town_outside_ground", "town_rectangle", "town_rotated", "town_upper_tight"]
+Right drag: orbit; wheel: zoom; Home: reset; N: next seed; P: next profile; B: next site; Escape: quit
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.27s
+     Running `/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/examples/building_zoo --type townhouse-with-gate --geometry-only --export docs/proofs/building-types-step2/default-geometry.json`
+type=TownhouseWithGate profile=town_standard site=town_rectangle seed=7: 3 parts; []
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.28s
+     Running `/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/examples/building_zoo --type townhouse-with-gate --site town_blocked --geometry-only --export docs/proofs/building-types-step2/rejected-geometry.json`
+type=TownhouseWithGate profile=town_standard site=town_blocked seed=7: NoFit("Storeys or gate violate ground contact, upper projection, roof height or reserved passage clearance")
+NoFit("Storeys or gate violate ground contact, upper projection, roof height or reserved passage clearance")
+negative_geometry_exit=1

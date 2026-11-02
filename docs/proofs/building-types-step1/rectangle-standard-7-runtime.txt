@@ -1,0 +1,16 @@
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.25s
+     Running `/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/examples/building_zoo --type house-with-annex --site rectangle --profile standard --seed 7 --camera oblique --screenshot docs/proofs/building-types-step1/rectangle-standard-7.png --interaction-smoke --export docs/proofs/building-types-step1/rectangle-standard-7.json`
+type=HouseWithAnnex profile=standard site=rectangle seed=7: 2 parts; []
+[2m2026-11-01T20:57:04.677791Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 27.2", kernel: "27.2.0", cpu: "Apple M1 Pro", core_count: "10", memory: "16.0 GiB" }
+[2m2026-11-01T20:57:04.788184Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T20:57:04.829894Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T20:57:04.829962Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T20:57:04.865918Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window building_core · synthetic prototype zoo (67v0)
+[2m2026-11-01T20:57:05.306831Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m INTERACTION: injected right-drag and wheel changed the real camera
+[2m2026-11-01T20:57:05.308239Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m INTERACTION: Home restored the fixed camera
+[2m2026-11-01T20:57:05.322642Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m INTERACTION: N regenerated the next deterministic seed
+[2m2026-11-01T20:57:05.324066Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m INTERACTION: P selected and regenerated the next profile
+[2m2026-11-01T20:57:05.340208Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m INTERACTION: B selected and regenerated the next site; result Err(NoFit("Main body including roof violates ground, upper envelope, height or reserved access"))
+[2m2026-11-01T20:57:05.340255Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m INTERACTION: restored exact CLI inputs and camera before capture
+[2m2026-11-01T20:57:12.984150Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m CAPTURE saved docs/proofs/building-types-step1/rectangle-standard-7.png
+[2m2026-11-01T20:57:12.985623Z[0m [33m WARN[0m [2mbevy_winit::state[0m[2m:[0m Skipped event Destroyed for unknown winit Window Id WindowId(529230365952)

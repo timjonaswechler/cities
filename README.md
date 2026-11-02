@@ -36,11 +36,13 @@ Die Seitenleiste steuert Seed, Stadtgröße, Zitadelle, innere Burg, Marktplatz,
 | `R` | Neue Stadt mit nächstem Seed |
 | `Enter` | Stadt erneut berechnen / Seed übernehmen |
 | `T` | Zwischen Draufsicht und Perspektive wechseln |
+| `E` | Marktplanung V1 ein-/ausschalten |
+| `B` | Gebäudeformen V2 ein-/ausschalten |
 | `Home` | Kamera zurücksetzen |
 | `+` / `−` | Stadtgröße ändern |
 | `Esc` | Seedeingabe abbrechen / Anwendung schließen |
 
-JSON- und PNG-Exporte werden unter `exports/` gespeichert. PNG enthält die aktuelle Bevy-Ansicht; JSON enthält die unveränderten zweidimensionalen Grundrisse und die ursprüngliche Straßen-, Mauer-, Gewässer- und Baumgeometrie.
+JSON- und PNG-Exporte werden unter `exports/` gespeichert. PNG enthält die aktuelle Bevy-Ansicht. Ohne Gebäudeplanung enthält JSON die ursprünglichen Grundrisse (Version 1). Mit Gebäudeplanung enthält Version 2 die angezeigten Grundrisse in `city`, den Originalbestand in `originalCity` und die Entscheidungen in `buildingPlanning`. Straßen-, Mauer-, Gewässer- und Baumgeometrie bleiben unverändert.
 
 ```sh
 cargo run -- --seed 42 --size 10 --river
@@ -54,6 +56,48 @@ cargo run -- --options village.json
 ```json
 {"seed":42,"size":5,"citadel":false,"walls":false,"temple":false,"greens":true}
 ```
+
+## Marktplanung V1
+
+Die akzeptierte Marktlogik aus dem HTML-Stadtlabor ist als zuschaltbares Rust-Feature übernommen: getrennte Laufwegabstände zum Hauptmarkt und zwischen Nebenmärkten, Bedarf und Distriktgewicht **ohne Marktpflicht pro Distrikt**. Grundrisse und Original-Zufallszustand bleiben unverändert; es werden noch keine Plätze freigeräumt, Höfe gebaut oder Wachstumsschritte simuliert.
+
+```sh
+cargo run -- --seed 42 --size 25 --economy
+cargo run -- --market-profile assets/market-profiles/market-v1.json
+cargo run -- --write-market-profile exports/market-profile.json
+cargo run -- --market-profile exports/market-profile.json --export exports/city.json
+```
+
+Mit `E` ein-/ausschalten; „Marktregeln anzeigen“ öffnet die Plus/Minus-Regler, Profil-Reset, Profil-Speicherung und Wege-/Distriktanzeige. Dachfarben zeigen Markteinzug, **keine Gebäudenutzung**: H braun, M1 gold, M2 blau, M3 grün, M4 violett, M5 rot; unversorgte Gebäude grau. Beschriftete Pins markieren Kandidaten. Laufwege und Distriktabdeckung stehen im Bericht und JSON-Export.
+
+Das benannte V1-Profil ist konfigurierbar. Das HTML-Stadtlabor bleibt als Referenz erhalten; Rust wird gegen alle 27 gespeicherten Konfigurationen geprüft. Künftige Features können über `plan_markets(&city, &profile, &demand_overrides)` explizite Nachfragegewichte liefern, statt Markteffekte unkontrolliert zurückzukoppeln.
+
+**Grenzen:** Das Wegenetz und Gebäudezugänge sind Annäherungen, keine zertifizierten Fußgängerrouten. Abdeckung verwendet zunächst Gebäudegrundfläche, nicht Einwohnerzahlen. Der Wegemittelwert ist beim jeweiligen Versorgungsweg gedeckelt. Grundstücke, Platzflächen, Kapazität, Abriss und wirtschaftliche Entwicklung sind noch nicht modelliert.
+
+![Native Marktplanung V1](docs/market-v1-preview.png)
+
+Details, Profilformat und Nachfrage-Interface: [Marktplanung V1](docs/market-planning-v1.md). Quellen: [Recherche](docs/research-organic-cities.md). Die [Experimentierspur](docs/organic-city-experiments.md) hält die früheren Marktflächen-/Hof-/Vorstadtversuche und offenen Fragen fest; die HTML-Stadtlabore liegen unter `crates/city_core/prototypes/`.
+
+## Referenz-Blockouts · neues Ziel von PR #2
+
+Der alte Haus-Zoo ist verworfen. Das [neue Referenz-Blockout-Labor](crates/city_core/prototypes/house-blockout-lab.html) stellt vier feste Entwürfe ihren Bildvorlagen gegenüber: Dorfhaus mit Anbau, Stadthaus mit Tor, gedeckte Verbindung und Hofgruppe. Unterschiedliche einzelne Eckwinkel statt globaler Scherung; Sattel-/Pultdächer, Geschossversätze, Treppe, Konsolen und echte facettierte Tor-/Brückenbögen. Keine Seeds oder Zufallsgenerierung in dieser Runde.
+
+HTML herunterladen und öffnen; kein Server oder Paketdownload erforderlich. Noch keine gestalterische Freigabe oder Stadtintegration. [Referenzzuordnung, Regeln, Bedienung und Grenzen](docs/house-blockout-lab.md). Die Vorlagen sind Stilreferenzen, keine vermessenen Baupläne oder Spielassets. Alle Prüfungen laufen lokal, ohne GitHub Runner. Marktplanung und die nachstehende V1-/V2-Bereinigung bleiben unverändert verfügbar.
+
+## Gebäudeformen V2
+
+Mit `B` oder `--buildings` zuschalten: zu kleine oder unbrauchbar schmale/spitze Restformen werden ausgelassen oder mit direkten Nachbarn vereinigt. Schmale Streifen werden entlang gemeinsamer Längswände aufgeteilt, statt am kurzen Ende als dünner Arm angehängt zu werden. V2 kürzt zusätzlich lange schmale Ausläufer auf eine breitere Abschlusskante (Standard 6 m) und bereinigt danach Kanten unter 2 m, ohne Fläche aufzufüllen. Genau 2 m lange Kanten bleiben erhalten. Flächenverlust, Zuordnungen und nicht sicher entfernbare Restkanten sind nachvollziehbar; der Originalmodus und das bisherige V1-Profil bleiben verfügbar.
+
+```sh
+cargo run -- --seed 42 --size 25 --economy --buildings
+cargo run -- --seed 42 --size 25 --economy --building-profile assets/building-profiles/buildings-v2.json
+cargo run -- --write-building-profile exports/building-profile.json
+cargo run -- --seed 42 --size 25 --economy --buildings --export exports/planned-city.json
+```
+
+Für die Abnahme bleibt **Purplechurch mit Seed 42 und Größe 25 aus PR #1** die Vergleichsbasis. Der [HTML-Vergleich](docs/building-planning-v2-comparison.html) zeigt Original und Planung bei identischen Optionen und identischer Kamera, einschließlich Detailmarkierung; herunterladen und per Doppelklick öffnen. Stormwind dient nur als zusätzlicher Aufteilungs-Testfall.
+
+Die Marktplanung wird bei gemeinsamer Aktivierung auf den tatsächlich angezeigten Grundrissen neu berechnet. Die Formgrenzen sind konfigurierbare Versuchswerte, keine zertifizierten Raummaße. Komplexe lokale Engstellen, tatsächliche Nutzung und Eigentumsrechte bleiben offen. Details, Exportversion und Prüfnachweise: [Gebäudeformen V2](docs/building-planning-v1.md).
 
 ## Generator verwenden
 
@@ -82,6 +126,8 @@ cargo test --workspace
 cargo fmt --all --check
 cargo clippy --workspace --all-targets -- -D warnings
 python3 tools/verify-archive.py
+node tools/verify-building-draft.mjs
+node tools/verify-building-refinement.mjs
 ```
 
 Die Referenzen stammen aus dem unabhängig ausgeführten vollständigen Originalbundle, Version **0.11.5, Build 2431**. Verglichen werden vollständige kanonische Modelle mit exakten `f64`-Werten, ohne Rundungstoleranz. Die Referenzumgebung ist Node 26.7.0 auf macOS ARM64. Verschiedene JavaScript-Laufzeiten lieferten bereits im Original unterschiedliche Ergebnisse einzelner Math-Funktionen; deshalb bedeutet dieser Vergleich keine pauschale Bitgleichheit mit jeder Browser-/CPU-Kombination.

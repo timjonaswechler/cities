@@ -1,0 +1,8 @@
+type=TownhouseWithGate profile=imported-request site=imported-request seed=7: 3 parts; []
+[2m2026-11-01T22:36:37.338909Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 27.2", kernel: "27.2.0", cpu: "Apple M1 Pro", core_count: "10", memory: "16.0 GiB" }
+[2m2026-11-01T22:36:37.458608Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T22:36:37.497068Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T22:36:37.497158Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T22:36:37.532024Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window building_core · synthetic prototype zoo (67v0)
+[2m2026-11-01T22:36:45.635060Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m CAPTURE saved docs/proofs/building-types-step3/zoo-real-townhouse.png
+[2m2026-11-01T22:36:45.639069Z[0m [33m WARN[0m [2mbevy_winit::state[0m[2m:[0m Skipped event Destroyed for unknown winit Window Id WindowId(521724527872)

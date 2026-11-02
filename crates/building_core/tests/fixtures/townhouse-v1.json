@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "provenance": "Frozen synthetic metre inputs, not measurements from image 11.",
+  "profiles": {
+    "town_standard": {
+      "length": [
+        8,
+        8.8
+      ],
+      "depth": [
+        5,
+        5.6
+      ],
+      "lower_height": 3.5,
+      "upper_height": 2.8,
+      "roof_rise": 2.5,
+      "overhang": [
+        0.4,
+        0.6
+      ],
+      "gate_span": 4,
+      "gate_pier": 0.65,
+      "gate_spring": 2.2,
+      "gate_rise": 1,
+      "gate_wall_top": 4.8,
+      "gate_roof_rise": 1.5,
+      "setback": 1.2
+    },
+    "town_compact": {
+      "length": [
+        7,
+        7.5
+      ],
+      "depth": [
+        4.8,
+        5
+      ],
+      "lower_height": 3.5,
+      "upper_height": 2.5,
+      "roof_rise": 2.1,
+      "overhang": [
+        0.25,
+        0.4
+      ],
+      "gate_span": 4,
+      "gate_pier": 0.65,
+      "gate_spring": 2.2,
+      "gate_rise": 1,
+      "gate_wall_top": 4.8,
+      "gate_roof_rise": 1.5,
+      "setback": 1.2
+    },
+    "town_flush": {
+      "length": [
+        8,
+        8.8
+      ],
+      "depth": [
+        5,
+        5.6
+      ],
+      "lower_height": 3.5,
+      "upper_height": 2.8,
+      "roof_rise": 2.5,
+      "overhang": [
+        0,
+        0
+      ],
+      "gate_span": 4,
+      "gate_pier": 0.65,
+      "gate_spring": 2.2,
+      "gate_rise": 1,
+      "gate_wall_top": 4.8,
+      "gate_roof_rise": 1.5,
+      "setback": 1.2
+    },
+    "town_access_profile": {
+      "length": [
+        8,
+        8
+      ],
+      "depth": [
+        5,
+        5
+      ],
+      "lower_height": 3.5,
+      "upper_height": 2.8,
+      "roof_rise": 2.5,
+      "overhang": [
+        0.4,
+        0.6
+      ],
+      "gate_span": 4,
+      "gate_pier": 0.65,
+      "gate_spring": 2.2,
+      "gate_rise": 1,
+      "gate_wall_top": 4.8,
+      "gate_roof_rise": 1.5,
+      "setback": 1.2
+    },
+    "town_tall_clearance": {
+      "length": [
+        8,
+        8
+      ],
+      "depth": [
+        5,
+        5
+      ],
+      "lower_height": 3.5,
+      "upper_height": 2.8,
+      "roof_rise": 2.5,
+      "overhang": [
+        0.4,
+        0.6
+      ],
+      "gate_span": 4,
+      "gate_pier": 0.65,
+      "gate_spring": 2.2,
+      "gate_rise": 1,
+      "gate_wall_top": 4.8,
+      "gate_roof_rise": 1.5,
+      "setback": 1.2
+    },
+    "town_outside": {
+      "length": [
+        8,
+        8.8
+      ],
+      "depth": [
+        5,
+        5.6
+      ],
+      "lower_height": 3.5,
+      "upper_height": 2.8,
+      "roof_rise": 2.5,
+      "overhang": [
+        0.4,
+        0.6
+      ],
+      "gate_span": 4,
+      "gate_pier": 0.65,
+      "gate_spring": 2.2,
+      "gate_rise": 1,
+      "gate_wall_top": 4.8,
+      "gate_roof_rise": 1.5,
+      "setback": 0.2
+    }
+  },
+  "sites": {
+    "town_rectangle": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    },
+    "town_rotated": {
+      "ground": [
+        {
+          "x": 30,
+          "z": -27
+        },
+        {
+          "x": 30,
+          "z": -7
+        },
+        {
+          "x": 15,
+          "z": -7
+        },
+        {
+          "x": 15,
+          "z": -27
+        }
+      ],
+      "envelope": [
+        {
+          "x": 30,
+          "z": -27
+        },
+        {
+          "x": 30,
+          "z": -7
+        },
+        {
+          "x": 15,
+          "z": -7
+        },
+        {
+          "x": 15,
+          "z": -27
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    },
+    "town_irregular": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 9,
+          "z": 8
+        },
+        {
+          "x": -8,
+          "z": 7
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 9,
+          "z": 8
+        },
+        {
+          "x": -8,
+          "z": 7
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    },
+    "town_upper_tight": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -5.5
+        },
+        {
+          "x": 10,
+          "z": -5.5
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    },
+    "town_no_overhang": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0,
+      "access": []
+    },
+    "town_access": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": [
+        {
+          "footprint": [
+            {
+              "x": 3.25,
+              "z": -7
+            },
+            {
+              "x": 4.15,
+              "z": -7
+            },
+            {
+              "x": 4.15,
+              "z": 8
+            },
+            {
+              "x": 3.25,
+              "z": 8
+            }
+          ],
+          "clearance": 2
+        }
+      ]
+    },
+    "town_blocked": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": [
+        {
+          "footprint": [
+            {
+              "x": -10,
+              "z": -7
+            },
+            {
+              "x": 10,
+              "z": -7
+            },
+            {
+              "x": 10,
+              "z": 8
+            },
+            {
+              "x": -10,
+              "z": 8
+            }
+          ],
+          "clearance": 2
+        }
+      ]
+    },
+    "town_low": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 6,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    },
+    "town_ground_tight": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 0,
+          "z": -7
+        },
+        {
+          "x": 0,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    },
+    "town_outside_ground": {
+      "ground": [
+        {
+          "x": -10,
+          "z": -5
+        },
+        {
+          "x": 10,
+          "z": -5
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "envelope": [
+        {
+          "x": -10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": -7
+        },
+        {
+          "x": 10,
+          "z": 8
+        },
+        {
+          "x": -10,
+          "z": 8
+        }
+      ],
+      "max_height": 11,
+      "annex_allowed": false,
+      "max_overhang": 0.8,
+      "access": []
+    }
+  },
+  "cases": [
+    {
+      "id": "suitable",
+      "site": "town_rectangle",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "ok"
+    },
+    {
+      "id": "other-seed",
+      "site": "town_rectangle",
+      "profile": "town_standard",
+      "seed": 91,
+      "expect": "ok"
+    },
+    {
+      "id": "compact",
+      "site": "town_rectangle",
+      "profile": "town_compact",
+      "seed": 7,
+      "expect": "ok"
+    },
+    {
+      "id": "rotated",
+      "site": "town_rotated",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "ok"
+    },
+    {
+      "id": "local-contour",
+      "site": "town_irregular",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "ok"
+    },
+    {
+      "id": "upper-zone",
+      "site": "town_upper_tight",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "overhang-forbidden",
+      "site": "town_no_overhang",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "flush-permitted",
+      "site": "town_no_overhang",
+      "profile": "town_flush",
+      "seed": 7,
+      "expect": "ok"
+    },
+    {
+      "id": "required-access",
+      "site": "town_access",
+      "profile": "town_access_profile",
+      "seed": 7,
+      "expect": "ok"
+    },
+    {
+      "id": "fully-blocked",
+      "site": "town_blocked",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "height",
+      "site": "town_low",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "ground-limit",
+      "site": "town_ground_tight",
+      "profile": "town_standard",
+      "seed": 7,
+      "expect": "NoFit"
+    },
+    {
+      "id": "upper-outside-ground",
+      "site": "town_outside_ground",
+      "profile": "town_outside",
+      "seed": 7,
+      "expect": "ok"
+    }
+  ]
+}

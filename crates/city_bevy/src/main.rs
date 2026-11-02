@@ -10,7 +10,11 @@ use bevy::{
     render::view::screenshot::{Screenshot, ScreenshotCaptured, save_to_disk},
     ui_widgets::{Activate, Button},
 };
-use city_core::{City, CityOptions, GenerationError, generate_city, generate_snapshot};
+use city_bevy::city_buildings::{self, Config as TypeConfig, Placement};
+use city_core::{
+    BuildingPlan, BuildingProfile, City, CityOptions, GenerationError, MarketPlan, MarketProfile,
+    generate_city, generate_snapshot, plan_buildings, plan_markets,
+};
 use std::sync::{Mutex, mpsc};
 
 #[derive(Resource)]
@@ -18,8 +22,53 @@ struct CityState {
     city: City,
     options: CityOptions,
     message: String,
-    job: Option<Mutex<mpsc::Receiver<Result<City, GenerationError>>>>,
+    job: Option<Mutex<mpsc::Receiver<Result<GeneratedCity, GenerationError>>>>,
     seed_edit: Option<String>,
+    economy_enabled: bool,
+    economy: Option<MarketPlan>,
+    market_profile: MarketProfile,
+    market_settings: bool,
+    market_view: mesh::MarketView,
+    buildings_enabled: bool,
+    building_profile: BuildingProfile,
+    building_plan: Option<BuildingPlan>,
+    prototype: Option<Vec<Placement>>,
+}
+impl CityState {
+    fn visible_city(&self) -> &City {
+        self.building_plan
+            .as_ref()
+            .map_or(&self.city, |plan| &plan.city)
+    }
+}
+struct GeneratedCity {
+    city: City,
+    economy: Option<MarketPlan>,
+    building_plan: Option<BuildingPlan>,
+}
+fn generate_view(
+    options: &CityOptions,
+    economy: bool,
+    profile: &MarketProfile,
+    buildings: Option<&BuildingProfile>,
+) -> Result<GeneratedCity, GenerationError> {
+    profile.validate()?;
+    if let Some(profile) = buildings {
+        profile.validate()?;
+    }
+    let city = generate_city(options)?;
+    let building_plan = buildings.map(|p| plan_buildings(&city, p)).transpose()?;
+    let visible = building_plan.as_ref().map_or(&city, |p| &p.city);
+    let economy = if economy {
+        Some(plan_markets(visible, profile, &[])?)
+    } else {
+        None
+    };
+    Ok(GeneratedCity {
+        city,
+        economy,
+        building_plan,
+    })
 }
 #[derive(Resource, Default)]
 struct Actions(Vec<Action>);
@@ -32,11 +81,67 @@ enum Action {
     Seed,
     Gates,
     Feature(usize),
+    Economy,
+    Buildings,
+    MarketSettings,
+    MarketParam(MarketParameter, i8),
+    MarketDefaults,
+    SaveMarketProfile,
+    MarketRoutes,
+    MarketDistricts,
     Top,
     Reset,
     Json,
     Png,
 }
+#[derive(Clone, Copy)]
+enum MarketParameter {
+    Main,
+    Secondary,
+    Service,
+    District,
+    Beneficiaries,
+    Maximum,
+}
+impl MarketParameter {
+    fn adjust(self, p: &mut MarketProfile, delta: i8) {
+        let d = delta as f64;
+        match self {
+            Self::Main => p.main_min = (p.main_min + d * 20.0).clamp(0.0, 500.0),
+            Self::Secondary => p.side_min = (p.side_min + d * 20.0).clamp(0.0, 400.0),
+            Self::Service => p.service = (p.service + d * 20.0).clamp(80.0, 400.0),
+            Self::District => p.district_weight = (p.district_weight + d * 0.5).clamp(0.0, 2.0),
+            Self::Beneficiaries => {
+                p.min_beneficiaries =
+                    (p.min_beneficiaries as i64 + delta as i64).clamp(1, 100) as usize
+            }
+            Self::Maximum => {
+                p.max_markets = (p.max_markets as i64 + delta as i64).clamp(0, 5) as usize
+            }
+        }
+        p.name = "Marktplanung V1 (angepasst)".into();
+    }
+    fn label(self, p: &MarketProfile) -> String {
+        match self {
+            Self::Main => format!("Hauptmarkt: {:.0} m", p.main_min),
+            Self::Secondary => format!("Nebenmärkte: {:.0} m", p.side_min),
+            Self::Service => format!("Versorgung: {:.0} m", p.service),
+            Self::District => format!("Distriktgewicht: {:.1}", p.district_weight),
+            Self::Beneficiaries => format!("Mindestbedarf: {}", p.min_beneficiaries),
+            Self::Maximum => format!("Max. Nebenmärkte: {}", p.max_markets),
+        }
+    }
+}
+#[derive(Component)]
+struct CityControls;
+#[derive(Component)]
+struct MarketControls;
+#[derive(Component)]
+struct MarketReportBox;
+#[derive(Component)]
+struct MarketReportText;
+#[derive(Component)]
+struct ProfileValue(MarketParameter);
 #[derive(Component)]
 struct ButtonLabel(Action);
 #[derive(Component)]
@@ -112,13 +217,23 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut options = CityOptions::default();
     let mut output = None;
     let mut snapshot = None;
+    let mut economy_enabled = false;
+    let mut market_profile = MarketProfile::default();
+    let mut write_profile = None;
+    let mut buildings_enabled = false;
+    let mut building_profile = BuildingProfile::default();
+    let mut write_building_profile = None;
     let mut capture = Capture::default();
+    let mut type_config: Option<TypeConfig> = None;
+    let mut type_seed: Option<u64> = None;
+    let mut detail_lot = None;
+    let mut detail_rear = false;
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--help" | "-h" => {
                 println!(
-                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
+                    "New Cities · Rust / Bevy 0.20.0\n\ncargo run -- [--seed N] [--size 1..200] [--options FILE]\n             [--coast] [--river] [--greens] [--no-walls]\n             [--export FILE] [--snapshot FILE] [--economy]\n             [--market-profile FILE] [--write-market-profile FILE]\n             [--buildings] [--building-profile FILE] [--write-building-profile FILE]\n             [--building-types FILE] [--type-seed N] [--detail-lot W:I --detail-rear]\n             [--screenshot FILE] [--smoke-test]\n\n--export/--snapshot run without a window.\nR: new seed · Enter: rebuild · T: top view · E: economy overlay · B: building planning · Home: reset camera\nRight drag: orbit · Middle drag: pan · Wheel: zoom · Esc: quit"
                 );
                 return Ok(());
             }
@@ -129,6 +244,51 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             }
             "--seed" => options.seed = args.next().ok_or("--seed requires a number")?.parse()?,
             "--size" => options.size = args.next().ok_or("--size requires a number")?.parse()?,
+            "--building-types" => {
+                type_config = Some(serde_json::from_str(&std::fs::read_to_string(
+                    args.next()
+                        .ok_or("--building-types requires a config file")?,
+                )?)?);
+            }
+            "--detail-rear" => detail_rear = true,
+            "--type-seed" => {
+                type_seed = Some(
+                    args.next()
+                        .ok_or("--type-seed requires an integer")?
+                        .parse()?,
+                )
+            }
+            "--detail-lot" => {
+                detail_lot = Some(parse_lot(
+                    &args.next().ok_or("--detail-lot requires ward:index")?,
+                )?)
+            }
+            "--economy" => economy_enabled = true,
+            "--buildings" => buildings_enabled = true,
+            "--building-profile" => {
+                building_profile = serde_json::from_str(&std::fs::read_to_string(
+                    args.next().ok_or("--building-profile requires a file")?,
+                )?)?;
+                buildings_enabled = true;
+            }
+            "--write-building-profile" => {
+                write_building_profile = Some(
+                    args.next()
+                        .ok_or("--write-building-profile requires a file")?,
+                );
+            }
+            "--market-profile" => {
+                market_profile = serde_json::from_str(&std::fs::read_to_string(
+                    args.next().ok_or("--market-profile requires a file")?,
+                )?)?;
+                economy_enabled = true;
+            }
+            "--write-market-profile" => {
+                write_profile = Some(
+                    args.next()
+                        .ok_or("--write-market-profile requires a file")?,
+                )
+            }
             "--coast" => options.coast = true,
             "--river" => options.river = true,
             "--greens" => options.greens = true,
@@ -142,24 +302,97 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             _ => return Err(format!("Unknown argument {arg}; use --help").into()),
         }
     }
+    validate_type_mode(
+        type_config.is_some(),
+        economy_enabled,
+        buildings_enabled,
+        snapshot.is_some(),
+    )?;
+    if type_seed.is_some() && type_config.is_none() {
+        return Err("--type-seed requires --building-types".into());
+    }
     options.validate()?;
+    market_profile.validate()?;
+    building_profile.validate()?;
+    if let Some(path) = write_building_profile {
+        write_json(&path, &building_profile)?;
+        println!("Gebäudeprofil: {path}");
+        return Ok(());
+    }
+    if let Some(path) = write_profile {
+        write_json(&path, &market_profile)?;
+        println!("Marktprofil: {path}");
+        return Ok(());
+    }
     if let Some(path) = snapshot {
+        if economy_enabled || buildings_enabled {
+            return Err(
+                "--economy/--buildings do not apply to original snapshots; use --export".into(),
+            );
+        }
         write_json(&path, &generate_snapshot(&options)?)?;
         println!("Snapshot: {path}");
         return Ok(());
     }
-    let city = generate_city(&options)?;
+    let GeneratedCity {
+        city,
+        economy,
+        building_plan,
+    } = generate_view(
+        &options,
+        economy_enabled,
+        &market_profile,
+        buildings_enabled.then_some(&building_profile),
+    )?;
+    let prototype = if let Some(mut config) = type_config {
+        if let Some(seed) = type_seed {
+            for lot in &mut config.lots {
+                lot.seed = seed;
+            }
+        }
+        let placements = city_buildings::plan(&city, &config)?;
+        for p in &placements {
+            println!(
+                "PROTOTYPE {}:{}: {}",
+                p.ward_id,
+                p.building_index,
+                p.attempts.join("; ")
+            );
+        }
+        Some(placements)
+    } else {
+        None
+    };
     if let Some(path) = output {
-        write_city(&path, &city)?;
+        if let Some(placements) = &prototype {
+            write_type_city(&path, &city, placements)?;
+        } else {
+            write_city(&path, &city, economy.as_ref(), building_plan.as_ref())?;
+        }
         println!(
             "{} · {} buildings → {path}",
             city.name,
-            city.building_count()
+            building_plan
+                .as_ref()
+                .map_or(&city, |p| &p.city)
+                .building_count()
         );
         return Ok(());
     }
-    let orbit = orbit_for(&city);
-    App::new()
+    let mut orbit = orbit_for(&city);
+    if let Some(id) = detail_lot {
+        orbit = detail_orbit(&city, id)?;
+    }
+    if detail_rear {
+        if detail_lot.is_none() {
+            return Err("--detail-rear requires --detail-lot".into());
+        }
+        orbit.yaw += std::f32::consts::PI;
+        orbit.pitch = 0.65;
+        orbit.distance = 55.;
+    }
+    let prototype_active = prototype.is_some();
+    let exit = App::new()
         .add_plugins(
             DefaultPlugins
                 .set(bevy::render::RenderPlugin {
@@ -170,6 +403,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     primary_window: Some(Window {
                         title: "New Cities · Rust / Bevy 0.20.0".into(),
                         resolution: (1440, 960).into(),
+                        visible: !capture.exit_after,
                         ..default()
                     }),
                     ..default()
@@ -182,11 +416,25 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             ..default()
         })
         .insert_resource(CityState {
+            prototype,
             city,
             options,
-            message: "Bereit".into(),
+            message: if prototype_active {
+                "PROTOTYP: wenige optische Ersetzungen; keine Wirtschaft; E/B/R/Enter gesperrt"
+                    .into()
+            } else {
+                "Bereit".into()
+            },
             job: None,
             seed_edit: None,
+            market_settings: economy_enabled,
+            market_profile,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled,
+            building_profile,
+            building_plan,
+            economy_enabled,
+            economy,
         })
         .insert_resource(orbit)
         .insert_resource(capture)
@@ -200,14 +448,61 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 apply_actions,
                 poll_generation,
                 update_labels,
+                update_market_panel,
                 button_colors,
                 camera,
+                position_market_labels,
                 capture_frame,
             )
                 .chain(),
         )
         .run();
+    if exit.is_error() {
+        return Err("native city exited unsuccessfully".into());
+    }
     Ok(())
+}
+fn validate_type_mode(
+    active: bool,
+    economy: bool,
+    buildings: bool,
+    snapshot: bool,
+) -> Result<(), String> {
+    if active && (economy || buildings || snapshot) {
+        Err("--building-types is a visual prototype; incompatible with economy, V1/V2 building planning and original snapshots".into())
+    } else {
+        Ok(())
+    }
+}
+fn parse_lot(s: &str) -> Result<(usize, usize), Box<dyn std::error::Error>> {
+    let (w, b) = s.split_once(':').ok_or("expected ward:index")?;
+    Ok((w.parse()?, b.parse()?))
+}
+fn write_type_city(
+    path: &str,
+    city: &City,
+    placements: &[Placement],
+) -> Result<(), Box<dyn std::error::Error>> {
+    write_json(
+        path,
+        &serde_json::json!({"format":"building-types-city-prototype","version":1,"originalCity":city,"placements":placements,"analysis":"visual replacements only; no economic/occupancy analysis"}),
+    )
+}
+fn detail_orbit(city: &City, id: (usize, usize)) -> Result<Orbit, String> {
+    let b = city
+        .wards
+        .iter()
+        .find(|w| w.id == id.0)
+        .and_then(|w| w.buildings.get(id.1))
+        .ok_or("unknown detail lot")?;
+    let mut orbit = orbit_for(city);
+    orbit.target = Vec3::new(
+        (b.polygon.iter().map(|p| p.x).sum::<f64>() / b.polygon.len() as f64 * 4.) as f32,
+        2.,
+        (b.polygon.iter().map(|p| p.y).sum::<f64>() / b.polygon.len() as f64 * 4.) as f32,
+    );
+    orbit.distance = 85.;
+    Ok(orbit)
 }
 fn write_json(path: &str, value: &impl serde::Serialize) -> Result<(), Box<dyn std::error::Error>> {
     let p = std::path::Path::new(path);
@@ -219,11 +514,26 @@ fn write_json(path: &str, value: &impl serde::Serialize) -> Result<(), Box<dyn s
     std::fs::write(p, serde_json::to_vec_pretty(value)?)?;
     Ok(())
 }
-fn write_city(path: &str, city: &City) -> Result<(), Box<dyn std::error::Error>> {
-    write_json(
-        path,
-        &serde_json::json!({"format":"new-cities","version":1,"city":city}),
-    )
+fn write_city(
+    path: &str,
+    city: &City,
+    economy: Option<&MarketPlan>,
+    building_plan: Option<&BuildingPlan>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut value = serde_json::json!({"format":"new-cities","version":1,"city":city});
+    if let Some(plan) = building_plan {
+        value["version"] = 2.into();
+        value["city"] = serde_json::to_value(&plan.city)?;
+        value["originalCity"] = serde_json::to_value(city)?;
+        value["buildingPlanning"] = serde_json::json!({
+            "profile":plan.profile,"decisions":plan.decisions,"summary":plan.summary,
+            "buildingOrigins":plan.building_origins,
+        });
+    }
+    if let Some(economy) = economy {
+        value["economy"] = serde_json::to_value(economy)?;
+    }
+    write_json(path, &value)
 }
 fn orbit_for(city: &City) -> Orbit {
     let extent = city.bounds.width.max(city.bounds.height) as f32 * 4.0;
@@ -248,7 +558,19 @@ fn setup_scene(
     mut capture: ResMut<Capture>,
     state: Res<CityState>,
 ) {
-    mesh::spawn_city(&mut commands, &mut meshes, &mut materials, &state.city);
+    mesh::spawn_city(
+        &mut commands,
+        &mut meshes,
+        &mut materials,
+        state.visible_city(),
+        state.economy.as_ref(),
+        &state.market_view,
+        state
+            .building_plan
+            .as_ref()
+            .map(|p| p.building_origins.as_slice()),
+        state.prototype.as_deref(),
+    );
     // A smoke test must render even when the desktop is locked or the window
     // is occluded. An image target does not depend on a window swap chain.
     let target = if capture.exit_after {
@@ -288,7 +610,7 @@ fn font(size: f32) -> TextFont {
         ..default()
     }
 }
-fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
+fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>, state: Res<CityState>) {
     commands.insert_resource(UiFonts {
         body: fonts.add(Font::from_bytes(
             include_bytes!("../../../assets/fonts/ShareTech-Regular.ttf").to_vec(),
@@ -306,7 +628,7 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
                 width: px(265),
                 padding: UiRect::all(px(20)),
                 flex_direction: FlexDirection::Column,
-                row_gap: px(7),
+                row_gap: px(5),
                 border_radius: BorderRadius::all(px(12)),
                 ..default()
             },
@@ -314,54 +636,39 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
         ))
         .id();
     commands.entity(panel).with_children(|parent| {
-        parent.spawn((
-            Text::new("NEW CITIES"),
-            font(23.0),
-            TextColor(Color::srgb_u8(231, 224, 203)),
-        ));
-        parent.spawn((
-            Text::new("WATABOU · NATIVE GENERATION"),
-            font(10.5),
-            TextColor(Color::srgb_u8(143, 159, 150)),
-            Node {
-                margin: UiRect::bottom(px(14)),
-                ..default()
-            },
-        ));
-        for action in [
-            Action::Seed,
-            Action::Smaller,
-            Action::Larger,
-            Action::New,
-            Action::Rebuild,
-        ] {
-            spawn_button(parent, action);
+        parent.spawn((Text::new("NEW CITIES"),font(23.0),TextColor(Color::srgb_u8(231,224,203))));
+        parent.spawn((Text::new("WATABOU · NATIVE GENERATION"),font(10.5),TextColor(Color::srgb_u8(143,159,150))));
+        for action in [Action::Seed,Action::Smaller,Action::Larger,Action::New,Action::Rebuild,Action::Buildings,Action::Economy,Action::MarketSettings] {
+            spawn_button(parent,action);
         }
-        parent.spawn((
-            Text::new("STADTPLAN"),
-            font(11.0),
-            TextColor(Color::srgb_u8(143, 159, 150)),
-            Node {
-                margin: UiRect::top(px(12)),
-                ..default()
-            },
-        ));
-        for i in 0..FEATURES.len() {
-            spawn_button(parent, Action::Feature(i));
-        }
-        spawn_button(parent, Action::Gates);
-        parent.spawn((
-            Text::new("ANSICHT & EXPORT"),
-            font(11.0),
-            TextColor(Color::srgb_u8(143, 159, 150)),
-            Node {
-                margin: UiRect::top(px(12)),
-                ..default()
-            },
-        ));
-        for action in [Action::Top, Action::Reset, Action::Json, Action::Png] {
-            spawn_button(parent, action);
-        }
+        parent.spawn((CityControls,Node {
+            display: if state.market_settings {Display::None} else {Display::Flex},
+            flex_direction:FlexDirection::Column,row_gap:px(5),..default()
+        })).with_children(|parent| {
+            parent.spawn((Text::new("STADTPLAN"),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+            for i in 0..FEATURES.len() {spawn_button(parent,Action::Feature(i));}
+            spawn_button(parent,Action::Gates);
+        });
+        parent.spawn((MarketControls,Node {
+            display: if state.market_settings {Display::Flex} else {Display::None},
+            flex_direction:FlexDirection::Column,row_gap:px(5),..default()
+        })).with_children(|parent| {
+            parent.spawn((Text::new("MARKTPROFIL · METER / WEGE"),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+            for parameter in [MarketParameter::Main,MarketParameter::Secondary,MarketParameter::Service,MarketParameter::District,MarketParameter::Beneficiaries,MarketParameter::Maximum] {
+                parent.spawn(Node { flex_direction:FlexDirection::Row,align_items:AlignItems::Center,column_gap:px(4),..default() }).with_children(|row| {
+                    row.spawn((ProfileValue(parameter),Text::new(parameter.label(&state.market_profile)),font(11.0),
+                        TextColor(Color::srgb_u8(215,220,202)),Node {width:px(155),..default()}));
+                    spawn_button(row,Action::MarketParam(parameter,-1));
+                    spawn_button(row,Action::MarketParam(parameter,1));
+                });
+            }
+            for action in [Action::MarketDefaults,Action::SaveMarketProfile,Action::MarketRoutes,Action::MarketDistricts] {
+                spawn_button(parent,action);
+            }
+            parent.spawn((Text::new("Abstände sind Netz-Schätzungen.\nKeine Marktpflicht pro Distrikt.\nKeine Plätze freigeräumt."),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+        });
+        parent.spawn((Text::new("ANSICHT & EXPORT"),font(11.0),TextColor(Color::srgb_u8(143,159,150))));
+        for action in [Action::Top,Action::Reset,Action::Json,Action::Png] {spawn_button(parent,action);}
     });
     commands.spawn((
         TitleText,
@@ -387,7 +694,135 @@ fn setup_ui(mut commands: Commands, mut fonts: ResMut<Assets<Font>>) {
             ..default()
         },
     ));
-    commands.spawn((Text::new("Rechte Maustaste: Drehen     Mittlere Maustaste: Verschieben     Mausrad: Zoom     T: Draufsicht"),font(12.0),TextColor(Color::srgb_u8(57,68,58)),Node{position_type:PositionType::Absolute,left:px(320),bottom:px(22),..default()}));
+    commands
+        .spawn((
+            MarketReportBox,
+            Node {
+                display: if state.economy.is_some() {
+                    Display::Flex
+                } else {
+                    Display::None
+                },
+                position_type: PositionType::Absolute,
+                left: px(310),
+                top: px(172),
+                width: px(310),
+                padding: UiRect::all(px(12)),
+                border_radius: BorderRadius::all(px(8)),
+                ..default()
+            },
+            BackgroundColor(Color::srgba(0.90, 0.90, 0.83, 0.94)),
+        ))
+        .with_children(|p| {
+            p.spawn((
+                MarketReportText,
+                Text::new(""),
+                font(11.5),
+                TextColor(Color::srgb_u8(48, 57, 49)),
+            ));
+        });
+    commands.spawn((Text::new("Rechte Maustaste: Drehen   Mittlere: Verschieben   Mausrad: Zoom   T: Draufsicht   E: Marktplanung   B: Gebäudeformen"),font(12.0),TextColor(Color::srgb_u8(57,68,58)),
+        Node{position_type:PositionType::Absolute,left:px(320),bottom:px(22),..default()}));
+}
+type MarketPanelFilter = Or<(
+    With<CityControls>,
+    With<MarketControls>,
+    With<MarketReportBox>,
+)>;
+fn update_market_panel(
+    state: Res<CityState>,
+    mut panels: Query<(&mut Node, Has<MarketControls>, Has<MarketReportBox>), MarketPanelFilter>,
+    mut values: Query<(&ProfileValue, &mut Text), Without<MarketReportText>>,
+    mut report: Query<&mut Text, (With<MarketReportText>, Without<ProfileValue>)>,
+    mut layers: Query<(&mesh::MarketLayer, &mut Visibility)>,
+) {
+    for (mut node, market, report) in &mut panels {
+        let visible = if report {
+            state.economy.is_some()
+        } else {
+            market == state.market_settings
+        };
+        node.display = if visible {
+            Display::Flex
+        } else {
+            Display::None
+        };
+    }
+    for (value, mut text) in &mut values {
+        text.0 = value.0.label(&state.market_profile);
+    }
+    for (layer, mut visibility) in &mut layers {
+        *visibility = if layer.visible(&state.market_view) {
+            Visibility::Visible
+        } else {
+            Visibility::Hidden
+        };
+    }
+    if let Some(plan) = &state.economy {
+        let mut lines = vec!["MARKTPLANUNG V1 · WEGE".to_string()];
+        for (i, m) in plan.markets.iter().enumerate().filter(|(_, m)| m.proposed) {
+            let name = m
+                .district
+                .and_then(|i| plan.districts.get(i))
+                .map_or("Ohne Distrikt", |d| d.name.as_str());
+            lines.push(format!(
+                "M{i}: {name} · {:.0} m ab H",
+                m.main_distance_metres.unwrap_or(0.)
+            ));
+        }
+        if !plan.markets.iter().any(|m| m.proposed) {
+            lines.push("Keine zulässigen Nebenmärkte.".into());
+        }
+        for p in &plan.pairs {
+            lines.push(format!(
+                "M{} - M{}: {:.0} m",
+                p.from, p.to, p.distance_metres
+            ));
+        }
+        lines.push("\nDISTRIKTE · NACHFRAGEABDECKUNG".into());
+        for d in &plan.districts {
+            lines.push(if let (Some(before), Some(after)) = (d.before, d.after) {
+                format!(
+                    "{}: {:.0}% -> {:.0}% · {} NM",
+                    d.name,
+                    before * 100.,
+                    after * 100.,
+                    d.secondary_markets
+                )
+            } else {
+                format!("{}: keine Nachfrage", d.name)
+            });
+        }
+        let rejected = plan
+            .candidates
+            .iter()
+            .filter(|c| c.reason != city_core::MarketCandidateReason::Selected)
+            .count();
+        lines.push(format!("\n{rejected} nicht gewählte Kandidaten"));
+        let count = |reason| {
+            plan.candidates
+                .iter()
+                .filter(|c| c.reason == reason)
+                .count()
+        };
+        lines.push(format!(
+            "H-Nähe: {} · NM-Nähe: {}",
+            count(city_core::MarketCandidateReason::NearMain),
+            count(city_core::MarketCandidateReason::NearSecondary)
+        ));
+        lines.push(format!(
+            "Ohne H-Verbindung: {} · Bedarf: {}",
+            count(city_core::MarketCandidateReason::Disconnected),
+            count(city_core::MarketCandidateReason::InsufficientDemand)
+        ));
+        lines.push("NM = eigener Nebenmarkt\nWege und Abdeckung sind Modellwerte.".into());
+        let value = lines.join("\n");
+        for mut text in &mut report {
+            if text.0 != value {
+                text.0 = value.clone();
+            }
+        }
+    }
 }
 fn assign_fonts(
     fonts: Res<UiFonts>,
@@ -461,7 +896,13 @@ fn keyboard(
     mut state: ResMut<CityState>,
     mut actions: ResMut<Actions>,
     mut exit: MessageWriter<AppExit>,
+    capture: Res<Capture>,
 ) {
+    // Automated image captures must not consume desktop typing or change seed mid-proof.
+    if capture.exit_after {
+        events.clear();
+        return;
+    }
     if let Some(input) = state.seed_edit.as_mut() {
         for event in events.read() {
             if event.state != ButtonState::Pressed {
@@ -501,6 +942,8 @@ fn keyboard(
         (KeyCode::KeyR, Action::New),
         (KeyCode::Enter, Action::Rebuild),
         (KeyCode::KeyT, Action::Top),
+        (KeyCode::KeyE, Action::Economy),
+        (KeyCode::KeyB, Action::Buildings),
         (KeyCode::Home, Action::Reset),
         (KeyCode::Equal, Action::Larger),
         (KeyCode::Minus, Action::Smaller),
@@ -520,9 +963,18 @@ fn start_generation(state: &mut CityState) {
     }
     state.seed_edit = None;
     let options = state.options.clone();
+    let economy = state.economy_enabled;
+    let profile = state.market_profile.clone();
+    let building_profile = state.building_profile.clone();
+    let buildings = state.buildings_enabled;
     let (tx, rx) = mpsc::channel();
     std::thread::spawn(move || {
-        let _ = tx.send(generate_city(&options));
+        let _ = tx.send(generate_view(
+            &options,
+            economy,
+            &profile,
+            buildings.then_some(&building_profile),
+        ));
     });
     state.job = Some(Mutex::new(rx));
     state.message = "Generierung läuft …".into();
@@ -534,6 +986,15 @@ fn apply_actions(
     mut orbit: ResMut<Orbit>,
 ) {
     for action in actions.0.drain(..) {
+        if state.prototype.is_some()
+            && !matches!(
+                action,
+                Action::Top | Action::Reset | Action::Json | Action::Png
+            )
+        {
+            state.message="PROTOTYP: E/B/Enter/R und Stadt-/Marktänderungen gesperrt; ohne --building-types neu starten".into();
+            continue;
+        }
         let mut regenerate = false;
         match action {
             Action::New => {
@@ -586,11 +1047,71 @@ fn apply_actions(
                 };
                 regenerate = true;
             }
+            Action::Economy => {
+                if state.job.is_some() {
+                    continue;
+                }
+                state.economy_enabled = !state.economy_enabled;
+                regenerate = true;
+            }
+            Action::Buildings => {
+                if state.job.is_some() {
+                    continue;
+                }
+                state.buildings_enabled = !state.buildings_enabled;
+                regenerate = true;
+            }
+            Action::MarketSettings => {
+                state.market_settings = !state.market_settings;
+                if state.market_settings && !state.economy_enabled && state.job.is_none() {
+                    state.economy_enabled = true;
+                    regenerate = true;
+                }
+            }
+            Action::MarketParam(parameter, delta) => {
+                if state.job.is_some() {
+                    continue;
+                }
+                parameter.adjust(&mut state.market_profile, delta);
+                state.economy_enabled = true;
+                regenerate = true;
+            }
+            Action::MarketDefaults => {
+                if state.job.is_some() {
+                    continue;
+                }
+                state.market_profile = MarketProfile::default();
+                state.economy_enabled = true;
+                regenerate = true;
+            }
+            Action::SaveMarketProfile => {
+                let path = format!("exports/market-profile-{}.json", state.city.options.seed);
+                state.message = match write_json(&path, &state.market_profile) {
+                    Ok(()) => format!("Profil gespeichert: {path}"),
+                    Err(e) => e.to_string(),
+                };
+            }
+            Action::MarketRoutes => {
+                state.market_view.routes = (state.market_view.routes + 1) % 3;
+            }
+            Action::MarketDistricts => {
+                state.market_view.districts = !state.market_view.districts;
+            }
             Action::Top => orbit.top = !orbit.top,
             Action::Reset => *orbit = orbit_for(&state.city),
             Action::Json => {
                 let path = format!("exports/city-{}.json", state.city.options.seed);
-                state.message = match write_city(&path, &state.city) {
+                let result = if let Some(p) = &state.prototype {
+                    write_type_city(&path, &state.city, p)
+                } else {
+                    write_city(
+                        &path,
+                        &state.city,
+                        state.economy.as_ref(),
+                        state.building_plan.as_ref(),
+                    )
+                };
+                state.message = match result {
                     Ok(_) => format!("Gespeichert: {path}"),
                     Err(e) => e.to_string(),
                 };
@@ -624,17 +1145,42 @@ fn poll_generation(
     let Some(result) = result else { return };
     state.job = None;
     match result {
-        Ok(city) => {
+        Ok(GeneratedCity {
+            city,
+            economy,
+            building_plan,
+        }) => {
             for entity in &query {
                 commands.entity(entity).despawn();
             }
             *orbit = orbit_for(&city);
-            mesh::spawn_city(&mut commands, &mut meshes, &mut materials, &city);
+            mesh::spawn_city(
+                &mut commands,
+                &mut meshes,
+                &mut materials,
+                building_plan.as_ref().map_or(&city, |p| &p.city),
+                economy.as_ref(),
+                &state.market_view,
+                building_plan
+                    .as_ref()
+                    .map(|p| p.building_origins.as_slice()),
+                None,
+            );
             state.city = city;
+            state.economy = economy;
+            state.building_plan = building_plan;
             state.message = "Bereit".into();
         }
         Err(error) => {
             state.options = state.city.options.clone();
+            state.economy_enabled = state.economy.is_some();
+            state.buildings_enabled = state.building_plan.is_some();
+            if let Some(plan) = &state.building_plan {
+                state.building_profile = plan.profile.clone();
+            }
+            if let Some(plan) = &state.economy {
+                state.market_profile = plan.profile.clone();
+            }
             state.message = format!("Generierung fehlgeschlagen: {error}");
         }
     }
@@ -684,6 +1230,47 @@ fn update_labels(
                     "Draufsicht"
                 }
             ),
+            Action::Economy => format!(
+                "{} Marktplanung V1  [E]",
+                if state.economy_enabled { "[x]" } else { "[ ]" }
+            ),
+            Action::Buildings => format!(
+                "{} Gebäudeformen V{}  [B]",
+                if state.buildings_enabled {
+                    "[x]"
+                } else {
+                    "[ ]"
+                },
+                state.building_profile.version
+            ),
+            Action::MarketSettings => {
+                if state.market_settings {
+                    "Stadtregeln anzeigen".into()
+                } else {
+                    "Marktregeln anzeigen".into()
+                }
+            }
+            Action::MarketParam(_, delta) => {
+                if delta < 0 {
+                    "-".into()
+                } else {
+                    "+".into()
+                }
+            }
+            Action::MarketDefaults => "Profil V1 zurücksetzen".into(),
+            Action::SaveMarketProfile => "Marktprofil als JSON speichern".into(),
+            Action::MarketRoutes => format!(
+                "Wege: {}",
+                ["Aus", "Hauptmarkt", "Alle Paare"][state.market_view.routes as usize]
+            ),
+            Action::MarketDistricts => format!(
+                "{} Distriktumrisse",
+                if state.market_view.districts {
+                    "[x]"
+                } else {
+                    "[ ]"
+                }
+            ),
             Action::Reset => "Kamera zurücksetzen   [Home]".into(),
             Action::Json => "Stadt als JSON exportieren".into(),
             Action::Png => "Ansicht als PNG speichern".into(),
@@ -693,17 +1280,41 @@ fn update_labels(
         }
     }
     for mut text in &mut title {
-        if text.0 != state.city.name {
-            text.0 = state.city.name.clone();
+        let value = if state.prototype.is_some() {
+            format!("{} · BAUTYP-PROTOTYP", state.city.name)
+        } else {
+            state.city.name.clone()
+        };
+        if text.0 != value {
+            text.0 = value;
         }
     }
     for mut text in &mut status {
+        let analysis = state.economy.as_ref().map(|e| format!(
+            "\n{} · {} Nebenmärkte · Nachfrageabdeckung: {:.0}%\nWege-Proxy: {:.0} -> {:.0} m (bei {:.0} m gedeckelt) · Ohne Anschluss: {} · Ohne Markt: {}\nDachfarben: Hauptmarkt braun · M1 gold · M2 blau · M3 grün · unversorgt grau",
+            e.profile.name, e.markets.iter().filter(|m| m.proposed).count(), e.served_demand_fraction * 100.0,
+            e.baseline_capped_distance_metres, e.planned_capped_distance_metres, e.profile.service,
+            e.unlinked_buildings, e.unserved_buildings,
+        )).unwrap_or_default();
+        let buildings = state
+            .building_plan
+            .as_ref()
+            .map(|p| {
+                format!(
+                    "\n{}: {} zugeordnet · {} bereinigt · {:.1} m² ausgelassen · {} kurze Restkanten",
+                    p.profile.name, p.summary.assigned_parts, p.summary.refined_buildings,
+                    p.summary.discarded_footprint_m2, p.summary.remaining_short_edges
+                )
+            })
+            .unwrap_or_default();
         let value = format!(
-            "{} Gebäude · {} Viertel · Seed {}\n{}",
-            state.city.building_count(),
+            "{} Gebäude · {} Viertel · Seed {}\n{}{}{}",
+            state.visible_city().building_count(),
             state.city.original_geometry.districts.len(),
             state.city.options.seed,
-            state.message
+            state.message,
+            buildings,
+            analysis
         );
         if text.0 != value {
             text.0 = value;
@@ -774,6 +1385,23 @@ fn camera(
         }
     }
 }
+fn position_market_labels(
+    cameras: Query<(&Camera, &GlobalTransform), With<Camera3d>>,
+    mut labels: Query<(&mesh::MarketPinLabel, &mut Node)>,
+) {
+    let Some((camera, transform)) = cameras.iter().next() else {
+        return;
+    };
+    for (label, mut node) in &mut labels {
+        if let Ok(p) = camera.world_to_viewport(transform, label.0) {
+            node.display = Display::Flex;
+            node.left = px(p.x - 12.0);
+            node.top = px(p.y - 10.0);
+        } else {
+            node.display = Display::None;
+        }
+    }
+}
 fn capture_frame(
     mut commands: Commands,
     mut capture: ResMut<Capture>,
@@ -829,6 +1457,338 @@ mod tests {
     use super::*;
 
     #[test]
+    fn prototype_guards_real_keyboard_actions_and_export() {
+        let options = CityOptions {
+            seed: 42,
+            size: 25,
+            ..Default::default()
+        };
+        let city = generate_city(&options).unwrap();
+        let original = serde_json::to_value(&city).unwrap();
+        let config: TypeConfig = serde_json::from_str(include_str!(
+            "../../../assets/building-types/purplechurch.json"
+        ))
+        .unwrap();
+        let placements = city_buildings::plan(&city, &config).unwrap();
+        let orbit = orbit_for(&city);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled: false,
+            building_profile: BuildingProfile::default(),
+            building_plan: None,
+            prototype: Some(placements),
+        })
+        .insert_resource(orbit)
+        .init_resource::<Actions>()
+        .init_resource::<Capture>()
+        .init_resource::<ButtonInput<KeyCode>>()
+        .add_message::<KeyboardInput>()
+        .add_message::<AppExit>()
+        .add_systems(Update, (keyboard, apply_actions).chain());
+        for key in [KeyCode::KeyE, KeyCode::KeyB, KeyCode::Enter, KeyCode::KeyR] {
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .press(key);
+            app.update();
+            let state = app.world().resource::<CityState>();
+            assert!(state.job.is_none());
+            assert!(!state.economy_enabled);
+            assert!(!state.buildings_enabled);
+            assert!(state.economy.is_none());
+            assert!(state.building_plan.is_none());
+            assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+            assert_eq!(state.options.seed, 42);
+            assert!(state.message.contains("gesperrt"));
+            app.world_mut()
+                .resource_mut::<ButtonInput<KeyCode>>()
+                .reset_all();
+        }
+        for action in [
+            Action::Seed,
+            Action::Smaller,
+            Action::Larger,
+            Action::Feature(0),
+            Action::Gates,
+            Action::MarketSettings,
+            Action::MarketParam(MarketParameter::Main, 1),
+            Action::MarketDefaults,
+        ] {
+            app.world_mut().resource_mut::<Actions>().0.push(action);
+            app.update();
+            let s = app.world().resource::<CityState>();
+            assert!(s.job.is_none());
+            assert!(s.seed_edit.is_none());
+            assert!(!s.economy_enabled);
+        }
+        let state = app.world().resource::<CityState>();
+        let p = std::env::temp_dir().join(format!("city-types-{}.json", std::process::id()));
+        write_type_city(
+            p.to_str().unwrap(),
+            &state.city,
+            state.prototype.as_ref().unwrap(),
+        )
+        .unwrap();
+        let value: serde_json::Value = serde_json::from_slice(&std::fs::read(&p).unwrap()).unwrap();
+        std::fs::remove_file(p).unwrap();
+        assert_eq!(value["originalCity"], original);
+        assert!(value.get("economy").is_none());
+        assert!(value.get("city").is_none());
+        assert_eq!(
+            value["placements"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|p| !p["design"].is_null())
+                .count(),
+            2
+        );
+        for (economy, buildings, snapshot) in [
+            (true, false, false),
+            (false, true, false),
+            (false, false, true),
+        ] {
+            assert!(validate_type_mode(true, economy, buildings, snapshot).is_err());
+            assert!(validate_type_mode(false, economy, buildings, snapshot).is_ok());
+        }
+    }
+
+    #[test]
+    fn economy_toggle_and_export_preserve_original_city() {
+        let options = CityOptions {
+            size: 5,
+            seed: 42,
+            ..Default::default()
+        };
+        let city = generate_city(&options).unwrap();
+        let original = serde_json::to_value(&city).unwrap();
+        let orbit = orbit_for(&city);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled: false,
+            building_profile: BuildingProfile::default(),
+            building_plan: None,
+            prototype: None,
+        })
+        .insert_resource(orbit)
+        .insert_resource(Actions::default())
+        .init_resource::<Assets<Mesh>>()
+        .init_resource::<Assets<StandardMaterial>>()
+        .add_systems(Update, (apply_actions, poll_generation).chain());
+        for enabled in [true, false] {
+            app.world_mut()
+                .resource_mut::<Actions>()
+                .0
+                .push(Action::Economy);
+            app.update();
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            while app.world().resource::<CityState>().job.is_some() {
+                assert!(std::time::Instant::now() < deadline);
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                app.update();
+            }
+            let state = app.world().resource::<CityState>();
+            assert_eq!(state.economy_enabled, enabled);
+            assert_eq!(state.economy.is_some(), enabled);
+            assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+            let path = std::env::temp_dir().join(format!(
+                "cities-economy-export-{}-{enabled}.json",
+                std::process::id()
+            ));
+            write_city(
+                path.to_str().unwrap(),
+                &state.city,
+                state.economy.as_ref(),
+                state.building_plan.as_ref(),
+            )
+            .unwrap();
+            let exported: serde_json::Value =
+                serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+            std::fs::remove_file(path).unwrap();
+            assert_eq!(exported["city"], original);
+            assert_eq!(exported.get("economy").is_some(), enabled);
+            if let Some(economy) = &state.economy {
+                assert_eq!(exported["economy"], serde_json::to_value(economy).unwrap());
+            }
+        }
+    }
+    #[test]
+    fn building_toggle_replans_rendering_markets_and_exports_without_mutating_original() {
+        let fixture: City = serde_json::from_str(include_str!(
+            "../../city_core/tests/building-fixtures/stormwind.json"
+        ))
+        .unwrap();
+        let options = fixture.options.clone();
+        let original = serde_json::to_value(&fixture).unwrap();
+        let orbit = orbit_for(&fixture);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city: fixture,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: true,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled: false,
+            building_profile: BuildingProfile::default(),
+            building_plan: None,
+            prototype: None,
+        })
+        .insert_resource(orbit)
+        .insert_resource(Actions::default())
+        .init_resource::<Assets<Mesh>>()
+        .init_resource::<Assets<StandardMaterial>>()
+        .add_systems(Update, (apply_actions, poll_generation).chain());
+        for enabled in [true, false] {
+            app.world_mut()
+                .resource_mut::<Actions>()
+                .0
+                .push(Action::Buildings);
+            app.update();
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            while app.world().resource::<CityState>().job.is_some() {
+                assert!(std::time::Instant::now() < deadline);
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                app.update();
+            }
+            let state = app.world().resource::<CityState>();
+            assert_eq!(state.buildings_enabled, enabled);
+            assert_eq!(state.building_plan.is_some(), enabled);
+            assert_eq!(
+                state.visible_city().building_count(),
+                if enabled { 365 } else { 368 }
+            );
+            assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+            let markets = plan_markets(state.visible_city(), &state.market_profile, &[]).unwrap();
+            assert_eq!(
+                serde_json::to_value(state.economy.as_ref().unwrap()).unwrap(),
+                serde_json::to_value(markets).unwrap()
+            );
+            let path = std::env::temp_dir().join(format!(
+                "cities-building-export-{}-{enabled}.json",
+                std::process::id()
+            ));
+            write_city(
+                path.to_str().unwrap(),
+                &state.city,
+                state.economy.as_ref(),
+                state.building_plan.as_ref(),
+            )
+            .unwrap();
+            let exported: serde_json::Value =
+                serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+            std::fs::remove_file(path).unwrap();
+            assert_eq!(
+                exported["city"],
+                serde_json::to_value(state.visible_city()).unwrap()
+            );
+            assert_eq!(exported["version"], if enabled { 2 } else { 1 });
+            assert_eq!(exported.get("buildingPlanning").is_some(), enabled);
+            if enabled {
+                assert_eq!(exported["originalCity"], original);
+            } else {
+                assert!(exported.get("originalCity").is_none());
+            }
+        }
+    }
+    #[test]
+    fn market_profile_controls_replan_without_changing_the_city() {
+        let options = CityOptions {
+            size: 10,
+            seed: 42,
+            ..Default::default()
+        };
+        let city = generate_city(&options).unwrap();
+        let original = serde_json::to_value(&city).unwrap();
+        let orbit = orbit_for(&city);
+        let mut app = App::new();
+        app.insert_resource(CityState {
+            city,
+            options,
+            message: String::new(),
+            job: None,
+            seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled: false,
+            building_profile: BuildingProfile::default(),
+            building_plan: None,
+            prototype: None,
+        })
+        .insert_resource(orbit)
+        .insert_resource(Actions::default())
+        .init_resource::<Assets<Mesh>>()
+        .init_resource::<Assets<StandardMaterial>>()
+        .add_systems(
+            Update,
+            (apply_actions, poll_generation, update_market_panel).chain(),
+        );
+        for action in [
+            Action::MarketSettings,
+            Action::MarketParam(MarketParameter::Main, 1),
+            Action::MarketParam(MarketParameter::Maximum, -1),
+        ] {
+            app.world_mut().resource_mut::<Actions>().0.push(action);
+            app.update();
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            while app.world().resource::<CityState>().job.is_some() {
+                assert!(std::time::Instant::now() < deadline);
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                app.update();
+            }
+        }
+        let state = app.world().resource::<CityState>();
+        assert!(state.market_settings && state.economy_enabled);
+        assert_eq!(state.market_profile.main_min, 220.);
+        assert_eq!(state.market_profile.max_markets, 2);
+        let plan = state.economy.as_ref().unwrap();
+        assert_eq!(plan.profile, state.market_profile);
+        assert!(plan.markets.iter().filter(|m| m.proposed).count() <= 2);
+        assert_eq!(serde_json::to_value(&state.city).unwrap(), original);
+        app.world_mut().resource_mut::<Actions>().0.extend([
+            Action::MarketRoutes,
+            Action::MarketRoutes,
+            Action::MarketDistricts,
+        ]);
+        app.update();
+        let state = app.world().resource::<CityState>();
+        assert_eq!(state.market_view.routes, 0);
+        assert!(!state.market_view.districts);
+        for (_, visibility) in app
+            .world_mut()
+            .query::<(&mesh::MarketLayer, &Visibility)>()
+            .iter(app.world())
+        {
+            assert_eq!(*visibility, Visibility::Hidden);
+        }
+    }
+    #[test]
     fn native_controls_replace_a_city_after_background_generation() {
         let options = CityOptions {
             size: 5,
@@ -844,6 +1804,15 @@ mod tests {
             message: String::new(),
             job: None,
             seed_edit: None,
+            economy_enabled: false,
+            economy: None,
+            market_profile: MarketProfile::default(),
+            market_settings: false,
+            market_view: mesh::MarketView::default(),
+            buildings_enabled: false,
+            building_profile: BuildingProfile::default(),
+            building_plan: None,
+            prototype: None,
         })
         .insert_resource(orbit)
         .insert_resource(Actions(vec![Action::Feature(4)]))

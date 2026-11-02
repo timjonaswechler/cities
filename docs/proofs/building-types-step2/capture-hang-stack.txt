@@ -1,0 +1,57 @@
+Focused excerpt from `sample 74850 1 -file /tmp/building-zoo-hang-sample.txt`.
+Analysis of sampling building_zoo (pid 74850) every 1 millisecond
+Process:         building_zoo [74850]
+Path:            /Users/USER/*/building_zoo
+Load Address:    0x102768000
+Identifier:      building_zoo
+Version:         0
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  bash [74849]
+Target Type:     live task
+
+Date/Time:       2026-11-01 22:52:17.451 +0100
+Launch Time:     2026-11-01 22:43:46.710 +0100
+OS Version:      macOS 27.2 (26B123)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         296.0M
+Physical footprint (peak):  340.6M
+Idle exit:                  untracked
+----
+
+Call graph:
+    326 Thread_2607748   DispatchQueue_1: com.apple.main-thread  (serial)
+    + 326 start  (in dyld) + 6652  [0x192fdcd7c]
+    +   326 main  (in building_zoo) + 52  [0x1027c40f8]
+    +     326 _RNvNtCsa9BKTri5B3M_3std2rt19lang_start_internal  (in building_zoo) + 952  [0x1060fbb44]
+    +       326 _RNCINvNtCsa9BKTri5B3M_3std2rt10lang_startuE0Cs9FNFyc2Auw8_12building_zoo  (in building_zoo) + 16  [0x10279eee8]
+    +         326 _RINvNtNtCsa9BKTri5B3M_3std3sys9backtrace28___rust_begin_short_backtraceFEuuECs9FNFyc2Auw8_12building_zoo  (in building_zoo) + 12  [0x10276efc4]  backtrace.rs:166
+    +           326 _RNvCs9FNFyc2Auw8_12building_zoo4main  (in building_zoo) + 6808  [0x1027c1350]  building_zoo.rs:130
+    +             326 _RNvMs0_NtCsjpPqXLo9TCC_8bevy_app3appNtB5_3App3run  (in building_zoo) + 300  [0x105e3d910]
+    +               326 _RNSNvYNCNvXCs5HwogdD6j1i_10bevy_winitNtB9_11WinitPluginNtNtCsjpPqXLo9TCC_8bevy_app6plugin6Plugin5builds0_0INtNtNtCsgtPOCBgevO_4core3ops8function6FnOnceTNtNtBV_3app3AppEE9call_once6vtableB9_  (in building_zoo) + 80  [0x102825ea0]
+    +                 326 _RNvNtCs5HwogdD6j1i_10bevy_winit5state12winit_runner  (in building_zoo) + 352  [0x1028475ec]
+    +                   326 _RINvMNtNtNtCs2WnWyggsXPD_5winit13platform_impl5macos9app_stateNtB3_19ApplicationDelegate17set_event_handleruNCINvNtB5_10event_loop14map_user_eventNtCs5HwogdD6j1i_10bevy_winit14WinitUserEventNCINvMs4_NtB9_10event_loopINtB3b_9EventLoopB2k_E7run_appNtNtB2m_5state19WinitAppRunnerStateE0E0NCINvMs3_B1N_INtB1N_9EventLoopB2k_E13run_on_demandB32_E0EB2m_  (in building_zoo) + 616  [0x10283de48]
+    +                     326 _RNvMNtNtNtCs2WnWyggsXPD_5winit13platform_impl5macos9app_stateNtB2_19ApplicationDelegate13internal_exit  (in building_zoo) + 44  [0x1028e22e0]
+    +                       326 _RNvMNtNtNtCs2WnWyggsXPD_5winit13platform_impl5macos9app_stateNtB2_19ApplicationDelegate12handle_event  (in building_zoo) + 196  [0x1028e1eec]
+    +                         326 _RNvMs_NtNtNtCs2WnWyggsXPD_5winit13platform_impl5macos13event_handlerNtB4_12EventHandler12handle_event  (in building_zoo) + 112  [0x1028ee0f4]
+    +                           326 _RNCINvNtNtNtCs2WnWyggsXPD_5winit13platform_impl5macos10event_loop14map_user_eventNtCs5HwogdD6j1i_10bevy_winit14WinitUserEventNCINvMs4_NtBa_10event_loopINtB28_9EventLoopB1h_E7run_appNtNtB1j_5state19WinitAppRunnerStateE0E0B1j_  (in building_zoo) + 600  [0x102841edc]
+    +                             326 _RNvMs_NtCscwBZM9YU4mN_8bevy_ecs5worldNtB4_5World9clear_all  (in building_zoo) + 324  [0x105f1fcec]
+    +                               326 _RINvMs2_NtNtCscwBZM9YU4mN_8bevy_ecs9component4infoNtB6_19ComponentDescriptor8drop_ptrNtNtCscygYwZw6QEi_11bevy_render19pipelined_rendering17RenderAppChannelsEB1p_  (in building_zoo) + 40  [0x104a2d148]
+    +                                 326 _RNvXs_NtCscygYwZw6QEi_11bevy_render19pipelined_renderingNtB4_17RenderAppChannelsNtNtNtCsgtPOCBgevO_4core3ops4drop4Drop4drop  (in building_zoo) + 104  [0x1049c0a00]
+    +                                   326 _RINvMs0_NtCsjdSyo9tOwiL_10bevy_tasks9task_poolNtB6_8TaskPool25scope_with_executor_innerNCNCNvXs_NtCscygYwZw6QEi_11bevy_render19pipelined_renderingNtB1w_17RenderAppChannelsNtNtNtCsgtPOCBgevO_4core3ops4drop4Drop4drop00INtNtB2P_6option6OptionNtNtCsjpPqXLo9TCC_8bevy_app7sub_app6SubAppEEB1y_  (in building_zoo) + 564  [0x104a02214]
+    +                                     326 _RINvNtCs8X0ijuebtr1_12futures_lite6future8block_onINtNtCslJsSqIQKwiA_5alloc3vec3VecINtNtCsgtPOCBgevO_4core6option6OptionNtNtCsjpPqXLo9TCC_8bevy_app7sub_app6SubAppEENCINvMs0_NtCsjdSyo9tOwiL_10bevy_tasks9task_poolNtB2L_8TaskPool25scope_with_executor_innerNCNCNvXs_NtCscygYwZw6QEi_11bevy_render19pipelined_renderingNtB4c_17RenderAppChannelsNtNtNtB1o_3ops4drop4Drop4drop00B1j_E0EB4e_  (in building_zoo) + 212  [0x104b1ec88]
+    +                                       326 _RNvMs5_CshuYeToMqAzV_7parkingNtB5_5Inner4park  (in building_zoo) + 388  [0x1060dd9b0]
+    +                                         326 _pthread_cond_wait  (in libsystem_pthread.dylib) + 980  [0x1930b11b4]
+    +                                           326 __psynch_cvwait  (in libsystem_kernel.dylib) + 8  [0x19306f50c]
+    326 Thread_2607803: IO Task Pool (0)
+    + 326 thread_start  (in libsystem_pthread.dylib) + 8  [0x1930abcd0]
+    +   326 _pthread_start  (in libsystem_pthread.dylib) + 136  [0x1930b0ce4]
+    +     326 _RNvNvMs0_NtNtNtCsa9BKTri5B3M_3std3sys6thread4unixNtB7_6Thread3new12thread_start  (in building_zoo) + 408  [0x106102d9c]
+    +       326 _RNSNvYNCINvNtNtCsa9BKTri5B3M_3std6thread9lifecycle15spawn_uncheckedNCNCNvMs0_NtCsjdSyo9tOwiL_10bevy_tasks9task_poolNtB1d_8TaskPool12new_internal00uEs_0INtNtNtCsgtPOCBgevO_4core3ops8function6FnOnceuE9call_once6vtableB1f_  (in building_zoo) + 132  [0x105f75dc8]
+    +         326 _RINvNtNtCsa9BKTri5B3M_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvMs0_NtCsjdSyo9tOwiL_10bevy_tasks9task_poolNtB1h_8TaskPool12new_internal00uEB1j_  (in building_zoo) + 60  [0x105f71ae0]
+    +           326 _RINvMs2_NtNtCsa9BKTri5B3M_3std6thread5localINtB6_8LocalKeyNtNtCsjdSyo9tOwiL_10bevy_tasks8executor13LocalExecutorE4withNCNCNCNvMs0_NtBY_9task_poolNtB24_8TaskPool12new_internal000uEBY_  (in building_zoo) + 212  [0x105f73444]
+    +             326 _RINvMs2_NtNtCsa9BKTri5B3M_3std6thread5localINtB6_8LocalKeyINtNtCsgtPOCBgevO_4core4cell7RefCellTNtCshuYeToMqAzV_7parking6ParkerNtNtNtBZ_4task4wake5WakerEEE4withNCINvNtCs8X0ijuebtr1_12futures_lite6future8block_onINtNtBZ_6result6ResultuNtCs7gfUGgHr7tn_13async_channel9RecvErrorENCINvMs3_CsgPPXrCyAHf8_14async_executorNtB4y_8Executor3runB3m_INtB2C_2OrNCNCNCNCNCNvMs0_NtCsjdSyo9tOwiL_10bevy_tasks9task_poolNtB5P_8TaskPool12new_internal00000INtB3L_4RecvuEEE0E0B3m_EB5R_  (in building_zoo) + 648  [0x105f73094]
+
+[1359 more lines in file. Use offset=55 to continue.]

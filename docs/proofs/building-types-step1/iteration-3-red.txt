@@ -1,0 +1,23 @@
+   Compiling building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-a02c8549/crates/building_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.69s
+     Running tests/profile_limits.rs (/Users/tim-jonaswechler/workspace/repositories/timjonaswechler/game/experimental/cities_generator/target/debug/deps/profile_limits-83d1bf65702dd491)
+
+running 1 test
+test rejects_local_taper_that_stretches_past_resolved_length ... FAILED
+
+failures:
+
+---- rejects_local_taper_that_stretches_past_resolved_length stdout ----
+
+thread 'rejects_local_taper_that_stretches_past_resolved_length' (2469423) panicked at crates/building_core/tests/profile_limits.rs:16:5:
+assertion failed: matches!(generate(BuildingType::HouseWithAnnex, &site, &profile, 7),
+    Err(Rejection::NoFit(_)))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    rejects_local_taper_that_stretches_past_resolved_length
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p building_core --test profile_limits`

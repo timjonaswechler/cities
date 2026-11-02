@@ -2066,6 +2066,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "building_core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2170,6 +2178,7 @@ name = "city_bevy"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "building_core",
  "city_core",
  "serde",
  "serde_json",

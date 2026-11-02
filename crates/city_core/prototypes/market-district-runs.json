@@ -1,0 +1,4240 @@
+{
+  "prototype": "market-district-lab",
+  "sourceSha256": "209e0d43954ca2908617df97154cd51d7a989bca71b65971fda571b921b0540e",
+  "inputGeneratorCommit": "8d73abc6ceb6a18c83e8ee87a6cc8c4e5ac4917c",
+  "node": "v26.7.0",
+  "runs": [
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "Nur Hauptmarkt",
+      "configuration": {
+        "city": 0,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 0
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 0,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 188,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.5377809822238488,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 196.95931185570484,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.7360537850879747,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.36827711408019864,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.023105709601036594,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 27,
+        "Alternative (Höchstzahl erreicht)": 5
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "100 / 100 m",
+      "configuration": {
+        "city": 0,
+        "mainMin": 100,
+        "sideMin": 100,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 3,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 111,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.7221168995306808,
+      "districtsWithoutOwnSecondary": 2,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 155.38754557724437,
+      "markets": [
+        {
+          "id": 1,
+          "node": 380,
+          "position": {
+            "x": -25.18016546639534,
+            "y": -35.08279568773082
+          },
+          "district": 2,
+          "mainDistance": 187.60557584927133,
+          "beneficiaries": 64,
+          "selectionScore": 53136.962532108926,
+          "weightedGainMetres": 12.59778033996689,
+          "servedDistricts": [
+            0,
+            2,
+            4
+          ],
+          "routePoints": 10
+        },
+        {
+          "id": 2,
+          "node": 334,
+          "position": {
+            "x": 30.38071964590166,
+            "y": 46.19257006898645
+          },
+          "district": 0,
+          "mainDistance": 211.19316714652672,
+          "beneficiaries": 43,
+          "selectionScore": 47994.93738425173,
+          "weightedGainMetres": 14.66408373628602,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 273,
+          "position": {
+            "x": -20.049149423217987,
+            "y": 35.825346396134684
+          },
+          "district": 0,
+          "mainDistance": 128.10999551741935,
+          "beneficiaries": 62,
+          "selectionScore": 43825.337494397754,
+          "weightedGainMetres": 14.30990220220741,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 10
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 496.4684900416463,
+          "routePoints": 23
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 400.45808435090663,
+          "routePoints": 20
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 316.03833806490945,
+          "routePoints": 21
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.9004898334368172,
+          "markets": 2,
+          "suppliers": [
+            0,
+            3,
+            2,
+            1
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.7060873204827391,
+          "markets": 1,
+          "suppliers": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.1057084945880805,
+          "markets": 0,
+          "suppliers": [
+            1,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 10,
+        "zu nah an Nebenmarkt": 7,
+        "Alternative (Höchstzahl erreicht)": 12
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "200 / 160 m ohne Distriktgewicht",
+      "configuration": {
+        "city": 0,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 0,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 3,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 122,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.697811937858072,
+      "districtsWithoutOwnSecondary": 2,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 159.70811776754437,
+      "markets": [
+        {
+          "id": 1,
+          "node": 334,
+          "position": {
+            "x": 30.38071964590166,
+            "y": 46.19257006898645
+          },
+          "district": 0,
+          "mainDistance": 211.19316714652672,
+          "beneficiaries": 43,
+          "selectionScore": 37972.294088156545,
+          "weightedGainMetres": 14.66408373628602,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 2,
+          "node": 393,
+          "position": {
+            "x": -38.000955978396505,
+            "y": -48.274314714474556
+          },
+          "district": 2,
+          "mainDistance": 261.19706723446257,
+          "beneficiaries": 43,
+          "selectionScore": 31788.7153904749,
+          "weightedGainMetres": 12.27611856351549,
+          "servedDistricts": [
+            2,
+            4
+          ],
+          "routePoints": 14
+        },
+        {
+          "id": 3,
+          "node": 301,
+          "position": {
+            "x": -46.97050617525265,
+            "y": 26.536094210366286
+          },
+          "district": 0,
+          "mainDistance": 212.4808683976606,
+          "beneficiaries": 51,
+          "selectionScore": 26700.06660963708,
+          "weightedGainMetres": 10.310991788358931,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 570.0599814268373,
+          "routePoints": 27
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 433.0892889225512,
+          "routePoints": 27
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 558.4204486163391,
+          "routePoints": 26
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.870475176208936,
+          "markets": 2,
+          "suppliers": [
+            0,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.6787926779524944,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.1057084945880805,
+          "markets": 0,
+          "suppliers": [
+            2,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 27,
+        "zu nah an Nebenmarkt": 2
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "200 / 160 m mit Distriktgewicht 1",
+      "configuration": {
+        "city": 0,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 3,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 122,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.697811937858072,
+      "districtsWithoutOwnSecondary": 2,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 159.70811776754437,
+      "markets": [
+        {
+          "id": 1,
+          "node": 393,
+          "position": {
+            "x": -38.000955978396505,
+            "y": -48.274314714474556
+          },
+          "district": 2,
+          "mainDistance": 261.19706723446257,
+          "beneficiaries": 43,
+          "selectionScore": 52807.292317360116,
+          "weightedGainMetres": 12.27611856351549,
+          "servedDistricts": [
+            2,
+            4
+          ],
+          "routePoints": 14
+        },
+        {
+          "id": 2,
+          "node": 334,
+          "position": {
+            "x": 30.38071964590166,
+            "y": 46.19257006898645
+          },
+          "district": 0,
+          "mainDistance": 211.19316714652672,
+          "beneficiaries": 43,
+          "selectionScore": 47994.93738425173,
+          "weightedGainMetres": 14.66408373628602,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 301,
+          "position": {
+            "x": -46.97050617525265,
+            "y": 26.536094210366286
+          },
+          "district": 0,
+          "mainDistance": 212.4808683976606,
+          "beneficiaries": 51,
+          "selectionScore": 31695.817243847992,
+          "weightedGainMetres": 10.310991788358931,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 570.0599814268376,
+          "routePoints": 27
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 558.4204486163391,
+          "routePoints": 26
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 433.0892889225512,
+          "routePoints": 27
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.870475176208936,
+          "markets": 2,
+          "suppliers": [
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.6787926779524944,
+          "markets": 1,
+          "suppliers": [
+            0,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.1057084945880805,
+          "markets": 0,
+          "suppliers": [
+            1,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 27,
+        "zu nah an Nebenmarkt": 2
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "200 / 160 m mit Distriktgewicht 2",
+      "configuration": {
+        "city": 0,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 2,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 3,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 122,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.697811937858072,
+      "districtsWithoutOwnSecondary": 2,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 159.70811776754437,
+      "markets": [
+        {
+          "id": 1,
+          "node": 393,
+          "position": {
+            "x": -38.000955978396505,
+            "y": -48.274314714474556
+          },
+          "district": 2,
+          "mainDistance": 261.19706723446257,
+          "beneficiaries": 43,
+          "selectionScore": 73825.86924424535,
+          "weightedGainMetres": 12.27611856351549,
+          "servedDistricts": [
+            2,
+            4
+          ],
+          "routePoints": 14
+        },
+        {
+          "id": 2,
+          "node": 334,
+          "position": {
+            "x": 30.38071964590166,
+            "y": 46.19257006898645
+          },
+          "district": 0,
+          "mainDistance": 211.19316714652672,
+          "beneficiaries": 43,
+          "selectionScore": 58017.580680346924,
+          "weightedGainMetres": 14.66408373628602,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 301,
+          "position": {
+            "x": -46.97050617525265,
+            "y": 26.536094210366286
+          },
+          "district": 0,
+          "mainDistance": 212.4808683976606,
+          "beneficiaries": 51,
+          "selectionScore": 36691.56787805891,
+          "weightedGainMetres": 10.310991788358931,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 570.0599814268376,
+          "routePoints": 27
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 558.4204486163391,
+          "routePoints": 26
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 433.0892889225512,
+          "routePoints": 27
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.870475176208936,
+          "markets": 2,
+          "suppliers": [
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.6787926779524944,
+          "markets": 1,
+          "suppliers": [
+            0,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.1057084945880805,
+          "markets": 0,
+          "suppliers": [
+            1,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 27,
+        "zu nah an Nebenmarkt": 2
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "300 / 240 m",
+      "configuration": {
+        "city": 0,
+        "mainMin": 300,
+        "sideMin": 240,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 0,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 188,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.5377809822238488,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 196.95931185570484,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.7360537850879747,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.36827711408019864,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.023105709601036594,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 32
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "400 / 320 m",
+      "configuration": {
+        "city": 0,
+        "mainMin": 400,
+        "sideMin": 320,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 0,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 188,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.5377809822238488,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 196.95931185570484,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.7360537850879747,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.36827711408019864,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.023105709601036594,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 32
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "Hohe Mindestnachfrage",
+      "configuration": {
+        "city": 0,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 80,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 0,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 188,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.5377809822238488,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 196.95931185570484,
+      "plannedCappedMetres": 196.95931185570484,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.7360537850879747,
+          "after": 0.7360537850879747,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.36827711408019864,
+          "after": 0.36827711408019864,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0.09403392984034942,
+          "after": 0.09403392984034942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0.023105709601036594,
+          "after": 0.023105709601036594,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 27,
+        "zu wenig zusätzlich begünstigte Gebäude": 5
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Landstadt · Seed 42",
+      "name": "Kurzer Versorgungsweg",
+      "configuration": {
+        "city": 0,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 160,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 407,
+      "inferredAlleyLinks": 31,
+      "mainEntrances": 4,
+      "candidates": 32,
+      "selected": 3,
+      "unlinkedBuildings": 6,
+      "unservedBuildings": 213,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.4882117602755226,
+      "districtsWithoutOwnSecondary": 2,
+      "baselineCappedMetres": 147.29083005277298,
+      "plannedCappedMetres": 127.99571643437868,
+      "markets": [
+        {
+          "id": 1,
+          "node": 334,
+          "position": {
+            "x": 30.38071964590166,
+            "y": 46.19257006898645
+          },
+          "district": 0,
+          "mainDistance": 211.19316714652672,
+          "beneficiaries": 42,
+          "selectionScore": 33598.3698195228,
+          "weightedGainMetres": 7.747197910630307,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 2,
+          "node": 393,
+          "position": {
+            "x": -38.000955978396505,
+            "y": -48.274314714474556
+          },
+          "district": 2,
+          "mainDistance": 261.19706723446257,
+          "beneficiaries": 41,
+          "selectionScore": 28457.82513470138,
+          "weightedGainMetres": 5.836152628947865,
+          "servedDistricts": [
+            2,
+            4
+          ],
+          "routePoints": 14
+        },
+        {
+          "id": 3,
+          "node": 301,
+          "position": {
+            "x": -46.97050617525265,
+            "y": 26.536094210366286
+          },
+          "district": 0,
+          "mainDistance": 212.4808683976606,
+          "beneficiaries": 33,
+          "selectionScore": 22216.157503707953,
+          "weightedGainMetres": 5.711763078816121,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 570.0599814268373,
+          "routePoints": 27
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 433.0892889225512,
+          "routePoints": 27
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 558.4204486163391,
+          "routePoints": 26
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Fencrest Hook",
+          "buildings": 248,
+          "before": 0.3252050155522083,
+          "after": 0.6154798695774915,
+          "markets": 2,
+          "suppliers": [
+            0,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Fortress",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Everheart Gate",
+          "buildings": 107,
+          "before": 0.121780761191724,
+          "after": 0.4660096556291434,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "name": "The Slums",
+          "buildings": 18,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "Saltgate",
+          "buildings": 45,
+          "before": 0,
+          "after": 0.08260278498704389,
+          "markets": 0,
+          "suppliers": [
+            2
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 27,
+        "zu nah an Nebenmarkt": 2
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "Nur Hauptmarkt",
+      "configuration": {
+        "city": 1,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 0
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 0,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 301,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.48611370301282136,
+      "districtsWithoutOwnSecondary": 7,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 203.358052574351,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.7630113520726105,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.5880567152422371,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.6974106661494942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.6228351918792083,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.03357798865766794,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 34,
+        "Alternative (Höchstzahl erreicht)": 28
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "100 / 100 m",
+      "configuration": {
+        "city": 1,
+        "mainMin": 100,
+        "sideMin": 100,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 3,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 104,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.8367018592542298,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 154.8349109753603,
+      "markets": [
+        {
+          "id": 1,
+          "node": 145,
+          "position": {
+            "x": 8.581785510601167,
+            "y": -72.49350774630481
+          },
+          "district": 6,
+          "mainDistance": 304.86819960187705,
+          "beneficiaries": 114,
+          "selectionScore": 76495.05068053893,
+          "weightedGainMetres": 16.90398702818447,
+          "servedDistricts": [
+            0,
+            2,
+            6
+          ],
+          "routePoints": 15
+        },
+        {
+          "id": 2,
+          "node": 301,
+          "position": {
+            "x": 32.34593588887128,
+            "y": 40.30536831332826
+          },
+          "district": 1,
+          "mainDistance": 203.66076613061085,
+          "beneficiaries": 44,
+          "selectionScore": 58190.06320848591,
+          "weightedGainMetres": 17.06842716386745,
+          "servedDistricts": [
+            0,
+            1
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 11,
+          "position": {
+            "x": -53.51310803326748,
+            "y": -33.62879186426404
+          },
+          "district": 2,
+          "mainDistance": 218.026293969141,
+          "beneficiaries": 93,
+          "selectionScore": 49766.76666257671,
+          "weightedGainMetres": 14.550727406938867,
+          "servedDistricts": [
+            2,
+            6,
+            7
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 592.7388818051217,
+          "routePoints": 28
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 358.41538102014636,
+          "routePoints": 28
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 519.3568071456002,
+          "routePoints": 25
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.88681088276893,
+          "markets": 0,
+          "suppliers": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.9485523677502602,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.8837470105506787,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.6228351918792083,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.9507982202690027,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0.9193873305405866,
+          "markets": 0,
+          "suppliers": [
+            3
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 11,
+        "zu nah an Nebenmarkt": 14,
+        "Alternative (Höchstzahl erreicht)": 34
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "200 / 160 m ohne Distriktgewicht",
+      "configuration": {
+        "city": 1,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 0,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 3,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 118,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.8119433756630169,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 154.91456032975992,
+      "markets": [
+        {
+          "id": 1,
+          "node": 141,
+          "position": {
+            "x": -0.4197308553359145,
+            "y": -57.45977868502424
+          },
+          "district": 6,
+          "mainDistance": 234.66214378483681,
+          "beneficiaries": 134,
+          "selectionScore": 42197.35259205977,
+          "weightedGainMetres": 17.42958477376214,
+          "servedDistricts": [
+            0,
+            2,
+            6
+          ],
+          "routePoints": 11
+        },
+        {
+          "id": 2,
+          "node": 301,
+          "position": {
+            "x": 32.34593588887128,
+            "y": 40.30536831332826
+          },
+          "district": 1,
+          "mainDistance": 203.66076613061085,
+          "beneficiaries": 44,
+          "selectionScore": 41322.98322504115,
+          "weightedGainMetres": 17.06842716386745,
+          "servedDistricts": [
+            0,
+            1
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 332,
+          "position": {
+            "x": -43.97071556840084,
+            "y": -11.558115019108696
+          },
+          "district": 2,
+          "mainDistance": 207.0945263992881,
+          "beneficiaries": 90,
+          "selectionScore": 33762.27014107267,
+          "weightedGainMetres": 13.945480306961597,
+          "servedDistricts": [
+            2,
+            3,
+            6,
+            7
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 522.5328259880814,
+          "routePoints": 24
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 366.08664495214185,
+          "routePoints": 20
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 487.7603988762267,
+          "routePoints": 27
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.8322793564881018,
+          "markets": 0,
+          "suppliers": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.9485523677502602,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.9572837924344653,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.736700441729822,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.8261653918429294,
+          "markets": 1,
+          "suppliers": [
+            3,
+            1,
+            0
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0.1300559787804301,
+          "markets": 0,
+          "suppliers": [
+            3
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 34,
+        "zu nah an Nebenmarkt": 13,
+        "Alternative (Höchstzahl erreicht)": 12
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "200 / 160 m mit Distriktgewicht 1",
+      "configuration": {
+        "city": 1,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 3,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 104,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.8367018592542298,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 154.8349109753603,
+      "markets": [
+        {
+          "id": 1,
+          "node": 145,
+          "position": {
+            "x": 8.581785510601167,
+            "y": -72.49350774630481
+          },
+          "district": 6,
+          "mainDistance": 304.86819960187705,
+          "beneficiaries": 114,
+          "selectionScore": 76495.05068053893,
+          "weightedGainMetres": 16.90398702818447,
+          "servedDistricts": [
+            0,
+            2,
+            6
+          ],
+          "routePoints": 15
+        },
+        {
+          "id": 2,
+          "node": 301,
+          "position": {
+            "x": 32.34593588887128,
+            "y": 40.30536831332826
+          },
+          "district": 1,
+          "mainDistance": 203.66076613061085,
+          "beneficiaries": 44,
+          "selectionScore": 58190.06320848591,
+          "weightedGainMetres": 17.06842716386745,
+          "servedDistricts": [
+            0,
+            1
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 11,
+          "position": {
+            "x": -53.51310803326748,
+            "y": -33.62879186426404
+          },
+          "district": 2,
+          "mainDistance": 218.026293969141,
+          "beneficiaries": 93,
+          "selectionScore": 49766.76666257671,
+          "weightedGainMetres": 14.550727406938867,
+          "servedDistricts": [
+            2,
+            6,
+            7
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 592.7388818051217,
+          "routePoints": 28
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 358.41538102014636,
+          "routePoints": 28
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 519.3568071456002,
+          "routePoints": 25
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.88681088276893,
+          "markets": 0,
+          "suppliers": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.9485523677502602,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.8837470105506787,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.6228351918792083,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.9507982202690027,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0.9193873305405866,
+          "markets": 0,
+          "suppliers": [
+            3
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 34,
+        "zu nah an Nebenmarkt": 17,
+        "Alternative (Höchstzahl erreicht)": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "200 / 160 m mit Distriktgewicht 2",
+      "configuration": {
+        "city": 1,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 2,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 3,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 104,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.8367018592542298,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 154.8349109753603,
+      "markets": [
+        {
+          "id": 1,
+          "node": 145,
+          "position": {
+            "x": 8.581785510601167,
+            "y": -72.49350774630481
+          },
+          "district": 6,
+          "mainDistance": 304.86819960187705,
+          "beneficiaries": 114,
+          "selectionScore": 112065.23079768468,
+          "weightedGainMetres": 16.90398702818447,
+          "servedDistricts": [
+            0,
+            2,
+            6
+          ],
+          "routePoints": 15
+        },
+        {
+          "id": 2,
+          "node": 301,
+          "position": {
+            "x": 32.34593588887128,
+            "y": 40.30536831332826
+          },
+          "district": 1,
+          "mainDistance": 203.66076613061085,
+          "beneficiaries": 44,
+          "selectionScore": 75057.14319193065,
+          "weightedGainMetres": 17.06842716386745,
+          "servedDistricts": [
+            0,
+            1
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 3,
+          "node": 11,
+          "position": {
+            "x": -53.51310803326748,
+            "y": -33.62879186426404
+          },
+          "district": 2,
+          "mainDistance": 218.026293969141,
+          "beneficiaries": 93,
+          "selectionScore": 64305.94857018877,
+          "weightedGainMetres": 14.550727406938867,
+          "servedDistricts": [
+            2,
+            6,
+            7
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 592.7388818051217,
+          "routePoints": 28
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 358.41538102014636,
+          "routePoints": 28
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 519.3568071456002,
+          "routePoints": 25
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.88681088276893,
+          "markets": 0,
+          "suppliers": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.9485523677502602,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.8837470105506787,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.6228351918792083,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.9507982202690027,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0.9193873305405866,
+          "markets": 0,
+          "suppliers": [
+            3
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 34,
+        "zu nah an Nebenmarkt": 17,
+        "Alternative (Höchstzahl erreicht)": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "300 / 240 m",
+      "configuration": {
+        "city": 1,
+        "mainMin": 300,
+        "sideMin": 240,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 2,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 139,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.7342218610722805,
+      "districtsWithoutOwnSecondary": 6,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 172.47133918934844,
+      "markets": [
+        {
+          "id": 1,
+          "node": 145,
+          "position": {
+            "x": 8.581785510601167,
+            "y": -72.49350774630481
+          },
+          "district": 6,
+          "mainDistance": 304.86819960187705,
+          "beneficiaries": 114,
+          "selectionScore": 76495.05068053893,
+          "weightedGainMetres": 16.90398702818447,
+          "servedDistricts": [
+            0,
+            2,
+            6
+          ],
+          "routePoints": 15
+        },
+        {
+          "id": 2,
+          "node": 470,
+          "position": {
+            "x": -39.66046706817424,
+            "y": -48.54092268769457
+          },
+          "district": 6,
+          "mainDistance": 301.7653194866591,
+          "beneficiaries": 77,
+          "selectionScore": 44332.131206477454,
+          "weightedGainMetres": 13.982726356818207,
+          "servedDistricts": [
+            2,
+            6,
+            7
+          ],
+          "routePoints": 19
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 274.67635550262827,
+          "routePoints": 21
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.8649130716126615,
+          "markets": 0,
+          "suppliers": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.5880567152422371,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.7890273262525958,
+          "markets": 0,
+          "suppliers": [
+            0,
+            2,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.6228351918792083,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.956096447173019,
+          "markets": 2,
+          "suppliers": [
+            2,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0.6305826635128622,
+          "markets": 0,
+          "suppliers": [
+            2
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 52,
+        "zu nah an Nebenmarkt": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "400 / 320 m",
+      "configuration": {
+        "city": 1,
+        "mainMin": 400,
+        "sideMin": 320,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 0,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 301,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.48611370301282136,
+      "districtsWithoutOwnSecondary": 7,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 203.358052574351,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.7630113520726105,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.5880567152422371,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.6974106661494942,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.6228351918792083,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.03357798865766794,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 62
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "Hohe Mindestnachfrage",
+      "configuration": {
+        "city": 1,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 80,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 3,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 93,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.8052638498249435,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 203.358052574351,
+      "plannedCappedMetres": 162.15599328744057,
+      "markets": [
+        {
+          "id": 1,
+          "node": 145,
+          "position": {
+            "x": 8.581785510601167,
+            "y": -72.49350774630481
+          },
+          "district": 6,
+          "mainDistance": 304.86819960187705,
+          "beneficiaries": 114,
+          "selectionScore": 76495.05068053893,
+          "weightedGainMetres": 16.90398702818447,
+          "servedDistricts": [
+            0,
+            2,
+            6
+          ],
+          "routePoints": 15
+        },
+        {
+          "id": 2,
+          "node": 11,
+          "position": {
+            "x": -53.51310803326748,
+            "y": -33.62879186426404
+          },
+          "district": 2,
+          "mainDistance": 218.026293969141,
+          "beneficiaries": 93,
+          "selectionScore": 49766.76666257671,
+          "weightedGainMetres": 14.550727406938867,
+          "servedDistricts": [
+            2,
+            6,
+            7
+          ],
+          "routePoints": 12
+        },
+        {
+          "id": 3,
+          "node": 409,
+          "position": {
+            "x": -15.766612912388249,
+            "y": 36.46507430973332
+          },
+          "district": 3,
+          "mainDistance": 204.65664074123129,
+          "beneficiaries": 85,
+          "selectionScore": 32453.858820173667,
+          "weightedGainMetres": 9.74734485178714,
+          "servedDistricts": [
+            0,
+            3,
+            1
+          ],
+          "routePoints": 15
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 358.41538102014636,
+          "routePoints": 28
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 585.284597453046,
+          "routePoints": 39
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 420.0153596487392,
+          "routePoints": 28
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.7630113520726105,
+          "after": 0.8649130716126615,
+          "markets": 0,
+          "suppliers": [
+            3,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.5880567152422371,
+          "after": 0.5880567152422371,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.6974106661494942,
+          "after": 0.8837470105506787,
+          "markets": 1,
+          "suppliers": [
+            2,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.6228351918792083,
+          "after": 0.8872420725687014,
+          "markets": 1,
+          "suppliers": [
+            3,
+            0
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0.041766086684526825,
+          "after": 0.041766086684526825,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0.03357798865766794,
+          "after": 0.9507982202690027,
+          "markets": 1,
+          "suppliers": [
+            2,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0.9193873305405866,
+          "markets": 0,
+          "suppliers": [
+            2
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 34,
+        "zu nah an Nebenmarkt": 17,
+        "zu wenig zusätzlich begünstigte Gebäude": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Flussstadt · Seed 42",
+      "name": "Kurzer Versorgungsweg",
+      "configuration": {
+        "city": 1,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 160,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 514,
+      "inferredAlleyLinks": 62,
+      "mainEntrances": 4,
+      "candidates": 62,
+      "selected": 3,
+      "unlinkedBuildings": 10,
+      "unservedBuildings": 294,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.5176110876953652,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 149.61239457465493,
+      "plannedCappedMetres": 127.73056938579718,
+      "markets": [
+        {
+          "id": 1,
+          "node": 301,
+          "position": {
+            "x": 32.34593588887128,
+            "y": 40.30536831332826
+          },
+          "district": 1,
+          "mainDistance": 203.66076613061085,
+          "beneficiaries": 42,
+          "selectionScore": 38267.50936840297,
+          "weightedGainMetres": 8.587200305851496,
+          "servedDistricts": [
+            1
+          ],
+          "routePoints": 13
+        },
+        {
+          "id": 2,
+          "node": 487,
+          "position": {
+            "x": -29.868401509067155,
+            "y": -52.9685845922973
+          },
+          "district": 6,
+          "mainDistance": 345.5502571711624,
+          "beneficiaries": 63,
+          "selectionScore": 31734.142483759682,
+          "weightedGainMetres": 6.663092539054084,
+          "servedDistricts": [
+            2,
+            6
+          ],
+          "routePoints": 24
+        },
+        {
+          "id": 3,
+          "node": 331,
+          "position": {
+            "x": -44.37087694140517,
+            "y": -10.672581596167216
+          },
+          "district": 2,
+          "mainDistance": 210.98152743883756,
+          "beneficiaries": 60,
+          "selectionScore": 25896.414243904273,
+          "weightedGainMetres": 6.631532343952221,
+          "servedDistricts": [
+            2,
+            3,
+            6
+          ],
+          "routePoints": 13
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 646.8807703476213,
+          "routePoints": 37
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 483.8733978366772,
+          "routePoints": 26
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 264.2425910168453,
+          "routePoints": 20
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "Merchants District",
+          "buildings": 51,
+          "before": 0.3525508691817967,
+          "after": 0.3525508691817967,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "The Crest",
+          "buildings": 58,
+          "before": 0.15931090217800972,
+          "after": 0.8520180531376016,
+          "markets": 1,
+          "suppliers": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Wolfheart Fair",
+          "buildings": 113,
+          "before": 0.34352898603808424,
+          "after": 0.7220679409322662,
+          "markets": 1,
+          "suppliers": [
+            3,
+            2,
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Amberwood Ridge",
+          "buildings": 133,
+          "before": 0.21684159521839902,
+          "after": 0.34986393492682966,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "East Purplechurch",
+          "buildings": 26,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 6,
+          "name": "Candlecrest Road",
+          "buildings": 145,
+          "before": 0,
+          "after": 0.41016777505021357,
+          "markets": 1,
+          "suppliers": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Bread Mill",
+          "buildings": 21,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 34,
+        "zu nah an Nebenmarkt": 14,
+        "Alternative (Höchstzahl erreicht)": 11
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "Nur Hauptmarkt",
+      "configuration": {
+        "city": 2,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 0
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 0,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 387,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.34565212635371956,
+      "districtsWithoutOwnSecondary": 5,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 213.33296015562243,
+      "markets": [],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.44732737913574766,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.41420934415090566,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.10039661344900254,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 21,
+        "Alternative (Höchstzahl erreicht)": 25
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "100 / 100 m",
+      "configuration": {
+        "city": 2,
+        "mainMin": 100,
+        "sideMin": 100,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 3,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 182,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.7120043983227187,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 157.25728608289234,
+      "markets": [
+        {
+          "id": 1,
+          "node": 317,
+          "position": {
+            "x": 17.74869239799693,
+            "y": -37.4326817686719
+          },
+          "district": 0,
+          "mainDistance": 278.66495846543677,
+          "beneficiaries": 87,
+          "selectionScore": 88165.38001164373,
+          "weightedGainMetres": 21.47982441162875,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 19
+        },
+        {
+          "id": 2,
+          "node": 448,
+          "position": {
+            "x": 52.92637523844257,
+            "y": 1.7920010682396232
+          },
+          "district": 5,
+          "mainDistance": 234.65202341133715,
+          "beneficiaries": 108,
+          "selectionScore": 75413.12286623476,
+          "weightedGainMetres": 15.858693171631185,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 17
+        },
+        {
+          "id": 3,
+          "node": 268,
+          "position": {
+            "x": 15.71580479634751,
+            "y": 39.520372056607926
+          },
+          "district": 0,
+          "mainDistance": 160.76511153787348,
+          "beneficiaries": 86,
+          "selectionScore": 62543.46816590341,
+          "weightedGainMetres": 18.737156489470237,
+          "servedDistricts": [
+            0,
+            2,
+            5
+          ],
+          "routePoints": 8
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 244.76938239808587,
+          "routePoints": 21
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 475.8658102175558,
+          "routePoints": 27
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 431.85287516345625,
+          "routePoints": 25
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.893314285369398,
+          "markets": 2,
+          "suppliers": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.45308638407927404,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.5950524087517937,
+          "markets": 1,
+          "suppliers": [
+            2,
+            3,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "Alternative (Höchstzahl erreicht)": 20,
+        "zu nah an Nebenmarkt": 21,
+        "zu nah am Hauptmarkt": 2
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "200 / 160 m ohne Distriktgewicht",
+      "configuration": {
+        "city": 2,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 0,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 3,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 187,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.702823620817746,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 160.81570976990778,
+      "markets": [
+        {
+          "id": 1,
+          "node": 317,
+          "position": {
+            "x": 17.74869239799693,
+            "y": -37.4326817686719
+          },
+          "district": 0,
+          "mainDistance": 278.66495846543677,
+          "beneficiaries": 87,
+          "selectionScore": 56769.16291402522,
+          "weightedGainMetres": 21.47982441162875,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 19
+        },
+        {
+          "id": 2,
+          "node": 448,
+          "position": {
+            "x": 52.92637523844257,
+            "y": 1.7920010682396232
+          },
+          "district": 5,
+          "mainDistance": 234.65202341133715,
+          "beneficiaries": 108,
+          "selectionScore": 41913.039837349585,
+          "weightedGainMetres": 15.858693171631185,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 17
+        },
+        {
+          "id": 3,
+          "node": 293,
+          "position": {
+            "x": -2.1449528839091627,
+            "y": 41.641545755508616
+          },
+          "district": 0,
+          "mainDistance": 232.71020646715107,
+          "beneficiaries": 69,
+          "selectionScore": 40115.96830486703,
+          "weightedGainMetres": 15.178732802454677,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 244.76938239808587,
+          "routePoints": 21
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 547.8109051468333,
+          "routePoints": 31
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 503.79797009273386,
+          "routePoints": 29
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.878480305530916,
+          "markets": 2,
+          "suppliers": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.45308638407927404,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.5950524087517937,
+          "markets": 1,
+          "suppliers": [
+            2,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 21,
+        "zu nah an Nebenmarkt": 14,
+        "Alternative (Höchstzahl erreicht)": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "200 / 160 m mit Distriktgewicht 1",
+      "configuration": {
+        "city": 2,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 3,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 187,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.702823620817746,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 160.81570976990778,
+      "markets": [
+        {
+          "id": 1,
+          "node": 317,
+          "position": {
+            "x": 17.74869239799693,
+            "y": -37.4326817686719
+          },
+          "district": 0,
+          "mainDistance": 278.66495846543677,
+          "beneficiaries": 87,
+          "selectionScore": 88165.38001164373,
+          "weightedGainMetres": 21.47982441162875,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 19
+        },
+        {
+          "id": 2,
+          "node": 448,
+          "position": {
+            "x": 52.92637523844257,
+            "y": 1.7920010682396232
+          },
+          "district": 5,
+          "mainDistance": 234.65202341133715,
+          "beneficiaries": 108,
+          "selectionScore": 75413.12286623476,
+          "weightedGainMetres": 15.858693171631185,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 17
+        },
+        {
+          "id": 3,
+          "node": 293,
+          "position": {
+            "x": -2.1449528839091627,
+            "y": 41.641545755508616
+          },
+          "district": 0,
+          "mainDistance": 232.71020646715107,
+          "beneficiaries": 69,
+          "selectionScore": 50963.720906484654,
+          "weightedGainMetres": 15.178732802454677,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 244.76938239808587,
+          "routePoints": 21
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 547.8109051468333,
+          "routePoints": 31
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 503.79797009273386,
+          "routePoints": 29
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.878480305530916,
+          "markets": 2,
+          "suppliers": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.45308638407927404,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.5950524087517937,
+          "markets": 1,
+          "suppliers": [
+            2,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 21,
+        "zu nah an Nebenmarkt": 14,
+        "Alternative (Höchstzahl erreicht)": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "200 / 160 m mit Distriktgewicht 2",
+      "configuration": {
+        "city": 2,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 2,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 3,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 184,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.7061717864191861,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 161.549951265004,
+      "markets": [
+        {
+          "id": 1,
+          "node": 446,
+          "position": {
+            "x": 51.5452582702873,
+            "y": -2.9920951880685895
+          },
+          "district": 5,
+          "mainDistance": 214.7314450277566,
+          "beneficiaries": 140,
+          "selectionScore": 125088.05845367703,
+          "weightedGainMetres": 18.320591506082817,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 15
+        },
+        {
+          "id": 2,
+          "node": 317,
+          "position": {
+            "x": 17.74869239799693,
+            "y": -37.4326817686719
+          },
+          "district": 0,
+          "mainDistance": 278.66495846543677,
+          "beneficiaries": 80,
+          "selectionScore": 90664.52420402352,
+          "weightedGainMetres": 18.283684582081023,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 19
+        },
+        {
+          "id": 3,
+          "node": 293,
+          "position": {
+            "x": -2.1449528839091627,
+            "y": 41.641545755508616
+          },
+          "district": 0,
+          "mainDistance": 232.71020646715107,
+          "beneficiaries": 69,
+          "selectionScore": 61811.473508102245,
+          "weightedGainMetres": 15.178732802454677,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 224.8488040145053,
+          "routePoints": 19
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 483.87739170915324,
+          "routePoints": 27
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 547.8109051468333,
+          "routePoints": 31
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.878480305530916,
+          "markets": 2,
+          "suppliers": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.45308638407927404,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.6144227208429986,
+          "markets": 1,
+          "suppliers": [
+            1,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 21,
+        "zu nah an Nebenmarkt": 14,
+        "Alternative (Höchstzahl erreicht)": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "300 / 240 m",
+      "configuration": {
+        "city": 2,
+        "mainMin": 300,
+        "sideMin": 240,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 3,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 184,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.65084797732185,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 175.96858175301404,
+      "markets": [
+        {
+          "id": 1,
+          "node": 316,
+          "position": {
+            "x": 22.179522639618767,
+            "y": -42.636105426466
+          },
+          "district": 0,
+          "mainDistance": 306.0022222327013,
+          "beneficiaries": 75,
+          "selectionScore": 74119.39900933682,
+          "weightedGainMetres": 18.062182695294233,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 20
+        },
+        {
+          "id": 2,
+          "node": 471,
+          "position": {
+            "x": 65.79584957850956,
+            "y": 13.23413228822212
+          },
+          "district": 5,
+          "mainDistance": 322.8891882865597,
+          "beneficiaries": 85,
+          "selectionScore": 49550.569405609895,
+          "weightedGainMetres": 10.426415632980353,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 25
+        },
+        {
+          "id": 3,
+          "node": 79,
+          "position": {
+            "x": 92.86972385663982,
+            "y": -36.87109336065769
+          },
+          "district": 5,
+          "mainDistance": 379.20896570219014,
+          "beneficiaries": 73,
+          "selectionScore": 34810.04061397683,
+          "weightedGainMetres": 8.875780074333893,
+          "servedDistricts": [
+            5
+          ],
+          "routePoints": 21
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 360.343811040573,
+          "routePoints": 30
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 416.6635884562034,
+          "routePoints": 26
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 350.8924279947118,
+          "routePoints": 25
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.7104800697097822,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2,
+            1
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.41420934415090566,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.9238265282969486,
+          "markets": 2,
+          "suppliers": [
+            3,
+            2,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 38,
+        "zu nah an Nebenmarkt": 5
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "400 / 320 m",
+      "configuration": {
+        "city": 2,
+        "mainMin": 400,
+        "sideMin": 320,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 1,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 318,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.417049894546935,
+      "districtsWithoutOwnSecondary": 4,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 204.66890876385727,
+      "markets": [
+        {
+          "id": 1,
+          "node": 425,
+          "position": {
+            "x": 99.64498319906826,
+            "y": -22.904209227063777
+          },
+          "district": 5,
+          "mainDistance": 441.36511111295596,
+          "beneficiaries": 69,
+          "selectionScore": 43497.642383344806,
+          "weightedGainMetres": 8.664051391765106,
+          "servedDistricts": [
+            5
+          ],
+          "routePoints": 25
+        }
+      ],
+      "pairs": [],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.44732737913574766,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.41420934415090566,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.5134577391959696,
+          "markets": 1,
+          "suppliers": [
+            1,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 43,
+        "zu nah an Nebenmarkt": 2
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "Hohe Mindestnachfrage",
+      "configuration": {
+        "city": 2,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 240,
+        "districtWeight": 1,
+        "minBeneficiaries": 80,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 2,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 226,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.6130751817595043,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 213.33296015562243,
+      "plannedCappedMetres": 175.99444257236252,
+      "markets": [
+        {
+          "id": 1,
+          "node": 317,
+          "position": {
+            "x": 17.74869239799693,
+            "y": -37.4326817686719
+          },
+          "district": 0,
+          "mainDistance": 278.66495846543677,
+          "beneficiaries": 87,
+          "selectionScore": 88165.38001164373,
+          "weightedGainMetres": 21.47982441162875,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 19
+        },
+        {
+          "id": 2,
+          "node": 448,
+          "position": {
+            "x": 52.92637523844257,
+            "y": 1.7920010682396232
+          },
+          "district": 5,
+          "mainDistance": 234.65202341133715,
+          "beneficiaries": 108,
+          "selectionScore": 75413.12286623476,
+          "weightedGainMetres": 15.858693171631185,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 17
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 244.76938239808587,
+          "routePoints": 21
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.44732737913574766,
+          "after": 0.7412699802472021,
+          "markets": 1,
+          "suppliers": [
+            0,
+            2,
+            1
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.41420934415090566,
+          "after": 0.41420934415090566,
+          "markets": 0,
+          "suppliers": [
+            0
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.10039661344900254,
+          "after": 0.5950524087517937,
+          "markets": 1,
+          "suppliers": [
+            2,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 21,
+        "zu nah an Nebenmarkt": 13,
+        "zu wenig zusätzlich begünstigte Gebäude": 10
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    },
+    {
+      "city": "Cloudhill · Seed 12345",
+      "name": "Kurzer Versorgungsweg",
+      "configuration": {
+        "city": 2,
+        "mainMin": 200,
+        "sideMin": 160,
+        "service": 160,
+        "districtWeight": 1,
+        "minBeneficiaries": 12,
+        "maxMarkets": 3
+      },
+      "graphNodes": 505,
+      "inferredAlleyLinks": 45,
+      "mainEntrances": 4,
+      "candidates": 46,
+      "selected": 3,
+      "unlinkedBuildings": 11,
+      "unservedBuildings": 294,
+      "unassignedDistrictBuildings": 0,
+      "servedFootprintFraction": 0.4917943187775647,
+      "districtsWithoutOwnSecondary": 3,
+      "baselineCappedMetres": 151.310406128436,
+      "plannedCappedMetres": 129.12560912498725,
+      "markets": [
+        {
+          "id": 1,
+          "node": 317,
+          "position": {
+            "x": 17.74869239799693,
+            "y": -37.4326817686719
+          },
+          "district": 0,
+          "mainDistance": 278.66495846543677,
+          "beneficiaries": 61,
+          "selectionScore": 39392.87869142808,
+          "weightedGainMetres": 8.165632738385636,
+          "servedDistricts": [
+            0
+          ],
+          "routePoints": 19
+        },
+        {
+          "id": 2,
+          "node": 448,
+          "position": {
+            "x": 52.92637523844257,
+            "y": 1.7920010682396232
+          },
+          "district": 5,
+          "mainDistance": 234.65202341133715,
+          "beneficiaries": 94,
+          "selectionScore": 35531.122162283194,
+          "weightedGainMetres": 7.007135961220512,
+          "servedDistricts": [
+            0,
+            5
+          ],
+          "routePoints": 17
+        },
+        {
+          "id": 3,
+          "node": 293,
+          "position": {
+            "x": -2.1449528839091627,
+            "y": 41.641545755508616
+          },
+          "district": 0,
+          "mainDistance": 232.71020646715107,
+          "beneficiaries": 47,
+          "selectionScore": 28792.435176379942,
+          "weightedGainMetres": 7.012028303842554,
+          "servedDistricts": [
+            0,
+            2
+          ],
+          "routePoints": 12
+        }
+      ],
+      "pairs": [
+        {
+          "from": 1,
+          "to": 2,
+          "distance": 244.76938239808587,
+          "routePoints": 21
+        },
+        {
+          "from": 1,
+          "to": 3,
+          "distance": 547.8109051468333,
+          "routePoints": 31
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "distance": 503.79797009273386,
+          "routePoints": 29
+        }
+      ],
+      "districts": [
+        {
+          "id": 0,
+          "name": "The Star",
+          "buildings": 265,
+          "before": 0.17465015977810355,
+          "after": 0.6002332351054437,
+          "markets": 2,
+          "suppliers": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        {
+          "id": 1,
+          "name": "Low Hill",
+          "buildings": 22,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 2,
+          "name": "Greengate",
+          "buildings": 92,
+          "before": 0.18979566932825742,
+          "after": 0.22867270925662564,
+          "markets": 0,
+          "suppliers": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Castle",
+          "buildings": 0,
+          "before": null,
+          "after": null,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 4,
+          "name": "South Slums",
+          "buildings": 17,
+          "before": 0,
+          "after": 0,
+          "markets": 0,
+          "suppliers": []
+        },
+        {
+          "id": 5,
+          "name": "Fenwood Gate",
+          "buildings": 166,
+          "before": 0.029304617904394117,
+          "after": 0.5317119707263362,
+          "markets": 1,
+          "suppliers": [
+            2,
+            0
+          ]
+        }
+      ],
+      "rejections": {
+        "zu nah am Hauptmarkt": 21,
+        "zu nah an Nebenmarkt": 14,
+        "Alternative (Höchstzahl erreicht)": 8
+      },
+      "mainSpacingViolations": 0,
+      "secondarySpacingViolations": 0,
+      "unreachableSelectedMarkets": 0
+    }
+  ]
+}

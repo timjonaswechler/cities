@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "name": "Gebäudeformen V2",
+  "minAreaM2": 24.0,
+  "minWidthM": 6.0,
+  "minDepthM": 4.0,
+  "minAngleDegrees": 25.0,
+  "minContactM": 6.0,
+  "refinement": {
+    "trimTips": true,
+    "minEdgeM": 2.0
+  }
+}

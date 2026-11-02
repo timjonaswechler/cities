@@ -3,9 +3,15 @@ mod runtime;
 #[rustfmt::skip]
 mod generated;
 mod adapter;
+mod building_planning;
+mod economy;
+mod market_model;
 mod math;
 mod model;
 mod snapshot;
+pub use building_planning::*;
+pub use economy::{analyze_economy, plan_markets};
+pub use market_model::*;
 pub use model::*;
 
 use runtime::{Runtime, V};

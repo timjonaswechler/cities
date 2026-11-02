@@ -1,0 +1,9 @@
+type=TownhouseWithGate profile=town_standard site=town_rectangle seed=7: 3 parts; []
+[2m2026-11-01T21:56:11.626369Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 27.2", kernel: "27.2.0", cpu: "Apple M1 Pro", core_count: "10", memory: "16.0 GiB" }
+[2m2026-11-01T21:56:11.726607Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T21:56:11.754492Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T21:56:11.754538Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T21:56:11.793723Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window building_core · synthetic prototype zoo (67v0)
+[2m2026-11-01T21:56:19.902285Z[0m [32m INFO[0m [2mbuilding_zoo[0m[2m:[0m CAPTURE saved docs/proofs/building-types-step2/town_rectangle-town_standard-7-rear.png
+[2m2026-11-01T21:56:19.903484Z[0m [33m WARN[0m [2mbevy_winit::state[0m[2m:[0m Skipped event Destroyed for unknown winit Window Id WindowId(533904672000)
+observed_process_exit=0

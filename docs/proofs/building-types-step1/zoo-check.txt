@@ -1,0 +1,4 @@
+    Checking city_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-a02c8549/crates/city_core)
+    Checking building_core v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-a02c8549/crates/building_core)
+    Checking city_bevy v0.1.0 (/Users/tim-jonaswechler/.t3/worktrees/cities_generator/t3-a02c8549/crates/city_bevy)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 7.62s
