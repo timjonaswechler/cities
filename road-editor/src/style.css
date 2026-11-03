@@ -139,6 +139,22 @@ input[type="number"] {
   font-size: 12px;
   padding: 8px 4px;
 }
+.width-row {
+  align-items: flex-end;
+  gap: 6px;
+}
+.width-row .width-link {
+  flex: 0 0 30px;
+  height: 34px;
+  margin-bottom: 12px;
+  padding: 5px;
+  display: grid;
+  place-items: center;
+}
+.width-link svg {
+  width: 18px;
+  height: 18px;
+}
 .danger {
   color: #9c4034;
 }
@@ -321,6 +337,47 @@ footer {
   stroke-dasharray: 3 3;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
+}
+.water-hit {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 12;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+.water-outline {
+  fill: none;
+  stroke: #18566b;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+.road-outline {
+  stroke: #163f36;
+}
+.selected-water {
+  stroke: #edb65a;
+  stroke-width: 2;
+}
+.water-vertex {
+  fill: #e1f4fb;
+  stroke: #18566b;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  cursor: grab;
+}
+.water-vertex.selected {
+  fill: #edb65a;
+}
+.water-draft {
+  fill: none;
+  stroke: #2b91b4;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+.water-draft.closing {
+  stroke-dasharray: 5 4;
 }
 .conflict-line {
   stroke: #be503e !important;

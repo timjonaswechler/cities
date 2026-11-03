@@ -122,9 +122,11 @@ Die Darstellung ordnet ursprüngliches X/Y den Bevy-Achsen X/Z zu. Eine ursprün
 ## Parametrischer Wegeditor im Browser
 
 [Wegwerk](road-editor/README.md) ist eine neue TypeScript-/Three.js-Werkbank:
-Vektorpfade zeichnen und ziehen, Breitenverläufe, gemeinsame Knoten und lokale
-Kreuzungsradien bearbeiten. Darstellung und Sperrflächen verwenden dieselben
-vereinigten Außenringe und Löcher. Keine Häuser, Wasser oder Stadtintegration.
+Wege und Wasser mit denselben Linien-/Bézier-Vektoren zeichnen: offen mit Breite,
+geschlossen als gefüllte Fläche ohne Breitenangabe. Anker, Kontrollgriffe und
+Aussparungen bleiben editierbar; dazu kommen Netzknoten, lokale Kreuzungsradien,
+Undo/Redo und Graph-JSON. Darstellung und Sperrflächen verwenden dieselben
+vereinigten Außenringe und Löcher. Keine Häuser oder Stadtintegration.
 
 ```sh
 cd road-editor

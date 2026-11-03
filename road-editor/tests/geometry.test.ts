@@ -804,6 +804,33 @@ describe("frozen world-coordinate evaluator", () => {
       parse('{"version":1,"nodes":null,"paths":[],"junctions":[]}'),
     ).toThrow();
   });
+  it("G14c optional width links roundtrip and reject inconsistent imports", () => {
+    const n = straight();
+    expect(parse(serialize(n))).toEqual(n);
+    for (const widthsLinked of [false, true]) {
+      const linked = {
+        ...n,
+        paths: [{ ...n.paths[0], widthsLinked }],
+      };
+      expect(parse(serialize(linked))).toEqual(linked);
+    }
+    for (const widthsLinked of ["true", 1, null]) {
+      expect(() =>
+        parse(
+          JSON.stringify({
+            ...n,
+            paths: [{ ...n.paths[0], widthsLinked }],
+          }),
+        ),
+      ).toThrow();
+    }
+    const mismatched = {
+      ...n,
+      paths: [{ ...n.paths[0], endWidth: 3, widthsLinked: true }],
+    };
+    expect(() => parse(JSON.stringify(mismatched))).toThrow();
+    expect(() => computeSurface(mismatched)).toThrow();
+  });
   it("G14b folded offsets are diagnosed instead of presented as unqualified geometry", () => {
     const n = quadratic();
     n.nodes[0].x = -1;

@@ -1,9 +1,10 @@
 # Wegwerk — parametrischer Wegeditor
 
 Eigenständige Browserwerkbank in TypeScript/Three.js, neu implementiert statt
-Fortsetzung der verworfenen Hausgalerie. Wege und Straßen sind dasselbe Modell:
-eigene Breite und Breitenverlauf, keine Szenariotypen. Keine Häuser, Wasser,
-Blocker, Parzellierung oder Rust-/Archiv-Integration.
+Fortsetzung der verworfenen Hausgalerie. Wege, Straßen und Wasser verwenden
+dieselben Vektoren: offen mit Breite, ausdrücklich geschlossen als gefüllte
+Fläche ohne Breitenparameter. Das Material ist eine Einstellung, kein Szenariotyp.
+Keine Häuser, Nachbarblocker, Parzellierung oder Rust-/Archiv-Integration.
 
 ## Starten
 
@@ -21,13 +22,20 @@ ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
 
 ## Bearbeiten
 
-- **Zeichnen** → Segmenttyp wählen → Start und Endpunkte klicken. Weitere
-  Klicks erweitern denselben zusammenhängenden Pfad; Segmenttyp darf wechseln.
-  **Esc/Auswählen** beendet ihn. Ein Klick nahe einem bestehenden Knoten dockt
-  über dessen Identität an. Ein Klick auf eine Mittellinie teilt das Segment
-  formerhaltend und verwendet den neuen Knoten.
-- Mittellinie auswählen; Breiten am Anfang/Ende numerisch eingeben.
+- Material **Weg/Wasser** und Segmenttyp **Gerade/Quadratisch/Kubisch** wählen,
+  dann **Zeichnen** und Start/Endpunkte klicken. Weitere Klicks erweitern denselben
+  Vektor; der Segmenttyp darf wechseln. **Esc/Enter/Auswählen** beendet ihn offen.
+  Am ersten Anker klicken oder **Pfad schließen** füllt stattdessen sein Inneres.
+  Bei offenen Pfaden docken nahe Anker und Mittellinien desselben Materials an;
+  Mittellinien werden dabei formerhaltend geteilt. Wasser dockt nicht automatisch
+  an Wegknoten an.
+- **Offenen** Vektor auswählen; Breiten am Anfang/Ende numerisch eingeben.
   Gleiche Werte bedeuten konstante Breite, sonst linear über gesamte Bogenlänge.
+  Das **Kettensymbol** zwischen den Feldern koppelt beide Breiten: Beim Einschalten
+  wird die Anfangsbreite für beide übernommen; danach ändert jedes Feld beide Werte.
+  Erneutes Klicken löst die Kopplung, ohne die Werte zu ändern. Die Einstellung gilt
+  pro Pfad, ist undo-fähig und wird im Graph-JSON gespeichert; ältere Dateien ohne
+  diese Einstellung bleiben entkoppelt.
   **Richtung umkehren** kehrt Segmente, Kontrollgriffe und Breitenzuordnung um,
   ohne die physische Fläche zu ändern.
 - Runde Anker ziehen oder deren XY-Position eingeben. Ein gemeinsamer Anker
@@ -47,13 +55,70 @@ ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
   **Ansicht 0 / 120 m** setzt die Kamera zurück. **3D prüfen** zeigt dieselben
   Flächen räumlich, **Draufsicht** kehrt zum Editieren zurück.
 - **JSON speichern/laden** exportiert/importiert den versionierten editierbaren
-  Graphen mit IDs, Segmenten, Griffen, Breiten und Radien — keine abgeleiteten Meshes.
-  Ungültige Importe/Parameter ersetzen nicht den letzten gültigen Graphen.
+  Graphen mit IDs, Segmenten, Griffen, Breiten, Radien und gefüllten Konturen — keine
+  abgeleiteten Meshes. Ungültige Importe/Parameter ersetzen nicht den letzten
+  gültigen Graphen.
+
+## Offene Vektoren und gefüllte Konturen
+
+Für beide Materialien gilt dieselbe Regel: Ein **offener Vektor** belegt den
+Streifen seiner Breite; eine **geschlossene Kontur** belegt ihr Inneres ohne
+Breitenangabe. Gerade, quadratische und kubische Segmente können gemischt werden.
+Eine Kurvenkontur kann mit zwei Ankern eine Fläche einschließen; degenerierte
+oder selbstschneidende Konturen werden nicht übernommen.
+
+1. Vektor zeichnen und am Startanker oder mit **Pfad schließen** schließen.
+   Das Schließen ist ein eigener Undo-Schritt. Bei ungültiger Kontur bleibt der
+   letzte gültige offene Vektor erhalten, einschließlich seiner Breite.
+2. Fläche anklicken. Anker ziehen oder deren XY-Werte eingeben. Nach Ankerwahl
+   bestimmt **Kontursegment** den Typ der folgenden Kante. Blaue Kontrollgriffe
+   ziehen oder ihre XY-Werte bearbeiten — genauso wie an offenen Vektoren.
+   **Punkt einfügen** teilt die folgende Kurve exakt mit De Casteljau;
+   **Punkt entfernen** verbindet die Nachbarn geradlinig.
+3. **Insel aussparen** bei Wasser bzw. **Aussparung zeichnen** bei Wegen zeichnet
+   mit denselben Segmenttypen eine innere Kontur. Am Startanker, mit **Enter**
+   oder **Fläche schließen** abschließen. Bis dahin ist sie ein Entwurf:
+   **Esc/Abbrechen** verwirft ihn, Undo entfernt den letzten Entwurfsanker.
+   Die gültige Aussparung wird als ein Undo-Schritt übernommen. Sie ist ein echtes
+   Loch und lässt sich ebenfalls mit Ankern und Griffen bearbeiten.
+4. **Kontur öffnen** entfernt das Schließsegment und macht daraus wieder einen
+   offenen Vektor mit zunächst gekoppelten 4 m Breite. Vorher Aussparungen entfernen.
+   Löschen und Undo/Redo gelten unabhängig für die gewählte Fläche.
+
+Wasser ist blau, seine Oberfläche liegt 1,4 m unter der Wegeebene. Die räumliche
+Ansicht zeigt senkrechte Ufer. Wege und Wasser bilden gemeinsam die Sperrfläche;
+Überlappungen werden nicht doppelt gezählt. Ein Weg über einer Insel bleibt
+gesperrt, der übrige Inselbereich ist nicht automatisch Bauland. Überlappende
+Konturen vereinigen sich in der Auswertung, bleiben getrennt editierbar.
+
+Inseln/Aussparungen dürfen das äußere Ufer nicht berühren, nicht außerhalb liegen
+und einander nicht überlappen oder verschachteln. Ungültige Änderungen und Importe
+ersetzen den letzten gültigen Zustand nicht. Keine Wassersimulation.
+
+Alte Netzringe bleiben Streifen: Ein Zyklus aus verbundenen Wegabschnitten
+füllt nicht automatisch seinen Innenbereich. **Pfad schließen** wandelt einen
+gewählten Pfad ausdrücklich zur gefüllten Kontur um.
+[Begriffe](../GLOSSARY.md).
 
 ## Geometrie-Interface
 
 `src/network.ts`: `Network`, `parse/serialize`, Graphbearbeitung und `History`.
-Version 1 enthält `nodes`, `paths`, `junctions`; Maße in Metern, XY in der Ebene.
+Maße in Metern, XY in der Ebene. Neue Projekte verwenden Version 3:
+
+- Offene Vektoren sind `paths` mit `kind: "road" | "water"`, Segmenten und Breiten.
+  Fehlendes Material bedeutet weiterhin Weg.
+- Gefüllte Konturen sind `areaBlockers: {id, kind, outer, holes?, outerEdges?, holeEdges?}`.
+  Ankerlisten sind umlaufend ohne wiederholten Endpunkt. Optional beschreibt
+  jede Kante einen `Curve`-Wert; ohne Kantenliste sind die Kanten gerade.
+- `src/curves.ts` definiert dieselbe Linien-/Bézier-Geometrie, adaptive Abtastung
+  und exakte Teilung für offene Pfade, Außenkonturen und Aussparungen.
+  `closePath/openArea` konvertieren die Quellgeometrie; Schließen entfernt keine
+  Knoten, die noch von einem anderen Pfad verwendet werden.
+
+Version-1-Wegnetze und Version-2-Polygongewässer bleiben ladbar. Neue Materialien
+und Kurvenkonturen benötigen Version 3; entsprechende Bearbeitungen aktualisieren
+die Version. Version 1 mit Flächensperren und alte Versionen mit neuen Kurvenfeldern
+werden ausdrücklich abgelehnt.
 Eine Arm-ID besteht aus Pfad-ID, Segmentindex und `start/end`.
 Knotenidentität ist explizit, Koordinatengleichheit erzeugt keine Verbindung.
 
@@ -61,7 +126,10 @@ Knotenidentität ist explizit, Koordinatengleichheit erzeugt keine Verbindung.
 
 - `computeSurface(network)` liefert `areas: {outer, holes}[]`, Radiusentscheidungen,
   Topologiekonflikte und Geometriehinweise. Ringe sind umlaufend, ohne wiederholten
-  Endpunkt; ihre Kanten bilden die Randverläufe.
+  Endpunkt; ihre Kanten bilden die Randverläufe. `areas` ist die gemeinsame
+  Sperrfläche von Wegen und Wasser. `roadAreas` enthält die Wege;
+  `water.areas` die vereinigten Gewässer und `water.visibleAreas` deren nicht von
+  Wegen verdeckte Teile. `water.drop` ist die Absenkung in Metern.
 - `contains(surface, point)` fragt die Sperrfläche ab.
 - `nearestBoundary(surface, point)` liefert den nächsten Randpunkt,
   lokale normierte Randrichtung, nichtnegativen Abstand und Lochrandkennung;
@@ -93,9 +161,11 @@ müssen den tatsächlichen Abstand zu beiden vollständigen Flanken einhalten. I
 der Wegstreifen; die freiliegenden Kreise und Tangentialpunkte bleiben unverändert. Die lokale Kreisergänzung wird mit den Streifen vereinigt; kein globaler Puffer.
 Polygon-Clipping erhält getrennte Außenflächen, konkave Konturen und Löcher.
 
-`src/view.ts` trianguliert ausschließlich diese Ringe einschließlich Löchern.
-Draufsicht und räumliche Ansicht verwenden dasselbe Three.js-Mesh.
-Es gibt keine zweite Kollisions- oder Renderflächenrechnung.
+`src/view.ts` trianguliert die ausgegebenen Wege- und sichtbaren Wasserringe
+inklusive Löchern. Ihre disjunkten Grundflächen ergeben zusammen dieselbe
+Sperrfläche ohne Doppelzählung. Wasser wird abgesenkt und um senkrechte Ufer
+ergänzt; diese ändern die Grundfläche nicht. Draufsicht und räumliche Ansicht
+verwenden dieselben Three.js-Meshes, keine zweite Kollisionsflächenrechnung.
 
 ## Prüfen
 
@@ -108,7 +178,9 @@ npm run check
 `check` führt Formatprüfung, Typprüfung, Produktionsbuild, Geometrieprüfungen und
 echtes Chromium/WebGL aus. Einzelbefehle: `npm run typecheck`, `npm run build`,
 `npm test`, `npm run test:browser`. CI verwendet dieselben Prüfungen.
-[Feste Abnahme](ACCEPTANCE.md) · [Baseline/Iterationen/Nachweise](evidence/iterations.md).
+[Feste Abnahme](ACCEPTANCE.md) · [Baseline/Iterationen/Nachweise](evidence/iterations.md) ·
+[Wasser-Erweiterung](evidence/water-iterations.md) ·
+[Gemeinsame Vektoren und Prüfungen](evidence/vectors-iterations.md).
 
 ## Grenzen
 
