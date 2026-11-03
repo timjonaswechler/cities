@@ -1,0 +1,86 @@
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+ ❯ tests/geometry.test.ts (19 tests | 5 failed) 239ms
+   ❯ frozen world-coordinate evaluator (19)
+     × G03b arc-length width is not Bézier parameter, including a stationary endpoint 17ms
+     × G07b tapered and curved arm radii follow the actual edges 4ms
+     × G02 cubic S / compound finite, nonempty 23ms
+     × G03 linear width over arc length, not parameter t 0ms
+     × G04 direction reversal preserves curved tapered physical surface 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G03b arc-length width is not Bézier parameter, including a stationary endpoint
+AssertionError: expected 120 to be less than or equal to 0.000001
+ ❯ close tests/geometry.test.ts:6:63
+      4| import { straight,quadratic,cubic,junction,loop,crossing,graph,line } …
+      5| const distanceLiteral=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
+      6| const close=(a:number,b:number,t=1e-6)=>expect(Math.abs(a-b)).toBeLess…
+       |                                                               ^
+      7| function transform(n:Network,angle:number,x:number,y:number) {
+      8|  const f=(p:Point)=>({x:Math.cos(angle)*p.x-Math.sin(angle)*p.y+x,y:Ma…
+ ❯ tests/geometry.test.ts:22:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G07b tapered and curved arm radii follow the actual edges
+AssertionError: expected 0.2 to be less than or equal to 0.000001
+ ❯ close tests/geometry.test.ts:6:63
+      4| import { straight,quadratic,cubic,junction,loop,crossing,graph,line } …
+      5| const distanceLiteral=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
+      6| const close=(a:number,b:number,t=1e-6)=>expect(Math.abs(a-b)).toBeLess…
+       |                                                               ^
+      7| function transform(n:Network,angle:number,x:number,y:number) {
+      8|  const f=(p:Point)=>({x:Math.cos(angle)*p.x-Math.sin(angle)*p.y+x,y:Ma…
+ ❯ tests/geometry.test.ts:29:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G02 cubic S / compound finite, nonempty
+AssertionError: expected 252.14331529081394 to be greater than 300
+ ❯ tests/geometry.test.ts:52:56
+     50|  });
+     51|  it('G02 cubic S / compound finite, nonempty',()=>{
+     52|   const s=computeSurface(cubic()); expect(areaSize(s)).toBeGreaterThan…
+       |                                                        ^
+     53|   expect(s.areas.flatMap(a=>[a.outer,...a.holes]).flat().every(p=>Numb…
+     54|  });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G03 linear width over arc length, not parameter t
+AssertionError: expected 120 to be less than or equal to 0.000001
+ ❯ close tests/geometry.test.ts:6:63
+      4| import { straight,quadratic,cubic,junction,loop,crossing,graph,line } …
+      5| const distanceLiteral=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
+      6| const close=(a:number,b:number,t=1e-6)=>expect(Math.abs(a-b)).toBeLess…
+       |                                                               ^
+      7| function transform(n:Network,angle:number,x:number,y:number) {
+      8|  const f=(p:Point)=>({x:Math.cos(angle)*p.x-Math.sin(angle)*p.y+x,y:Ma…
+ ❯ tests/geometry.test.ts:57:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G04 direction reversal preserves curved tapered physical surface
+AssertionError: expected 275.4688852241778 to be less than or equal to 0.02
+ ❯ close tests/geometry.test.ts:6:63
+      4| import { straight,quadratic,cubic,junction,loop,crossing,graph,line } …
+      5| const distanceLiteral=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
+      6| const close=(a:number,b:number,t=1e-6)=>expect(Math.abs(a-b)).toBeLess…
+       |                                                               ^
+      7| function transform(n:Network,angle:number,x:number,y:number) {
+      8|  const f=(p:Point)=>({x:Math.cos(angle)*p.x-Math.sin(angle)*p.y+x,y:Ma…
+ ❯ tests/geometry.test.ts:69:4
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 14 passed (19)
+   Start at  13:03:01
+   Duration  400ms (tests 80%, transform 15%, import 5%, worker 1%)

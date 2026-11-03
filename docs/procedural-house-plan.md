@@ -1,4 +1,8 @@
-# Neustart: prozedurale 3D-Häuser
+# Historischer Plan: prozedurale 3D-Häuser
+
+**Verworfen:** Dieser Plan beschreibt den Prototyp aus [PR #4](https://github.com/timjonaswechler/cities/pull/4).
+Die Galerie wurde durch den unabhängigen [Wegeditor](../road-editor/README.md) ersetzt.
+Die nachstehenden Angaben sind historisch, keine Anforderungen an den Editor.
 
 **Ausgangsbasis des Neustarts:** `4434217bbec51fca62c0cf72bc74b5ee576eb358`.
 **Abgestimmte Richtung:** eigenständige TypeScript-/Three.js-Browsergalerie; Mittelalter-Fantasy; ausschließlich Haus-Blockouts.
@@ -9,9 +13,9 @@ Einzelne prozedurale **3D-Häuser** sollen später im lokalen Kontext einer Stad
 
 Die Stadt soll später erlaubte Bauflächen, zulässige Nutzungen und lokale Informationen liefern. Der Hausgenerator bestimmt daraus die tatsächliche Hausform und Platzierung. Er darf weder Häuser in beliebige Grundrisse quetschen noch geschützte Flächen überschreiten.
 
-## Aktueller Stand: unabhängige Galerie
+## Historischer Stand: unabhängige Galerie
 
-[Hauslabor](../house-gallery/README.md) implementiert einen eigenen TypeScript-Hausgenerator und eine Three.js-Darstellung, ohne Rust-Abhängigkeit oder Stadtimport.
+[Hauslabor](https://github.com/timjonaswechler/cities/blob/2b02fa1391a254f9836cf4f9f5a4bca9caedcb0e/house-gallery/README.md) implementiert einen eigenen TypeScript-Hausgenerator und eine Three.js-Darstellung, ohne Rust-Abhängigkeit oder Stadtimport.
 
 - 9.136 synthetische Szenarien in elf Gruppen: Straßen, Wege, Kreuzungen, Sackgassen/Höfe, Freiflächen, Fließwasser, Ufer/Inseln sowie Zweifach-/Dreifachkombinationen und bewusste Grenzfälle.
 - Reproduzierbare Seeds und vier einfache Volumenfamilien: Giebelhaus, Stadthaus, Langhaus, Winkelhaus.
@@ -31,7 +35,7 @@ Die endliche Suche ist kein vollständiger geometrischer Lösungsbeweis. Formstu
 
 ## Abnahme
 
-Die [eingefrorene Matrix und Abnahme](../house-gallery/ACCEPTANCE.md) enthält Faktoren, diskrete Ausprägungen, IDs, Seeds, Ausschlüsse sowie technische und subjektive Kriterien. „Keine Variation ausgelassen“ bedeutet vollständige Abdeckung dieses endlichen Katalogs, nicht unendlich vieler möglicher Geometrien.
+Die [eingefrorene Matrix und Abnahme](https://github.com/timjonaswechler/cities/blob/2b02fa1391a254f9836cf4f9f5a4bca9caedcb0e/house-gallery/ACCEPTANCE.md) enthält Faktoren, diskrete Ausprägungen, IDs, Seeds, Ausschlüsse sowie technische und subjektive Kriterien. „Keine Variation ausgelassen“ bedeutet vollständige Abdeckung dieses endlichen Katalogs, nicht unendlich vieler möglicher Geometrien.
 
 Technisch zu prüfen: Determinismus, gültige Geometrie/Meshes, wirkliche Topologien und Breiten, räumliche Einhaltung aller Bauteile, Reaktion auf veränderte lokale Daten, Material-/Wasserhöhen und Browserbedienung. Visuell getrennt: Silhouette, Dachwirkung, Lesbarkeit von Trassen, Wasser und Nachbarn sowie nachvollziehbarer Hausstandort.
 

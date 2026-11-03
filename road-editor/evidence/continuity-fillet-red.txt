@@ -1,0 +1,57 @@
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+ ❯ tests/geometry.test.ts (30 tests | 2 failed) 851ms
+   ❯ frozen world-coordinate evaluator (30)
+     × S5 repeated curved splits and reversal remain numerically stable 106ms
+     × S6 cubic fillet feasibility survives shape-preserving subdivision 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S5 repeated curved splits and reversal remain numerically stable
+AssertionError: expected [ { …(2) }, { …(2) } ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/geometry.test.ts:140:32
+    138|       expect(rotated.areas).toHaveLength(1);
+    139|       const translatedGraph=transform(structuredClone(n),2,7000,9000),…
+    140|       expect(translated.areas).toHaveLength(1);
+       |                                ^
+    141|       close(nearestBoundary(translated,translatedGraph.nodes.find(p=>p…
+    142|       close(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S6 cubic fillet feasibility survives shape-preserving subdivision
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/geometry.test.ts:269:93
+    267|     const n=junction("T",2);n.paths[0].startWidth=4;n.paths[0].endWidt…
+    268|     n.paths[0].segments[0]={kind:"cubic",from:"o",to:"e",c1:{x:10,y:4}…
+    269|     const before=computeSurface(n);expect(before.radii.find(r=>r.reque…
+       |                                                                                             ^
+    270|     splitSegment(n,"E",0,0.1,"split");const after=computeSurface(n);
+    271|     expect(after.radii.find(r=>r.requested===2)?.effective).toBe(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 28 passed (30)
+   Start at  14:00:39
+   Duration  1.02s (tests 92%, transform 5%, import 2%)

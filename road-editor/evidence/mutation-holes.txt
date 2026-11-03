@@ -1,0 +1,57 @@
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+ ❯ tests/geometry.test.ts (19 tests | 2 failed) 272ms
+   ❯ frozen world-coordinate evaluator (19)
+     × G09 union preserves enclosed free region, with independent area oracle 5ms
+     × G15 rigid motion, boundary distance/direction, negative controls 44ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G09 union preserves enclosed free region, with independent area oracle
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/geometry.test.ts:107:91
+    105|  });
+    106|  it('G09 union preserves enclosed free region, with independent area o…
+    107|   const s=computeSurface(loop());expect(s.areas).toHaveLength(1);expec…
+       |                                                                                           ^
+    108|   expect(contains(s,{x:0,y:0})).toBe(false);expect(contains(s,{x:20,y:…
+    109|   // Bevel outer corners: 44² - 4*(2*2/2) - 36².
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > G15 rigid motion, boundary distance/direction, negative controls
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/geometry.test.ts:158:83
+    156|   const hit=nearestBoundary(computeSurface(straight()),{x:0,y:10})!;
+    157|   close(hit.distance,7);close(hit.point.y,3);close(Math.abs(hit.direct…
+    158|   const hole=nearestBoundary(computeSurface(loop()),{x:0,y:0})!;expect…
+       |                                                                                   ^
+    159|   expect(Math.abs(areaSize(computeSurface(straight()))-241)).toBeGreat…
+    160|   expect(contains(computeSurface(loop()),{x:0,y:0})).not.toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed (19)
+   Start at  13:03:02
+   Duration  414ms (tests 87%, transform 8%, import 4%, worker 1%)

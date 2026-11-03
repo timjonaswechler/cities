@@ -1,0 +1,199 @@
+
+> parametric-road-editor@1.0.0 test:browser
+> playwright test
+
+[WebServer] 12:54:41 PM [vite] (client) Pre-transform error: Failed to load url /src/main.ts (resolved id: /src/main.ts). Does the file exist?
+
+Running 4 tests using 1 worker
+
+[WebServer] 12:54:42 PM [vite] (client) Pre-transform error: Failed to load url /src/main.ts (resolved id: /src/main.ts). Does the file exist?
+  ✘  1 tests/browser/editor.spec.ts:12:1 › B01 draw, select, anchor/control drag, numeric width/position, undo/redo (5.3s)
+[WebServer] 12:54:48 PM [vite] (client) Pre-transform error: Failed to load url /src/main.ts (resolved id: /src/main.ts). Does the file exist?
+  ✘  2 tests/browser/editor.spec.ts:32:1 › B02 docking, shared move, detach/connect, shape-preserving segment insertion (5.1s)
+[WebServer] 12:54:53 PM [vite] (client) Pre-transform error: Failed to load url /src/main.ts (resolved id: /src/main.ts). Does the file exist?
+  ✘  3 tests/browser/editor.spec.ts:45:1 › B03 local radius, impossible radius feedback, parameters survive save/load (5.1s)
+[WebServer] 12:54:59 PM [vite] (client) Pre-transform error: Failed to load url /src/main.ts (resolved id: /src/main.ts). Does the file exist?
+  ✘  4 tests/browser/editor.spec.ts:58:1 › B04 holes, conflict visibility, 3D uses identical surface, pan/zoom do not edit (5.1s)
+
+
+  1) tests/browser/editor.spec.ts:12:1 › B01 draw, select, anchor/control drag, numeric width/position, undo/redo
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#editor')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('#editor') with timeout 5000ms
+      - waiting for locator('#editor')
+
+
+       8 | async function drag(p:Page,a:{x:number;y:number},b:{x:number;y:number}){const from=await at(p,a.x,a.y),to=await at(p,b.x,b.y);await p.mouse.move(from.x,from.y);await p.mouse.down();await p.mouse.move(to.x,to.y,{steps:8});await p.mouse.up();}
+       9 | const errors=new WeakMap<Page,string[]>();
+    > 10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+         |                                                                                                                                                                                                                                             ^
+      11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:10:237
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    + ]
+
+       9 | const errors=new WeakMap<Page,string[]>();
+      10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+    > 11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+         |                                                         ^
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+      14 |  await page.locator('#kind').selectOption('quadratic');await page.getByRole('button',{name:'Zeichnen',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:11:57
+
+    Error Context: test-results/editor-B01-draw-select-anc-7981e-ic-width-position-undo-redo/error-context.md
+
+  2) tests/browser/editor.spec.ts:32:1 › B02 docking, shared move, detach/connect, shape-preserving segment insertion
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#editor')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('#editor') with timeout 5000ms
+      - waiting for locator('#editor')
+
+
+       8 | async function drag(p:Page,a:{x:number;y:number},b:{x:number;y:number}){const from=await at(p,a.x,a.y),to=await at(p,b.x,b.y);await p.mouse.move(from.x,from.y);await p.mouse.down();await p.mouse.move(to.x,to.y,{steps:8});await p.mouse.up();}
+       9 | const errors=new WeakMap<Page,string[]>();
+    > 10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+         |                                                                                                                                                                                                                                             ^
+      11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:10:237
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    + ]
+
+       9 | const errors=new WeakMap<Page,string[]>();
+      10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+    > 11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+         |                                                         ^
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+      14 |  await page.locator('#kind').selectOption('quadratic');await page.getByRole('button',{name:'Zeichnen',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:11:57
+
+    Error Context: test-results/editor-B02-docking-shared--6b8ea-reserving-segment-insertion/error-context.md
+
+  3) tests/browser/editor.spec.ts:45:1 › B03 local radius, impossible radius feedback, parameters survive save/load
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#editor')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('#editor') with timeout 5000ms
+      - waiting for locator('#editor')
+
+
+       8 | async function drag(p:Page,a:{x:number;y:number},b:{x:number;y:number}){const from=await at(p,a.x,a.y),to=await at(p,b.x,b.y);await p.mouse.move(from.x,from.y);await p.mouse.down();await p.mouse.move(to.x,to.y,{steps:8});await p.mouse.up();}
+       9 | const errors=new WeakMap<Page,string[]>();
+    > 10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+         |                                                                                                                                                                                                                                             ^
+      11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:10:237
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    + ]
+
+       9 | const errors=new WeakMap<Page,string[]>();
+      10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+    > 11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+         |                                                         ^
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+      14 |  await page.locator('#kind').selectOption('quadratic');await page.getByRole('button',{name:'Zeichnen',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:11:57
+
+    Error Context: test-results/editor-B03-local-radius-im-de623-arameters-survive-save-load/error-context.md
+
+  4) tests/browser/editor.spec.ts:58:1 › B04 holes, conflict visibility, 3D uses identical surface, pan/zoom do not edit
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#editor')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('#editor') with timeout 5000ms
+      - waiting for locator('#editor')
+
+
+       8 | async function drag(p:Page,a:{x:number;y:number},b:{x:number;y:number}){const from=await at(p,a.x,a.y),to=await at(p,b.x,b.y);await p.mouse.move(from.x,from.y);await p.mouse.down();await p.mouse.move(to.x,to.y,{steps:8});await p.mouse.up();}
+       9 | const errors=new WeakMap<Page,string[]>();
+    > 10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+         |                                                                                                                                                                                                                                             ^
+      11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:10:237
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    + ]
+
+       9 | const errors=new WeakMap<Page,string[]>();
+      10 | test.beforeEach(async({page})=>{const e:string[]=[];errors.set(page,e);page.on('pageerror',x=>e.push(x.message));page.on('console',m=>{if(m.type()==='error')e.push(m.text());});await page.goto('/');await expect(page.locator('#editor')).toBeVisible();});
+    > 11 | test.afterEach(async({page})=>{expect(errors.get(page)).toEqual([]);});
+         |                                                         ^
+      12 | test('B01 draw, select, anchor/control drag, numeric width/position, undo/redo',async({page})=>{
+      13 |  await page.getByRole('button',{name:'Neu',exact:true}).click();
+      14 |  await page.locator('#kind').selectOption('quadratic');await page.getByRole('button',{name:'Zeichnen',exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:11:57
+
+    Error Context: test-results/editor-B04-holes-conflict--be1a4-urface-pan-zoom-do-not-edit/error-context.md
+
+  4 failed
+    tests/browser/editor.spec.ts:12:1 › B01 draw, select, anchor/control drag, numeric width/position, undo/redo
+    tests/browser/editor.spec.ts:32:1 › B02 docking, shared move, detach/connect, shape-preserving segment insertion
+    tests/browser/editor.spec.ts:45:1 › B03 local radius, impossible radius feedback, parameters survive save/load
+    tests/browser/editor.spec.ts:58:1 › B04 holes, conflict visibility, 3D uses identical surface, pan/zoom do not edit

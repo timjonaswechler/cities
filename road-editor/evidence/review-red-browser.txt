@@ -1,0 +1,64 @@
+
+> parametric-road-editor@1.0.0 test:browser
+> playwright test
+
+
+Running 6 tests using 1 worker
+
+[WebServer] 1:13:55 PM [vite] (client) [Unhandled error] TypeError: Cannot read properties of undefined (reading 'control')
+[WebServer]  > render src/main.ts:182:50
+[WebServer]     180 |      const s = p.segments[selection.handle.segment],
+[WebServer]     181 |        key = selection.handle.key,
+[WebServer]     182 |        q = (s as unknown as Record<string, Point>)[key];
+[WebServer]         |                                                    ^
+[WebServer]     183 |      if (q)
+[WebServer]     184 |        panel += `<div class="section"><h3>Kontrollgriff ${key}</h3><div class="row">${input("Griff X (m)", "handleX", ...
+[WebServer]  > HTMLButtonElement.<anonymous> src/main.ts:551:2
+[WebServer]
+  ✘  1 tests/browser/editor.spec.ts:68:1 › S1 undo reconciles controls on removed segments (3.0s)
+  ✓  2 tests/browser/editor.spec.ts:83:1 › B01 draw, select, anchor/control drag, numeric width/position, undo/redo (5.9s)
+  ✓  3 tests/browser/editor.spec.ts:126:1 › B02 docking, shared move, detach/connect, shape-preserving segment insertion (4.1s)
+  ✓  4 tests/browser/editor.spec.ts:168:1 › B03 local radius, impossible radius feedback, parameters survive save/load (2.0s)
+  ✓  5 tests/browser/editor.spec.ts:208:1 › B04 holes, conflict visibility, 3D uses identical surface, pan/zoom do not edit (1.6s)
+  ✓  6 tests/browser/editor.spec.ts:238:1 › B05 mixed compound creation, numeric handles, reverse/delete, rejected edits are atomic (2.6s)
+
+
+  1) tests/browser/editor.spec.ts:68:1 › S1 undo reconciles controls on removed segments ───────────
+
+    Error: expect(received).toBeUndefined()
+
+    Received: {"key": "control", "segment": 1}
+
+      76 |   await page.locator('[data-handle="control"][data-segment="1"]').click();
+      77 |   await page.getByRole("button",{name:"Undo",exact:true}).click();
+    > 78 |   const s=await snapshot(page);expect(s.network.paths[0].segments).toHaveLength(1);expect(s.selection.handle).toBeUndefined();
+         |                                                                                                               ^
+      79 |   await expect(page.getByLabel("Griff X (m)")).toHaveCount(0);
+      80 |   await page.getByRole("button",{name:"Redo",exact:true}).click();
+      81 |   expect((await snapshot(page)).network.paths[0].segments).toHaveLength(2);
+        at <repo>/road-editor/tests/browser/editor.spec.ts:78:111
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Cannot read properties of undefined (reading 'control')",
+    + ]
+
+      64 | });
+      65 | test.afterEach(async ({ page }) => {
+    > 66 |   expect(errors.get(page)).toEqual([]);
+         |                            ^
+      67 | });
+      68 | test("S1 undo reconciles controls on removed segments",async({page})=>{
+      69 |   await page.getByRole("button",{name:"Neu",exact:true}).click();
+        at <repo>/road-editor/tests/browser/editor.spec.ts:66:28
+
+    Error Context: test-results/editor-S1-undo-reconciles-controls-on-removed-segments/error-context.md
+
+  1 failed
+    tests/browser/editor.spec.ts:68:1 › S1 undo reconciles controls on removed segments ────────────
+  5 passed (20.6s)
