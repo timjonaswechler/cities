@@ -1,0 +1,445 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+ ❯ tests/scene.test.ts (2 tests | 1 failed) 155ms
+   ❯ actual Three.js geometry and materials (2)
+     × has finite vertices/normals, valid indices, and nondegenerate triangles in all fixed visual scenes 147ms
+ ❯ tests/matrix.test.ts (15 tests | 5 failed) 12569ms
+   ❯ frozen finite catalog (15)
+     × junctions: every matrix entry is finite, deterministic, correctly described, and collision-safe 1204ms
+     × shores: every matrix entry is finite, deterministic, correctly described, and collision-safe 378ms
+     × road-water: every matrix entry is finite, deterministic, correctly described, and collision-safe 2000ms
+     × mixed: every matrix entry is finite, deterministic, correctly described, and collision-safe 2051ms
+     × different labeled width profiles really produce different local geometry for every motif 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/matrix.test.ts > frozen finite catalog > junctions: every matrix entry is finite, deterministic, correctly described, and collision-safe
+AssertionError: junctions~six~r10~0~0~1~none~dense: neighbor count not represented
+junctions~six~r10~1~0~1~none~dense: neighbor count not represented
+junctions~six~r10~2~0~1~none~dense: neighbor count not represented
+junctions~six~r10~3~0~1~none~dense: neighbor count not represented
+junctions~six~r3-9~0~0~1~none~dense: neighbor count not represented
+junctions~six~r3-9~1~0~1~none~dense: neighbor count not represented
+junctions~six~r3-9~2~0~1~none~dense: neighbor count not represented
+junctions~six~r3-9~3~0~1~none~dense: neighbor count not represented: expected [ …(8) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "junctions~six~r10~0~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r10~1~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r10~2~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r10~3~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r3-9~0~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r3-9~1~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r3-9~2~0~1~none~dense: neighbor count not represented",
++   "junctions~six~r3-9~3~0~1~none~dense: neighbor count not represented",
++ ]
+
+ ❯ tests/matrix.test.ts:96:56
+     94|     }
+     95|     summary[group.id] = { accepted, rejected: rejected.length, rejecte…
+     96|     expect(failures, failures.slice(0, 20).join('\n')).toEqual([]);
+       |                                                        ^
+     97|   });
+     98|   it('different labeled width profiles really produce different local …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/matrix.test.ts > frozen finite catalog > shores: every matrix entry is finite, deterministic, correctly described, and collision-safe
+AssertionError: shores~island~w7~0~0.6~0.75~none~dense: neighbor count not represented
+shores~island~w7~0~0.6~1~none~dense: neighbor count not represented
+shores~island~w7~0~0.6~1.3~none~dense: neighbor count not represented
+shores~island~w7~0~1.4~0.75~none~dense: neighbor count not represented
+shores~island~w7~0~1.4~1~none~dense: neighbor count not represented
+shores~island~w7~0~1.4~1.3~none~dense: neighbor count not represented
+shores~island~w7~0~2.4~0.75~none~dense: neighbor count not represented
+shores~island~w7~0~2.4~1~none~dense: neighbor count not represented
+shores~island~w7~0~2.4~1.3~none~dense: neighbor count not represented
+shores~island~w7~1~0.6~0.75~none~dense: neighbor count not represented
+shores~island~w7~1~0.6~1~none~dense: neighbor count not represented
+shores~island~w7~1~0.6~1.3~none~dense: neighbor count not represented
+shores~island~w7~1~1.4~0.75~none~dense: neighbor count not represented
+shores~island~w7~1~1.4~1~none~dense: neighbor count not represented
+shores~island~w7~1~1.4~1.3~none~dense: neighbor count not represented
+shores~island~w7~1~2.4~0.75~none~dense: neighbor count not represented
+shores~island~w7~1~2.4~1~none~dense: neighbor count not represented
+shores~island~w7~1~2.4~1.3~none~dense: neighbor count not represented: expected [ …(18) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "shores~island~w7~0~0.6~0.75~none~dense: neighbor count not represented",
++   "shores~island~w7~0~0.6~1~none~dense: neighbor count not represented",
++   "shores~island~w7~0~0.6~1.3~none~dense: neighbor count not represented",
++   "shores~island~w7~0~1.4~0.75~none~dense: neighbor count not represented",
++   "shores~island~w7~0~1.4~1~none~dense: neighbor count not represented",
++   "shores~island~w7~0~1.4~1.3~none~dense: neighbor count not represented",
++   "shores~island~w7~0~2.4~0.75~none~dense: neighbor count not represented",
++   "shores~island~w7~0~2.4~1~none~dense: neighbor count not represented",
++   "shores~island~w7~0~2.4~1.3~none~dense: neighbor count not represented",
++   "shores~island~w7~1~0.6~0.75~none~dense: neighbor count not represented",
++   "shores~island~w7~1~0.6~1~none~dense: neighbor count not represented",
++   "shores~island~w7~1~0.6~1.3~none~dense: neighbor count not represented",
++   "shores~island~w7~1~1.4~0.75~none~dense: neighbor count not represented",
++   "shores~island~w7~1~1.4~1~none~dense: neighbor count not represented",
++   "shores~island~w7~1~1.4~1.3~none~dense: neighbor count not represented",
++   "shores~island~w7~1~2.4~0.75~none~dense: neighbor count not represented",
++   "shores~island~w7~1~2.4~1~none~dense: neighbor count not represented",
++   "shores~island~w7~1~2.4~1.3~none~dense: neighbor count not represented",
++ ]
+
+ ❯ tests/matrix.test.ts:96:56
+     94|     }
+     95|     summary[group.id] = { accepted, rejected: rejected.length, rejecte…
+     96|     expect(failures, failures.slice(0, 20).join('\n')).toEqual([]);
+       |                                                        ^
+     97|   });
+     98|   it('different labeled width profiles really produce different local …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/matrix.test.ts > frozen finite catalog > road-water: every matrix entry is finite, deterministic, correctly described, and collision-safe
+AssertionError: road-water~tributary~r10+w7~0~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w7~0~1.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w7~0~2.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w7~1~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w7~1~1.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w7~1~2.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w12~0~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w12~0~1.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w12~0~2.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w12~1~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w12~1~1.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w12~1~2.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w3-10~0~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w3-10~0~1.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w3-10~0~2.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w3-10~1~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w3-10~1~1.4~1~none~dense: neighbor count not represented
+road-water~tributary~r10+w3-10~1~2.4~1~none~dense: neighbor count not represented
+road-water~tributary~r3-9+w7~0~0.6~1~none~dense: neighbor count not represented
+road-water~tributary~r3-9+w7~0~1.4~1~none~dense: neighbor count not represented: expected [ …(36) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "road-water~tributary~r10+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r10+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "road-water~tributary~r3-9+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++ ]
+
+ ❯ tests/matrix.test.ts:96:56
+     94|     }
+     95|     summary[group.id] = { accepted, rejected: rejected.length, rejecte…
+     96|     expect(failures, failures.slice(0, 20).join('\n')).toEqual([]);
+       |                                                        ^
+     97|   });
+     98|   it('different labeled width profiles really produce different local …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/matrix.test.ts > frozen finite catalog > mixed: every matrix entry is finite, deterministic, correctly described, and collision-safe
+AssertionError: mixed~island-access~r3+w3~0~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3~0~1.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3~0~2.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3~1~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3~1~1.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3~1~2.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w7~0~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w7~0~1.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w7~0~2.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w7~1~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w7~1~1.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w7~1~2.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w12~0~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w12~0~1.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w12~0~2.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w12~1~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w12~1~1.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w12~1~2.4~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3-10~0~0.6~1~none~dense: neighbor count not represented
+mixed~island-access~r3+w3-10~0~1.4~1~none~dense: neighbor count not represented: expected [ …(180) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "mixed~island-access~r3+w3~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r6+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r10+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~island-access~r3-9+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~court-water~r10+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r10+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~market-water~r3-9+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w7~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w7~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w7~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w7~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w7~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w7~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w12~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w12~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w12~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w12~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w12~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w12~1~2.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w3-10~0~0.6~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w3-10~0~1.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w3-10~0~2.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w3-10~1~0.6~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w3-10~1~1.4~1~none~dense: neighbor count not represented",
++   "mixed~canal-corner~r10+w3-10~1~2.4~1~none~dense: neighbor count not represented",
++ ]
+
+ ❯ tests/matrix.test.ts:96:56
+     94|     }
+     95|     summary[group.id] = { accepted, rejected: rejected.length, rejecte…
+     96|     expect(failures, failures.slice(0, 20).join('\n')).toEqual([]);
+       |                                                        ^
+     97|   });
+     98|   it('different labeled width profiles really produce different local …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/matrix.test.ts > frozen finite catalog > different labeled width profiles really produce different local geometry for every motif
+AssertionError: expected [ 'mixed/island-access' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "mixed/island-access",
++ ]
+
+ ❯ tests/matrix.test.ts:105:22
+    103|       if (new Set(geometry).size !== group.widths.length) failures.pus…
+    104|     }
+    105|     expect(failures).toEqual([]);
+       |                      ^
+    106|   });
+    107|   it('every ordinary motif has a buildable canonical form; all rejecti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/scene.test.ts > actual Three.js geometry and materials > has finite vertices/normals, valid indices, and nondegenerate triangles in all fixed visual scenes
+AssertionError: paths~s-left~p1.5~0~0~1~none~dense degenerate mesh: expected 0 to be greater than 1e-7
+ ❯ tests/scene.test.ts:27:83
+     25|           const b = new THREE.Vector3().fromBufferAttribute(position, …
+     26|           const c = new THREE.Vector3().fromBufferAttribute(position, …
+     27|           expect(b.sub(a).cross(c.sub(a)).length(), spec.id + ' degene…
+       |                                                                                   ^
+     28|         }
+     29|       });
+ ❯ Mesh.traverse node_modules/three/build/three.core.js:12978:3
+ ❯ Scene.traverse node_modules/three/build/three.core.js:12984:18
+ ❯ tests/scene.test.ts:13:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  6 failed | 20 passed (26)
+   Start at  02:52:07
+   Duration  12.73s (tests 99%, import 1%, transform 1%)

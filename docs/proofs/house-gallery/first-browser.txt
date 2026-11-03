@@ -1,0 +1,134 @@
+
+> fantasy-house-gallery@0.1.0 test:browser
+> playwright test --workers=1
+
+
+Running 7 tests using 1 worker
+
+  ✘  1 tests/browser/gallery.spec.ts:22:1 › starts with actual WebGL thumbnails and navigates every theme without errors (31.2s)
+  ✘  2 tests/browser/gallery.spec.ts:37:1 › filters independent widths/neighbors, searches, paginates, and restores the URL (32.1s)
+  ✓  3 tests/browser/gallery.spec.ts:63:1 › seed zero, house family, and camera changes are reproducible rather than just labels (29.4s)
+  ✘  4 tests/browser/gallery.spec.ts:80:1 › single view supports orbit, zoom, pan, reset, export, deep link, and Escape (14.5s)
+  ✓  5 tests/browser/gallery.spec.ts:114:1 › matrix explains every axis, exports the complete catalog, and closes accessibly (8.2s)
+  ✘  6 tests/browser/gallery.spec.ts:129:1 › mobile remains usable without document overflow, including the single view (5.4s)
+  ✓  7 tests/browser/gallery.spec.ts:140:1 › fixed visual corpus: every theme, water/road/path combinations, island, and rejection (2.0m)
+
+
+  1) tests/browser/gallery.spec.ts:22:1 › starts with actual WebGL thumbnails and navigates every theme without errors
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#gallery')
+    Expected: "false"
+    Received: "true"
+
+    Call log:
+      - Expect "toHaveAttribute" locator('#gallery') with timeout 90000ms
+      - waiting for locator('#gallery')
+        9 × locator resolved to <div id="gallery" class="gallery" aria-busy="true" aria-label="3D-Hausstudien">…</div>
+          - unexpected value "true"
+      - Test timeout of 30000ms exceeded.
+
+
+      13 | test.afterEach(() => { expect(errors, 'No console/runtime errors in the tested flow').toEqual([]); });
+      14 | async function ready(page: Page): Promise<void> {
+    > 15 |   await expect(page.locator('#gallery')).toHaveAttribute('aria-busy', 'false', { timeout: 90_000 });
+         |                                          ^
+      16 |   await expect(page.locator('[data-result="render-error"]')).toHaveCount(0);
+      17 |   await expect(page.locator('#error-banner')).toBeHidden();
+      18 |   const cards = page.getByTestId('study-card');
+        at ready (<repo>/house-gallery/tests/browser/gallery.spec.ts:15:42)
+        at <repo>/house-gallery/tests/browser/gallery.spec.ts:29:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gallery-starts-with-actual-a9e26--every-theme-without-errors/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gallery-starts-with-actual-a9e26--every-theme-without-errors/error-context.md
+
+  2) tests/browser/gallery.spec.ts:37:1 › filters independent widths/neighbors, searches, paginates, and restores the URL
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#gallery')
+    Expected: "false"
+    Received: "true"
+
+    Call log:
+      - Expect "toHaveAttribute" locator('#gallery') with timeout 90000ms
+      - waiting for locator('#gallery')
+        9 × locator resolved to <div id="gallery" class="gallery" aria-busy="true" aria-label="3D-Hausstudien">…</div>
+          - unexpected value "true"
+      - Test timeout of 30000ms exceeded.
+
+
+      13 | test.afterEach(() => { expect(errors, 'No console/runtime errors in the tested flow').toEqual([]); });
+      14 | async function ready(page: Page): Promise<void> {
+    > 15 |   await expect(page.locator('#gallery')).toHaveAttribute('aria-busy', 'false', { timeout: 90_000 });
+         |                                          ^
+      16 |   await expect(page.locator('[data-result="render-error"]')).toHaveCount(0);
+      17 |   await expect(page.locator('#error-banner')).toBeHidden();
+      18 |   const cards = page.getByTestId('study-card');
+        at ready (<repo>/house-gallery/tests/browser/gallery.spec.ts:15:42)
+        at <repo>/house-gallery/tests/browser/gallery.spec.ts:59:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gallery-filters-independen-068ac-inates-and-restores-the-URL/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gallery-filters-independen-068ac-inates-and-restores-the-URL/error-context.md
+
+  3) tests/browser/gallery.spec.ts:80:1 › single view supports orbit, zoom, pan, reset, export, deep link, and Escape
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      109 |   expect(page.url()).toBe(url);
+      110 |   await page.keyboard.press('Escape'); await expect(dialog).toBeHidden();
+    > 111 |   expect(new URL(page.url()).searchParams.has('case')).toBe(false);
+          |                                                        ^
+      112 | });
+      113 |
+      114 | test('matrix explains every axis, exports the complete catalog, and closes accessibly', async ({ page }) => {
+        at <repo>/house-gallery/tests/browser/gallery.spec.ts:111:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gallery-single-view-suppor-b5ff8-export-deep-link-and-Escape/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gallery-single-view-suppor-b5ff8-export-deep-link-and-Escape/error-context.md
+
+  4) tests/browser/gallery.spec.ts:129:1 › mobile remains usable without document overflow, including the single view
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      130 |   await page.setViewportSize({ width: 390, height: 844 });
+      131 |   await page.goto('/?seed=42'); await ready(page);
+    > 132 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+          |                                                                                         ^
+      133 |   await page.getByTestId('study-card').first().click();
+      134 |   await expect(page.locator('#inspector-canvas canvas')).toBeVisible();
+      135 |   expect(await page.evaluate(() => document.querySelector('#inspector-dialog')!.scrollWidth <= innerWidth)).toBe(true);
+        at <repo>/house-gallery/tests/browser/gallery.spec.ts:132:89
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gallery-mobile-remains-usa-098b3-w-including-the-single-view/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gallery-mobile-remains-usa-098b3-w-including-the-single-view/error-context.md
+
+  4 failed
+    tests/browser/gallery.spec.ts:22:1 › starts with actual WebGL thumbnails and navigates every theme without errors
+    tests/browser/gallery.spec.ts:37:1 › filters independent widths/neighbors, searches, paginates, and restores the URL
+    tests/browser/gallery.spec.ts:80:1 › single view supports orbit, zoom, pan, reset, export, deep link, and Escape
+    tests/browser/gallery.spec.ts:129:1 › mobile remains usable without document overflow, including the single view
+  3 passed (4.1m)

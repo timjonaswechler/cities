@@ -1,0 +1,84 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+ ❯ tests/topology.test.ts (68 tests | 5 failed) 2073ms
+   ❯ geometry-derived topology, not titles or declared arm counts (68)
+     × streets/hairpin-right: signed shape contract 4ms
+     × paths/hairpin-right: signed shape contract 1ms
+     × deadend/court: real terminal and access 1ms
+     × road-water/quay-end: intersections versus parallel routes at every width pair 1ms
+     × path-water/quay-end: intersections versus parallel routes at every width pair 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > streets/hairpin-right: signed shape contract
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > paths/hairpin-right: signed shape contract
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ assertLine tests/topology.test.ts:39:45
+     37|   } else {
+     38|     expect(angles.length).toBeGreaterThan(3);
+     39|     expect(angles.every(a => a * sign > 0)).toBe(true);
+       |                                             ^
+     40|     if (kind.startsWith('hairpin')) expect(Math.abs(total) * 180 / Mat…
+     41|     else expect(Math.abs(total) * 180 / Math.PI).toBeGreaterThan(90);
+ ❯ tests/topology.test.ts:149:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > deadend/court: real terminal and access
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ assertDeadend tests/topology.test.ts:78:62
+     76|     const square = scenario.surfaces.filter(s => s.kind === 'square').…
+     77|     const road = scenario.surfaces.filter(s => s.kind === 'road' || s.…
+     78|     expect(square.some(a => road.some(b => overlaps(a, b)))).toBe(true…
+       |                                                              ^
+     79|   }
+     80|   if (kind === 'plain' || kind === 'bulb') {
+ ❯ tests/topology.test.ts:155:135
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > road-water/quay-end: intersections versus parallel routes at every width pair
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > path-water/quay-end: intersections versus parallel routes at every width pair
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ assertCombination tests/topology.test.ts:113:80
+    111|     const roadPolygons = scenario.surfaces.filter(s => s.kind === 'roa…
+    112|     const waterPolygons = scenario.surfaces.filter(s => s.kind === 'wa…
+    113|     expect(roadPolygons.every(a => waterPolygons.every(b => !overlaps(…
+       |                                                                                ^
+    114|   } else if (kind === 'tributary') {
+    115|     expect(network(water).nodes.filter(n => n.degree === 3)).toHaveLen…
+ ❯ tests/topology.test.ts:158:153
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  5 failed | 100 passed (105)
+   Start at  03:16:58
+   Duration  21.37s (tests 99%)

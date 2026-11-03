@@ -1,0 +1,60 @@
+{
+  "seed": 42,
+  "groups": {
+    "streets": {
+      "cases": 312,
+      "triangles": 50466,
+      "failures": []
+    },
+    "paths": {
+      "cases": 312,
+      "triangles": 48624,
+      "failures": []
+    },
+    "junctions": {
+      "cases": 480,
+      "triangles": 37653,
+      "failures": []
+    },
+    "deadends": {
+      "cases": 216,
+      "triangles": 17694,
+      "failures": []
+    },
+    "spaces": {
+      "cases": 324,
+      "triangles": 21378,
+      "failures": []
+    },
+    "waterways": {
+      "cases": 720,
+      "triangles": 397152,
+      "failures": []
+    },
+    "shores": {
+      "cases": 432,
+      "triangles": 59976,
+      "failures": []
+    },
+    "road-water": {
+      "cases": 2304,
+      "triangles": 178272,
+      "failures": []
+    },
+    "path-water": {
+      "cases": 2304,
+      "triangles": 185340,
+      "failures": []
+    },
+    "mixed": {
+      "cases": 1728,
+      "triangles": 180444,
+      "failures": []
+    },
+    "limits": {
+      "cases": 4,
+      "triangles": 60,
+      "failures": []
+    }
+  }
+}

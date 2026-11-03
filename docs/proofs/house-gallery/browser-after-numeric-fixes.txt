@@ -1,0 +1,16 @@
+
+> fantasy-house-gallery@0.1.0 test:browser
+> playwright test --workers=1
+
+
+Running 7 tests using 1 worker
+
+  ✓  1 tests/browser/gallery.spec.ts:22:1 › starts with actual WebGL thumbnails and navigates every theme without errors (57.7s)
+  ✓  2 tests/browser/gallery.spec.ts:37:1 › filters independent widths/neighbors, searches, paginates, and restores the URL (30.4s)
+  ✓  3 tests/browser/gallery.spec.ts:63:1 › seed zero, house family, and camera changes are reproducible rather than just labels (28.5s)
+  ✓  4 tests/browser/gallery.spec.ts:80:1 › single view supports orbit, zoom, pan, reset, export, deep link, and Escape (14.4s)
+  ✓  5 tests/browser/gallery.spec.ts:114:1 › matrix explains every axis, exports the complete catalog, and closes accessibly (5.9s)
+  ✓  6 tests/browser/gallery.spec.ts:129:1 › mobile remains usable without document overflow, including the single view (5.9s)
+  ✓  7 tests/browser/gallery.spec.ts:140:1 › fixed visual corpus: every theme, water/road/path combinations, island, and rejection (2.0m)
+
+  7 passed (4.4m)

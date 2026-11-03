@@ -1,0 +1,35 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+ ❯ tests/scene.test.ts (2 tests | 1 failed) 208ms
+   ❯ actual Three.js geometry and materials (2)
+     × has finite vertices/normals, valid indices, and nondegenerate triangles in all fixed visual scenes 201ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/scene.test.ts > actual Three.js geometry and materials > has finite vertices/normals, valid indices, and nondegenerate triangles in all fixed visual scenes
+Error: Unable to find segment #11266 [-6.38581929876693, -6.574025148547634] -> [-6.060660171779821, -7.060660171779821] in SweepLine tree.
+ ❯ SweepLine.process node_modules/polygon-clipping/dist/polygon-clipping.cjs.js:1553:22
+ ❯ Operation.run node_modules/polygon-clipping/dist/polygon-clipping.cjs.js:1750:35
+ ❯ Proxy.union node_modules/polygon-clipping/dist/polygon-clipping.cjs.js:1776:20
+ ❯ union src/scene.ts:16:41
+     14|   if (!polygons.length) return [];
+     15|   const converted = polygons.map(toClip);
+     16|   return clipping.intersection(clipping.union(converted[0], ...convert…
+       |                                         ^
+     17| }
+     18| function shapes(polygons: MultiPolygon): THREE.Shape[] {
+ ❯ createScene src/scene.ts:110:20
+ ❯ tests/scene.test.ts:12:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 25 passed (26)
+   Start at  03:01:38
+   Duration  13.90s (tests 99%, import 1%)

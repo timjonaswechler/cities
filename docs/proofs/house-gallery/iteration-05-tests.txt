@@ -1,0 +1,33 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+ ❯ tests/scene.test.ts (2 tests | 1 failed) 149ms
+   ❯ actual Three.js geometry and materials (2)
+     × has finite vertices/normals, valid indices, and nondegenerate triangles in all fixed visual scenes 140ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/scene.test.ts > actual Three.js geometry and materials > has finite vertices/normals, valid indices, and nondegenerate triangles in all fixed visual scenes
+AssertionError: paths~s-left~p1.5~0~0~1~none~dense degenerate mesh: expected 0 to be greater than 1e-7
+ ❯ tests/scene.test.ts:27:83
+     25|           const b = new THREE.Vector3().fromBufferAttribute(position, …
+     26|           const c = new THREE.Vector3().fromBufferAttribute(position, …
+     27|           expect(b.sub(a).cross(c.sub(a)).length(), spec.id + ' degene…
+       |                                                                                   ^
+     28|         }
+     29|       });
+ ❯ Mesh.traverse node_modules/three/build/three.core.js:12978:3
+ ❯ Scene.traverse node_modules/three/build/three.core.js:12984:18
+ ❯ tests/scene.test.ts:13:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 25 passed (26)
+   Start at  03:00:52
+   Duration  13.86s (tests 99%, import 1%, transform 1%)

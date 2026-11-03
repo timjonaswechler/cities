@@ -1,0 +1,61 @@
+
+> fantasy-house-gallery@0.1.0 check
+> npm run build && npm test && npm run test:browser
+
+
+> fantasy-house-gallery@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 15 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.91 kB │ gzip:   0.57 kB
+dist/assets/index-BCYMWdnA.css   18.69 kB │ gzip:   5.05 kB
+dist/assets/index-BSqlPmd6.js   664.86 kB │ gzip: 174.00 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 155ms
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+
+ Test Files  7 passed (7)
+      Tests  113 passed (113)
+   Start at  03:49:20
+   Duration  21.52s (tests 99%)
+
+
+> fantasy-house-gallery@0.1.0 test:browser
+> playwright test
+
+
+Running 16 tests using 1 worker
+
+  ✓   1 tests/browser/context.spec.ts:51:3 › truthful context label: space-none (5.4s)
+  ✓   2 tests/browser/context.spec.ts:51:3 › truthful context label: space-road (3.1s)
+  ✓   3 tests/browser/context.spec.ts:51:3 › truthful context label: space-path (3.0s)
+  ✓   4 tests/browser/context.spec.ts:51:3 › truthful context label: tiny (3.0s)
+  ✓   5 tests/browser/context.spec.ts:51:3 › truthful context label: flooded (2.9s)
+  ✓   6 tests/browser/context.spec.ts:51:3 › truthful context label: pond (3.1s)
+  ✓   7 tests/browser/context.spec.ts:51:3 › truthful context label: flow (3.0s)
+  ✓   8 tests/browser/context.spec.ts:74:1 › truthful context filters and search: no neutral road or pond width is treated as a real route (22.8s)
+  ✓   9 tests/browser/gallery.spec.ts:30:1 › starts with actual WebGL thumbnails and navigates every theme without errors (57.0s)
+  ✓  10 tests/browser/gallery.spec.ts:57:1 › filters independent widths/neighbors, searches, paginates, and restores the URL (33.3s)
+  ✓  11 tests/browser/gallery.spec.ts:95:1 › seed zero, house family, and camera changes are reproducible rather than just labels (31.3s)
+  ✓  12 tests/browser/gallery.spec.ts:140:1 › single view supports orbit, zoom, pan, reset, export, deep link, and Escape (15.6s)
+  ✓  13 tests/browser/gallery.spec.ts:201:1 › matrix explains every axis, exports the complete catalog, and closes accessibly (7.2s)
+  ✓  14 tests/browser/gallery.spec.ts:228:1 › flooded control displays the actual water height and explains the bounded rejection (4.6s)
+  ✓  15 tests/browser/gallery.spec.ts:238:1 › mobile remains usable without document overflow, including the single view (7.5s)
+  ✓  16 tests/browser/gallery.spec.ts:265:1 › fixed visual corpus: every theme, water/road/path combinations, island, and rejection (2.3m)
+
+  16 passed (5.7m)

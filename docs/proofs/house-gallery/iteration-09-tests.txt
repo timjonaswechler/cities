@@ -1,0 +1,61 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+ ❯ tests/topology.test.ts (68 tests | 3 failed) 2070ms
+   ❯ geometry-derived topology, not titles or declared arm counts (68)
+     × deadend/court: real terminal and access 4ms
+     × road-water/quay-end: intersections versus parallel routes at every width pair 1ms
+     × path-water/quay-end: intersections versus parallel routes at every width pair 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > deadend/court: real terminal and access
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ assertDeadend tests/topology.test.ts:78:62
+     76|     const square = scenario.surfaces.filter(s => s.kind === 'square').…
+     77|     const road = scenario.surfaces.filter(s => s.kind === 'road' || s.…
+     78|     expect(square.some(a => road.some(b => overlaps(a, b)))).toBe(true…
+       |                                                              ^
+     79|   }
+     80|   if (kind === 'plain' || kind === 'bulb') {
+ ❯ tests/topology.test.ts:155:135
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > road-water/quay-end: intersections versus parallel routes at every width pair
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > path-water/quay-end: intersections versus parallel routes at every width pair
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ assertCombination tests/topology.test.ts:113:80
+    111|     const roadPolygons = scenario.surfaces.filter(s => s.kind === 'roa…
+    112|     const waterPolygons = scenario.surfaces.filter(s => s.kind === 'wa…
+    113|     expect(roadPolygons.every(a => waterPolygons.every(b => !overlaps(…
+       |                                                                                ^
+    114|   } else if (kind === 'tributary') {
+    115|     expect(network(water).nodes.filter(n => n.degree === 3)).toHaveLen…
+ ❯ tests/topology.test.ts:158:153
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  3 failed | 102 passed (105)
+   Start at  03:17:57
+   Duration  21.43s (tests 99%)
