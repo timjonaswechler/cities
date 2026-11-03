@@ -26,6 +26,11 @@ async function load(p: Page, n: Network) {
     .poll(async () => JSON.stringify((await snapshot(p)).network))
     .toBe(JSON.stringify(n));
 }
+async function beginWater(p: Page) {
+  await p.getByLabel("Zeichenmaterial").selectOption("water");
+  await p.locator("#kind").selectOption("line");
+  await p.getByRole("button", { name: "Zeichnen", exact: true }).click();
+}
 async function at(p: Page, x: number, y: number) {
   const box = await p.locator("#editor").boundingBox(),
     s = await snapshot(p);
@@ -83,6 +88,226 @@ test("S1 undo reconciles controls on removed segments", async ({ page }) => {
   await expect(page.getByLabel("Griff X (m)")).toHaveCount(0);
   await page.getByRole("button", { name: "Redo", exact: true }).click();
   expect((await snapshot(page)).network.paths[0].segments).toHaveLength(2);
+});
+test("W09 draws and edits a lowered water blocker with atomic undo/delete", async ({
+  page,
+}, testInfo) => {
+  await page.getByRole("button", { name: "Neu", exact: true }).click();
+  await beginWater(page);
+  await clickWorld(page, -20, -15);
+  await clickWorld(page, 20, -15);
+  await page.keyboard.press("Escape");
+  expect((await snapshot(page)).network.areaBlockers ?? []).toEqual([]);
+  expect((await snapshot(page)).area).toBeCloseTo(160, 5);
+  expect((await snapshot(page)).network.paths[0].kind).toBe("water");
+  await page.getByRole("button", { name: "Neu", exact: true }).click();
+  await beginWater(page);
+  for (const [x, y] of [
+    [-20, -15],
+    [20, -15],
+    [20, 15],
+    [-20, 15],
+  ])
+    await clickWorld(page, x, y);
+  expect((await snapshot(page)).area).toBeGreaterThan(0);
+  expect((await snapshot(page)).network.areaBlockers).toEqual([]);
+  await clickWorld(page, -20, -15);
+  let s = await snapshot(page);
+  expect(s.network.version).toBe(3);
+  expect(s.network.areaBlockers).toHaveLength(1);
+  expect(s.area).toBeCloseTo(1200, 5);
+  expect(s.meshArea).toBeCloseTo(s.area, 2);
+  expect(s.waterMesh.color).toBe("2b91b4");
+  expect(s.waterMesh.heights.length).toBeGreaterThan(0);
+  expect(s.waterMesh.heights.every((z) => z < 0)).toBe(true);
+  sameMesh(s);
+  await drag(page, { x: -20, y: -15 }, { x: -25, y: -15 });
+  await expect(page.getByLabel("Ufer X (m)")).toHaveValue("-25");
+  await page.getByLabel("Ufer X (m)").fill("-30");
+  await page.getByLabel("Ufer X (m)").press("Tab");
+  s = await snapshot(page);
+  expect(s.area).toBeCloseTo(1350, 4);
+  const valid = s.network;
+  await page.getByLabel("Ufer X (m)").fill("30");
+  await page.getByLabel("Ufer X (m)").press("Tab");
+  expect((await snapshot(page)).network).toEqual(valid);
+  await expect(page.locator("#status")).toContainText("Kontur");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await snapshot(page)).area).toBeCloseTo(1275, 4);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  expect((await snapshot(page)).network).toEqual(valid);
+  await page
+    .getByRole("button", { name: "Punkt einfügen", exact: true })
+    .click();
+  expect((await snapshot(page)).network.areaBlockers![0].outer).toHaveLength(5);
+  expect((await snapshot(page)).area).toBeCloseTo(1350, 4);
+  await page
+    .getByRole("button", { name: "Punkt entfernen", exact: true })
+    .click();
+  expect((await snapshot(page)).network.areaBlockers![0].outer).toHaveLength(4);
+  await page.screenshot({ path: testInfo.outputPath("water-area.png") });
+  await page
+    .getByRole("button", { name: "Wasser löschen", exact: true })
+    .click();
+  expect((await snapshot(page)).area).toBe(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await snapshot(page)).area).toBeCloseTo(1350, 4);
+});
+test("W10 islands stay free, roads remain blocked, water survives graph JSON and 3D", async ({
+  page,
+}, testInfo) => {
+  const road: Network = {
+    version: 1,
+    nodes: [
+      { id: "a", x: -20, y: 0 },
+      { id: "b", x: 20, y: 0 },
+    ],
+    paths: [
+      {
+        id: "L",
+        startWidth: 6,
+        endWidth: 6,
+        widthsLinked: true,
+        segments: [{ kind: "line", from: "a", to: "b" }],
+      },
+    ],
+    junctions: [],
+  };
+  await load(page, road);
+  await beginWater(page);
+  for (const [x, y] of [
+    [-10, -10],
+    [10, -10],
+    [10, 10],
+    [-10, 10],
+  ])
+    await clickWorld(page, x, y);
+  await page
+    .getByRole("button", { name: "Pfad schließen", exact: true })
+    .click();
+  expect((await snapshot(page)).area).toBeCloseTo(520, 5);
+  await page
+    .getByRole("button", { name: "Insel aussparen", exact: true })
+    .click();
+  for (const [x, y] of [
+    [-4, -4],
+    [4, -4],
+    [4, 4],
+    [-4, 4],
+  ])
+    await clickWorld(page, x, y);
+  await page
+    .getByRole("button", { name: "Fläche schließen", exact: true })
+    .click();
+  let s = await snapshot(page);
+  expect(s.area).toBeCloseTo(504, 5);
+  expect(s.meshArea).toBeCloseTo(504, 2);
+  expect(s.network.nodes).toEqual(road.nodes);
+  expect(s.network.paths).toEqual(road.paths);
+  expect(contains(s.surface, { x: 0, y: 0 })).toBe(true);
+  expect(contains(s.surface, { x: 0, y: 3.5 })).toBe(false);
+  expect(contains(s.surface, { x: 0, y: 8 })).toBe(true);
+  expect(s.surface.areas[0].holes).toHaveLength(2);
+  sameMesh(s);
+  const saved = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "JSON speichern", exact: true })
+    .click();
+  const file = (await (await saved).path())!;
+  const valid = s.network;
+  await page.getByRole("button", { name: "Neu", exact: true }).click();
+  await page.locator("#import").setInputFiles(file);
+  await expect.poll(async () => (await snapshot(page)).network).toEqual(valid);
+  await page.getByRole("button", { name: "3D prüfen", exact: true }).click();
+  s = await snapshot(page);
+  expect(s.meshArea).toBeCloseTo(504, 2);
+  expect(s.waterMesh.heights.every((z) => z < 0)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath("water-island-3d.png") });
+  await page.getByRole("button", { name: "Draufsicht", exact: true }).click();
+  const invalid = structuredClone(valid);
+  invalid.areaBlockers![0].holes = [
+    [
+      { x: 8, y: 8 },
+      { x: 12, y: 8 },
+      { x: 12, y: 12 },
+      { x: 8, y: 12 },
+    ],
+  ];
+  await page.locator("#import").setInputFiles({
+    name: "invalid-water.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(invalid)),
+  });
+  await expect(page.locator("#status")).toContainText("Import abgelehnt");
+  expect((await snapshot(page)).network).toEqual(valid);
+  await page.locator('[data-node="a"]').click();
+  await expect(
+    page.getByRole("button", { name: "Breiten koppeln", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+});
+test("W11 invalid closure preserves the open vector and undo clears removed island selections", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Neu", exact: true }).click();
+  await beginWater(page);
+  for (const [x, y] of [
+    [-10, -10],
+    [10, 10],
+    [-10, 10],
+    [10, -10],
+  ])
+    await clickWorld(page, x, y);
+  const open = (await snapshot(page)).network;
+  await page
+    .getByRole("button", { name: "Pfad schließen", exact: true })
+    .click();
+  expect((await snapshot(page)).network).toEqual(open);
+  expect((await snapshot(page)).network.areaBlockers).toEqual([]);
+  await expect(page.locator("#status")).toContainText("Kontur");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Pfad schließen", exact: true })
+    .click();
+  expect((await snapshot(page)).area).toBeCloseTo(200, 5);
+  await page
+    .getByRole("button", { name: "Wasser löschen", exact: true })
+    .click();
+  await beginWater(page);
+  for (const [x, y] of [
+    [-20, -20],
+    [20, -20],
+    [20, 20],
+    [-20, 20],
+  ])
+    await clickWorld(page, x, y);
+  await page
+    .getByRole("button", { name: "Pfad schließen", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Insel aussparen", exact: true })
+    .click();
+  for (const [x, y] of [
+    [-4, -4],
+    [4, -4],
+    [4, 4],
+    [-4, 4],
+  ])
+    await clickWorld(page, x, y);
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("button", { name: "Insel entfernen", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Insel entfernen", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Insel aussparen", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Zeichnen", exact: true }),
+  ).not.toHaveClass(/active/);
 });
 test("B06 width link synchronizes either input, unlinks, and participates in undo/redo", async ({
   page,

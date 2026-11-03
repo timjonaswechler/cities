@@ -1,3 +1,5 @@
+import { WATER_DROP, contourPoints } from "./blockers";
+import { sampleCurve, type CurveSample } from "./curves";
 import clipping, {
   type MultiPolygon,
   type Polygon,
@@ -7,6 +9,7 @@ import {
   armId,
   derivative,
   distance,
+  cleanJunctions,
   evaluate,
   node,
   validate,
@@ -31,13 +34,13 @@ export interface RadiusResult {
 }
 export interface Surface {
   areas: Area[];
+  roadAreas?: Area[];
+  water?: { areas: Area[]; visibleAreas: Area[]; drop: number };
   radii: RadiusResult[];
   conflicts: string[];
   diagnostics: string[];
 }
-export interface Sample extends Point {
-  t: number;
-}
+export type Sample = CurveSample;
 interface Stroke {
   path: string;
   index: number;
@@ -84,34 +87,7 @@ function projection(p: Point, a: Point, b: Point) {
   return { point: add(a, mul(d, t)), t };
 }
 export function sampleSegment(n: Network, s: Segment): Sample[] {
-  if (s.kind === "line")
-    return [
-      { ...evaluate(n, s, 0), t: 0 },
-      { ...evaluate(n, s, 1), t: 1 },
-    ];
-  const out: Sample[] = [{ ...evaluate(n, s, 0), t: 0 }];
-  function step(t0: number, t1: number, depth: number) {
-    const a = evaluate(n, s, t0),
-      b = evaluate(n, s, t1),
-      ts = [0.25, 0.5, 0.75].map((t) => t0 + (t1 - t0) * t),
-      qs = ts.map((t) => evaluate(n, s, t));
-    const deviation = Math.max(
-      ...qs.map((q) => distance(q, projection(q, a, b).point)),
-    );
-    const length = [a, ...qs, b]
-      .slice(1)
-      .reduce((len, p, i) => len + distance([a, ...qs][i], p), 0);
-    if (length <= 0.2 && deviation <= 0.002) {
-      out.push({ ...b, t: t1 });
-      return;
-    }
-    if (depth >= 32) throw new Error("Geometrie numerisch nicht auflösbar");
-    const mid = (t0 + t1) / 2;
-    step(t0, mid, depth + 1);
-    step(mid, t1, depth + 1);
-  }
-  step(0, 1, 0);
-  return out;
+  return sampleCurve(node(n, s.from), node(n, s.to), s);
 }
 function tangentVector(n: Network, s: Segment, t: number): Point {
   // At stationary endpoints the first noncoincident control-polygon edge
@@ -481,7 +457,7 @@ function fromMulti(m: MultiPolygon): Area[] {
     holes: poly.slice(1).map((r) => r.slice(0, -1).map(([x, y]) => ({ x, y }))),
   }));
 }
-export function computeSurface(n: Network): Surface {
+function computeStrokeSurface(n: Network): Surface {
   validate(n);
   const strokes: Stroke[] = [],
     arms = new Map<string, Arm[]>(),
@@ -854,6 +830,54 @@ export function computeSurface(n: Network): Surface {
     if (a.outer.length < 3 || Math.abs(signedArea(a.outer)) < EPS)
       diagnostics.push("Degenerierte Außenkontur");
   return { areas, radii, conflicts, diagnostics };
+}
+export function computeSurface(n: Network): Surface {
+  validate(n);
+  const stroke = (kind: "road" | "water") => {
+    const subset: Network = {
+      ...n,
+      areaBlockers: undefined,
+      paths: n.paths.filter((p) => (p.kind ?? "road") === kind),
+    };
+    cleanJunctions(subset);
+    return computeStrokeSurface(subset);
+  };
+  const road = stroke("road"),
+    water = stroke("water");
+  const toPolygon = (a: Area): Polygon => [ring(a.outer), ...a.holes.map(ring)];
+  const filled = (kind: "road" | "water"): Polygon[] =>
+    (n.areaBlockers ?? [])
+      .filter((a) => a.kind === kind)
+      .map((a) => [
+        ring(contourPoints(a.outer, a.outerEdges)),
+        ...(a.holes ?? []).map((h, i) =>
+          ring(contourPoints(h, a.holeEdges?.[i])),
+        ),
+      ]);
+  const roads = union([...road.areas.map(toPolygon), ...filled("road")]),
+    waters = union([...water.areas.map(toPolygon), ...filled("water")]);
+  return {
+    areas: fromMulti(
+      !waters.length
+        ? roads
+        : !roads.length
+          ? waters
+          : union([...roads, ...waters]),
+    ),
+    roadAreas: fromMulti(roads),
+    ...(waters.length
+      ? {
+          water: {
+            areas: fromMulti(waters),
+            visibleAreas: fromMulti(clipping.difference(waters, roads)),
+            drop: WATER_DROP,
+          },
+        }
+      : {}),
+    radii: [...road.radii, ...water.radii],
+    conflicts: [...road.conflicts, ...water.conflicts],
+    diagnostics: [...road.diagnostics, ...water.diagnostics],
+  };
 }
 export function areaSize(s: Surface): number {
   return s.areas.reduce(

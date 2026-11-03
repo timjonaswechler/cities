@@ -56,6 +56,68 @@ Screenshots ergänzen Assertions. Sichtkriterien: unterscheidbare Anker/Griffe,
 gut lesbare Kontur/Breite/Radius, erkennbare freie Innenbereiche und Konflikte.
 Gestaltungsurteile bleiben subjektiv.
 
+## Erweiterung: Wasser als zusätzliche Flächensperre
+
+Die bisherigen Wege-Assertions und Toleranzen bleiben unverändert. Die erste
+Wasser-Erweiterung ergänzte polygonale Flächensperren. Diese Fixtures bleiben
+bestehen; die nachfolgende Vektorvorgabe erweitert das Zeichnen für beide Materialien.
+Kein Rückgriff auf die verworfene Galerie oder deren Matrix.
+
+`tests/blockers.test.ts` friert die zusätzlichen Eingaben ein:
+
+- W01: konkave Uferkontur, 128 m² und unabhängige Innen-/Außen-/Randabstandsproben.
+- W02: 40 × 30 m See mit 10 × 8 m Insel, 1.120 m² Sperrfläche; Insel bleibt Loch.
+- W03: 240 m² Weg plus 400 m² Wasser, 120 m² Überlappung: 520 m² Union.
+  Sichtbares Wasser und Wege sind disjunkte Render-Grundflächen derselben Union.
+- W04: Weg durch eine Insel: 504 m² Union; Straße gesperrt, Inselreste frei.
+- W05: überlappende/getrennte Gewässer sowie ein Teich innerhalb einer Insel.
+- W06: Version-2-JSON und History erhalten Gewässer und Breitenkopplung;
+  Version-1-Wegnetze bleiben ladbar, Wasser in Version 1 wird abgelehnt.
+- W07: ungültige Zahlen, Konturen, IDs, Selbstschnitte sowie berührende,
+  überlappende, verschachtelte oder außerhalb liegende Inselringe ablehnen.
+- W08: Ringumkehr und starre Bewegung erhalten Flächen und Randabstände.
+
+W09–W11 in `tests/browser/editor.spec.ts` prüfen Zeichnen/Schließen/offenes Beenden,
+Ziehen, numerische Änderungen, Punkteinfügen/-entfernen, Inseln, Löschen,
+Undo/Redo, Import/Export und die echte gemeinsame Three.js-Grundfläche.
+Wasservertices liegen tatsächlich unter Z=0; das tatsächliche Material ist blau.
+Offene Vektoren belegen bereits ihren Breitenstreifen; nur unfertige Aussparungen
+sind Entwürfe. Unzulässige Änderungen ersetzen nicht den letzten gültigen Zustand. Keine Console-/Runtimefehler im Ablauf.
+Diese Ansichten bleiben bei 1440×1000 und derselben festen Startkamera prüfbar.
+
+Die Absenkung beträgt 1,4 m. Keine Wassersimulation. Screenshotnachweise werden
+in das jeweilige Playwright-Ausgabeverzeichnis geschrieben, nicht als neue
+Behauptungen in die historischen Abnahmebelege übernommen.
+
+## Erweiterung: ein Vektor-Zeichenablauf für Weg und Wasser
+
+Die aktuelle Vorgabe ersetzt die getrennten Zeichenmodelle: Offen entsteht eine
+Fläche durch Breite; ausdrücklich geschlossen wird das Innere gefüllt, ohne
+Breitenparameter. Beide Materialien unterstützen Gerade, quadratische/kubische
+Bézier-Segmente und dieselben Anker/Kontrollgriffe.
+
+`tests/vectors.test.ts`:
+
+- V01–V02: identische variable Streifen und lokale Abrundungen für beide Materialien.
+- V03–V04: analytische gefüllte Kurvenflächen, keine versteckten Breiten;
+  Schließen erzeugt eine Fläche statt eines dicken Rings.
+- V05–V06: kubische Konturen, exakte De-Casteljau-Teilung und gekrümmte Löcher.
+- V07: materialübergreifende Überlappung erzeugt keine Weg-Wasser-Kreuzungsabrundung.
+- V08–V10: Öffnen, Version-3-Roundtrip, Altformat-Kompatibilität und strikte
+  Ablehnung ungültiger Kurven einschließlich `null`-Kanten.
+- V14: gemeinsam genutzte Knoten anderer Pfade bleiben beim Schließen erhalten;
+  ungültiges Schließen verändert die Quelle nicht.
+- V15: gekrümmte Flächen behalten Fläche und Belegung bei starrer Bewegung,
+  Konturumkehr einschließlich kubischer Griffe und Materialwechsel.
+
+V11–V13 in `tests/browser/vectors.spec.ts` prüfen beide Materialien mit allen
+drei Segmenttypen, echte Breitenänderungen, Schließen am Anker/per Button,
+fehlende Breitenfelder bei Flächen, Griffziehen und numerische Griffänderungen,
+formerhaltendes Einfügen, Undo/Redo, Import/Export, Öffnen, gekrümmte Inseln und
+nachträgliche Bézier-Kanten an alten Polygongewässern. Keine Console-/Runtimefehler.
+Die bisherigen Geometrie-Assertions und Toleranzen bleiben unverändert.
+Nachweise: [Vektor-Iterationen](evidence/vectors-iterations.md).
+
 ## Befehle und Nachweis
 
 `npm ci`, `npm run build`, `npm test`, `npm run test:browser` in `road-editor/`.

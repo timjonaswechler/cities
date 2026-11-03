@@ -1,3 +1,10 @@
+import {
+  contourEdges,
+  validateAreaBlockers,
+  type AreaBlocker,
+} from "./blockers";
+import { curvePoint, curveDerivative, splitCurve, type Curve } from "./curves";
+
 export interface Point {
   x: number;
   y: number;
@@ -5,12 +12,10 @@ export interface Point {
 export interface Node extends Point {
   id: string;
 }
-export type Segment =
-  | { kind: "line"; from: string; to: string }
-  | { kind: "quadratic"; from: string; to: string; control: Point }
-  | { kind: "cubic"; from: string; to: string; c1: Point; c2: Point };
+export type Segment = Curve & { from: string; to: string };
 export interface Path {
   id: string;
+  kind?: "road" | "water";
   segments: Segment[];
   startWidth: number;
   endWidth: number;
@@ -23,16 +28,18 @@ export interface Junction {
   radius: number;
 }
 export interface Network {
-  version: 1;
+  version: 1 | 2 | 3;
   nodes: Node[];
   paths: Path[];
   junctions: Junction[];
+  areaBlockers?: AreaBlocker[];
 }
 export const emptyNetwork = (): Network => ({
-  version: 1,
+  version: 3,
   nodes: [],
   paths: [],
   junctions: [],
+  areaBlockers: [],
 });
 export const mix = (a: Point, b: Point, t: number): Point => ({
   x: a.x + (b.x - a.x) * t,
@@ -55,12 +62,25 @@ export function validate(value: unknown): asserts value is Network {
   if (!value || typeof value !== "object") fail("Graph muss ein Objekt sein");
   const n = value as Network;
   if (
-    n.version !== 1 ||
+    ![1, 2, 3].includes(n.version) ||
     !Array.isArray(n.nodes) ||
     !Array.isArray(n.paths) ||
     !Array.isArray(n.junctions)
   )
-    fail("Ungültiges Format / Version (erwartet 1)");
+    fail("Ungültiges Format / Version (erwartet 1, 2 oder 3)");
+  if (n.version === 1 && n.areaBlockers !== undefined)
+    fail("Flächensperren benötigen Formatversion 2");
+  validateAreaBlockers(n.areaBlockers);
+  if (
+    n.version < 3 &&
+    n.areaBlockers?.some(
+      (a) =>
+        a.kind === "road" ||
+        a.outerEdges !== undefined ||
+        a.holeEdges !== undefined,
+    )
+  )
+    fail("Vektorkonturen und Materialien benötigen Formatversion 3");
   const point = (p: Point) =>
     p && typeof p === "object" && Number.isFinite(p.x) && Number.isFinite(p.y);
   const id = (s: string) => typeof s === "string" && s.length > 0;
@@ -76,6 +96,13 @@ export function validate(value: unknown): asserts value is Network {
     if (!p || !id(p.id) || paths.has(p.id))
       fail("Ungültige oder doppelte Pfad-ID");
     paths.add(p.id);
+    if (
+      p.kind !== undefined &&
+      (n.version < 3 || !["road", "water"].includes(p.kind))
+    )
+      fail(
+        "Pfadmaterial benötigt Formatversion 3 und muss Weg oder Wasser sein",
+      );
     if (
       !Number.isFinite(p.startWidth) ||
       !Number.isFinite(p.endWidth) ||
@@ -141,32 +168,10 @@ export function serialize(n: Network): string {
   return JSON.stringify(n, null, 2);
 }
 export function evaluate(n: Network, s: Segment, t: number): Point {
-  const a = node(n, s.from),
-    b = node(n, s.to);
-  if (s.kind === "line") return mix(a, b, t);
-  if (s.kind === "quadratic")
-    return mix(mix(a, s.control, t), mix(s.control, b, t), t);
-  return mix(
-    mix(mix(a, s.c1, t), mix(s.c1, s.c2, t), t),
-    mix(mix(s.c1, s.c2, t), mix(s.c2, b, t), t),
-    t,
-  );
+  return curvePoint(node(n, s.from), node(n, s.to), s, t);
 }
 export function derivative(n: Network, s: Segment, t: number): Point {
-  const a = node(n, s.from),
-    b = node(n, s.to);
-  if (s.kind === "line") return { x: b.x - a.x, y: b.y - a.y };
-  const diff = (a: Point, b: Point, k: number) => ({
-    x: (b.x - a.x) * k,
-    y: (b.y - a.y) * k,
-  });
-  if (s.kind === "quadratic")
-    return mix(diff(a, s.control, 2), diff(s.control, b, 2), t);
-  return mix(
-    mix(diff(a, s.c1, 3), diff(s.c1, s.c2, 3), t),
-    mix(diff(s.c1, s.c2, 3), diff(s.c2, b, 3), t),
-    t,
-  );
+  return curveDerivative(node(n, s.from), node(n, s.to), s, t);
 }
 export function moveNode(n: Network, id: string, p: Point): void {
   if (!Number.isFinite(p.x) || !Number.isFinite(p.y))
@@ -216,23 +221,10 @@ export function splitSegment(
     n.nodes.some((p) => p.id === nodeId)
   )
     throw new Error("Ungültige Teilung");
-  const a = node(n, s.from),
-    b = node(n, s.to),
-    at = evaluate(n, s, t);
-  let left: Segment, right: Segment;
-  if (s.kind === "line") {
-    left = { ...s, to: nodeId };
-    right = { ...s, from: nodeId };
-  } else if (s.kind === "quadratic") {
-    left = { ...s, to: nodeId, control: mix(a, s.control, t) };
-    right = { ...s, from: nodeId, control: mix(s.control, b, t) };
-  } else {
-    const a1 = mix(a, s.c1, t),
-      b1 = mix(s.c1, s.c2, t),
-      c1 = mix(s.c2, b, t);
-    left = { ...s, to: nodeId, c1: a1, c2: mix(a1, b1, t) };
-    right = { ...s, from: nodeId, c1: mix(b1, c1, t), c2: c1 };
-  }
+  const cut = splitCurve(node(n, s.from), node(n, s.to), s, t),
+    at = cut.point;
+  const left: Segment = { ...cut.left, from: s.from, to: nodeId },
+    right: Segment = { ...cut.right, from: nodeId, to: s.to };
   // Keep radius references attached to the original physical ends.
   const remap = new Map<string, string>();
   for (let i = index; i < p.segments.length; i++) {
@@ -305,6 +297,68 @@ export function connect(n: Network, source: string, target: string): void {
   });
   cleanJunctions(n);
   validate(n);
+}
+export function closePath(
+  n: Network,
+  id: string,
+  closing: Curve = { kind: "line" },
+): void {
+  const p = n.paths.find((p) => p.id === id);
+  if (!p?.segments.length || n.areaBlockers?.some((a) => a.id === id))
+    throw new Error("Pfad kann nicht geschlossen werden");
+  const segments = [...p.segments],
+    first = segments[0].from;
+  if (segments.at(-1)!.to !== first)
+    segments.push({ ...closing, from: segments.at(-1)!.to, to: first });
+  const area: AreaBlocker = {
+    id,
+    kind: p.kind ?? "road",
+    outer: segments.map((s) => {
+      const q = node(n, s.from);
+      return { x: q.x, y: q.y };
+    }),
+    outerEdges: segments.map(({ from: _from, to: _to, ...edge }) => edge),
+    holes: [],
+  };
+  validateAreaBlockers([area]);
+  const owned = new Set(segments.flatMap((s) => [s.from, s.to]));
+  n.version = 3;
+  n.paths = n.paths.filter((q) => q.id !== id);
+  const retained = new Set(
+    n.paths.flatMap((q) => q.segments.flatMap((s) => [s.from, s.to])),
+  );
+  n.nodes = n.nodes.filter((q) => !owned.has(q.id) || retained.has(q.id));
+  (n.areaBlockers ??= []).push(area);
+  cleanJunctions(n);
+}
+export function openArea(n: Network, id: string): void {
+  const area = n.areaBlockers?.find((a) => a.id === id);
+  if (!area || area.holes?.length || n.paths.some((p) => p.id === id))
+    throw new Error("Zum Öffnen zuerst die Aussparungen entfernen");
+  const used = new Set(n.nodes.map((q) => q.id));
+  let count = 0;
+  const nodes = area.outer.map((q) => {
+    let id: string;
+    do {
+      id = `${area.id}-K${++count}`;
+    } while (used.has(id));
+    used.add(id);
+    return { id, x: q.x, y: q.y };
+  });
+  const edges = contourEdges(area);
+  n.version = 3;
+  n.nodes.push(...nodes);
+  n.paths.push({
+    id,
+    kind: area.kind,
+    startWidth: 4,
+    endWidth: 4,
+    widthsLinked: true,
+    segments: edges
+      .slice(0, -1)
+      .map((s, i) => ({ ...s, from: nodes[i].id, to: nodes[i + 1].id })),
+  });
+  n.areaBlockers = n.areaBlockers!.filter((a) => a.id !== id);
 }
 export class History {
   private past: Network[] = [];

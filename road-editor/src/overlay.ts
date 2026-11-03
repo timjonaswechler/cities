@@ -91,6 +91,13 @@ export default {
       Clipper.ClipType.ctUnion,
     );
   },
+  difference(subject: Geometry, clip: Geometry): MultiPolygon {
+    return operation(
+      polygons(subject),
+      polygons(clip),
+      Clipper.ClipType.ctDifference,
+    );
+  },
   intersection(subject: Geometry, clip: Geometry): MultiPolygon {
     return operation(
       polygons(subject),
