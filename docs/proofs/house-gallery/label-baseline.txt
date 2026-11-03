@@ -1,0 +1,221 @@
+
+> fantasy-house-gallery@0.1.0 test:browser
+> playwright test tests/browser/context.spec.ts --workers=1
+
+
+Running 8 tests using 1 worker
+
+  ✘  1 tests/browser/context.spec.ts:20:30 › truthful context label: space-none (8.7s)
+  ✓  2 tests/browser/context.spec.ts:20:30 › truthful context label: space-road (3.7s)
+  ✘  3 tests/browser/context.spec.ts:20:30 › truthful context label: space-path (6.4s)
+  ✘  4 tests/browser/context.spec.ts:20:30 › truthful context label: tiny (8.5s)
+  ✘  5 tests/browser/context.spec.ts:20:30 › truthful context label: flooded (8.3s)
+  ✘  6 tests/browser/context.spec.ts:20:30 › truthful context label: pond (8.7s)
+  ✓  7 tests/browser/context.spec.ts:20:30 › truthful context label: flow (3.7s)
+  ✘  8 tests/browser/context.spec.ts:31:1 › truthful context filters and search: no neutral road or pond width is treated as a real route (8.6s)
+
+
+  1) tests/browser/context.spec.ts:20:30 › truthful context label: space-none ──────────────────────
+
+    Error: spaces~triangle~r6~0~0~1~none~none
+
+    expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.scenario-widths')
+    Expected: "Freifläche · ohne Straße oder Weg"
+    Received: "Straße 6 m"
+    Timeout:  5000ms
+
+    Call log:
+      - spaces~triangle~r6~0~0~1~none~none locator('.scenario-widths') with timeout 5000ms
+      - waiting for locator('.scenario-widths')
+        14 × locator resolved to <p class="scenario-widths">Straße 6 m</p>
+           - unexpected value "Straße 6 m"
+
+
+      24 |   mkdirSync('test-results/context', { recursive: true });
+      25 |   await page.locator('#inspector-dialog').screenshot({ path: `test-results/context/${fixture.name}.png` });
+    > 26 |   await expect(page.locator('.scenario-widths'), fixture.id).toHaveText(fixture.text);
+         |                                                              ^
+      27 |   await expect(page.locator('.study-caption > p'), fixture.id).toHaveText(fixture.text);
+      28 |   await expect(page.getByTestId('study-card')).toHaveCount(1);
+      29 | });
+        at <repo>/house-gallery/tests/browser/context.spec.ts:26:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser/context-truthful-context-label-space-none/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser/context-truthful-context-label-space-none/error-context.md
+
+  2) tests/browser/context.spec.ts:20:30 › truthful context label: space-path ──────────────────────
+
+    Error: spaces~triangle~r6~0~0~1~path~none
+
+    expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.scenario-widths')
+    Expected: "Weg 1.8–2.8 m"
+    Received: "Straße 6 m"
+    Timeout:  5000ms
+
+    Call log:
+      - spaces~triangle~r6~0~0~1~path~none locator('.scenario-widths') with timeout 5000ms
+      - waiting for locator('.scenario-widths')
+        14 × locator resolved to <p class="scenario-widths">Straße 6 m</p>
+           - unexpected value "Straße 6 m"
+
+
+      24 |   mkdirSync('test-results/context', { recursive: true });
+      25 |   await page.locator('#inspector-dialog').screenshot({ path: `test-results/context/${fixture.name}.png` });
+    > 26 |   await expect(page.locator('.scenario-widths'), fixture.id).toHaveText(fixture.text);
+         |                                                              ^
+      27 |   await expect(page.locator('.study-caption > p'), fixture.id).toHaveText(fixture.text);
+      28 |   await expect(page.getByTestId('study-card')).toHaveCount(1);
+      29 | });
+        at <repo>/house-gallery/tests/browser/context.spec.ts:26:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser/context-truthful-context-label-space-path/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser/context-truthful-context-label-space-path/error-context.md
+
+  3) tests/browser/context.spec.ts:20:30 › truthful context label: tiny ────────────────────────────
+
+    Error: limits~tiny~r6~0~0~1~none~none
+
+    expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.scenario-widths')
+    Expected: "Ohne Straße oder Weg"
+    Received: "Straße 6 m"
+    Timeout:  5000ms
+
+    Call log:
+      - limits~tiny~r6~0~0~1~none~none locator('.scenario-widths') with timeout 5000ms
+      - waiting for locator('.scenario-widths')
+        14 × locator resolved to <p class="scenario-widths">Straße 6 m</p>
+           - unexpected value "Straße 6 m"
+
+
+      24 |   mkdirSync('test-results/context', { recursive: true });
+      25 |   await page.locator('#inspector-dialog').screenshot({ path: `test-results/context/${fixture.name}.png` });
+    > 26 |   await expect(page.locator('.scenario-widths'), fixture.id).toHaveText(fixture.text);
+         |                                                              ^
+      27 |   await expect(page.locator('.study-caption > p'), fixture.id).toHaveText(fixture.text);
+      28 |   await expect(page.getByTestId('study-card')).toHaveCount(1);
+      29 | });
+        at <repo>/house-gallery/tests/browser/context.spec.ts:26:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser/context-truthful-context-label-tiny/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser/context-truthful-context-label-tiny/error-context.md
+
+  4) tests/browser/context.spec.ts:20:30 › truthful context label: flooded ─────────────────────────
+
+    Error: limits~flooded~r6~0~0~1~none~none
+
+    expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.scenario-widths')
+    Expected: "Freie Wasserfläche · keine Trassenbreite"
+    Received: "Straße 6 m"
+    Timeout:  5000ms
+
+    Call log:
+      - limits~flooded~r6~0~0~1~none~none locator('.scenario-widths') with timeout 5000ms
+      - waiting for locator('.scenario-widths')
+        14 × locator resolved to <p class="scenario-widths">Straße 6 m</p>
+           - unexpected value "Straße 6 m"
+
+
+      24 |   mkdirSync('test-results/context', { recursive: true });
+      25 |   await page.locator('#inspector-dialog').screenshot({ path: `test-results/context/${fixture.name}.png` });
+    > 26 |   await expect(page.locator('.scenario-widths'), fixture.id).toHaveText(fixture.text);
+         |                                                              ^
+      27 |   await expect(page.locator('.study-caption > p'), fixture.id).toHaveText(fixture.text);
+      28 |   await expect(page.getByTestId('study-card')).toHaveCount(1);
+      29 | });
+        at <repo>/house-gallery/tests/browser/context.spec.ts:26:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser/context-truthful-context-label-flooded/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser/context-truthful-context-label-flooded/error-context.md
+
+  5) tests/browser/context.spec.ts:20:30 › truthful context label: pond ────────────────────────────
+
+    Error: shores~long-pond~w7~0~0.6~1~none~none
+
+    expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.scenario-widths')
+    Expected: "Freie Wasserfläche · keine Trassenbreite"
+    Received: "Wasser 7 m"
+    Timeout:  5000ms
+
+    Call log:
+      - shores~long-pond~w7~0~0.6~1~none~none locator('.scenario-widths') with timeout 5000ms
+      - waiting for locator('.scenario-widths')
+        14 × locator resolved to <p class="scenario-widths">Wasser 7 m</p>
+           - unexpected value "Wasser 7 m"
+
+
+      24 |   mkdirSync('test-results/context', { recursive: true });
+      25 |   await page.locator('#inspector-dialog').screenshot({ path: `test-results/context/${fixture.name}.png` });
+    > 26 |   await expect(page.locator('.scenario-widths'), fixture.id).toHaveText(fixture.text);
+         |                                                              ^
+      27 |   await expect(page.locator('.study-caption > p'), fixture.id).toHaveText(fixture.text);
+      28 |   await expect(page.getByTestId('study-card')).toHaveCount(1);
+      29 | });
+        at <repo>/house-gallery/tests/browser/context.spec.ts:26:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser/context-truthful-context-label-pond/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser/context-truthful-context-label-pond/error-context.md
+
+  6) tests/browser/context.spec.ts:31:1 › truthful context filters and search: no neutral road or pond width is treated as a real route
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('#result-count')
+    Expected: "36 Studien"
+    Received: "108 Studien"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" locator('#result-count') with timeout 5000ms
+      - waiting for locator('#result-count')
+        14 × locator resolved to <h2 id="result-count">108 Studien</h2>
+           - unexpected value "108 Studien"
+
+
+      33 |     await page.goto(`/?seed=42&group=spaces&neighbors=none&${query}`);
+      34 |     await expect(page.locator('#gallery')).toHaveAttribute('aria-busy', 'false', { timeout: 90_000 });
+    > 35 |     await expect(page.locator('#result-count')).toHaveText('36 Studien');
+         |                                                 ^
+      36 |     for (const card of await page.getByTestId('study-card').all()) {
+      37 |       await expect(card.locator('.study-caption > p')).toHaveText('Straße 6 m');
+      38 |     }
+        at <repo>/house-gallery/tests/browser/context.spec.ts:35:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browser/context-truthful-context-f-f9d52--is-treated-as-a-real-route/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browser/context-truthful-context-f-f9d52--is-treated-as-a-real-route/error-context.md
+
+  6 failed
+    tests/browser/context.spec.ts:20:30 › truthful context label: space-none ───────────────────────
+    tests/browser/context.spec.ts:20:30 › truthful context label: space-path ───────────────────────
+    tests/browser/context.spec.ts:20:30 › truthful context label: tiny ─────────────────────────────
+    tests/browser/context.spec.ts:20:30 › truthful context label: flooded ──────────────────────────
+    tests/browser/context.spec.ts:20:30 › truthful context label: pond ─────────────────────────────
+    tests/browser/context.spec.ts:31:1 › truthful context filters and search: no neutral road or pond width is treated as a real route
+  2 passed (59.4s)

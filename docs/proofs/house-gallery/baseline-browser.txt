@@ -1,0 +1,5 @@
+
+> fantasy-house-gallery@0.1.0 test:browser
+> playwright test --workers=1
+
+Error: Timed out waiting 60000ms from config.webServer.

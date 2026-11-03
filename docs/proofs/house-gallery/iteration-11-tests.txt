@@ -1,0 +1,12 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+
+ Test Files  6 passed (6)
+      Tests  105 passed (105)
+   Start at  03:19:30
+   Duration  21.39s (tests 99%)

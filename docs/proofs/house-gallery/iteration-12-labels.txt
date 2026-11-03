@@ -1,0 +1,17 @@
+
+> fantasy-house-gallery@0.1.0 test:browser
+> playwright test tests/browser/context.spec.ts --workers=1
+
+
+Running 8 tests using 1 worker
+
+  ✓  1 tests/browser/context.spec.ts:51:3 › truthful context label: space-none (5.4s)
+  ✓  2 tests/browser/context.spec.ts:51:3 › truthful context label: space-road (3.1s)
+  ✓  3 tests/browser/context.spec.ts:51:3 › truthful context label: space-path (3.0s)
+  ✓  4 tests/browser/context.spec.ts:51:3 › truthful context label: tiny (2.9s)
+  ✓  5 tests/browser/context.spec.ts:51:3 › truthful context label: flooded (2.8s)
+  ✓  6 tests/browser/context.spec.ts:51:3 › truthful context label: pond (3.0s)
+  ✓  7 tests/browser/context.spec.ts:51:3 › truthful context label: flow (3.0s)
+  ✓  8 tests/browser/context.spec.ts:74:1 › truthful context filters and search: no neutral road or pond width is treated as a real route (22.8s)
+
+  8 passed (46.9s)

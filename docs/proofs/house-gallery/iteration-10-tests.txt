@@ -1,0 +1,40 @@
+
+> fantasy-house-gallery@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 <repo>/house-gallery
+
+ ❯ tests/topology.test.ts (68 tests | 2 failed) 2029ms
+   ❯ geometry-derived topology, not titles or declared arm counts (68)
+     × road-water/quay-end: intersections versus parallel routes at every width pair 4ms
+     × path-water/quay-end: intersections versus parallel routes at every width pair 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > road-water/quay-end: intersections versus parallel routes at every width pair
+ FAIL  tests/topology.test.ts > geometry-derived topology, not titles or declared arm counts > path-water/quay-end: intersections versus parallel routes at every width pair
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ assertCombination tests/topology.test.ts:113:80
+    111|     const roadPolygons = scenario.surfaces.filter(s => s.kind === 'roa…
+    112|     const waterPolygons = scenario.surfaces.filter(s => s.kind === 'wa…
+    113|     expect(roadPolygons.every(a => waterPolygons.every(b => !overlaps(…
+       |                                                                                ^
+    114|   } else if (kind === 'tributary') {
+    115|     expect(network(water).nodes.filter(n => n.degree === 3)).toHaveLen…
+ ❯ tests/topology.test.ts:158:153
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  2 failed | 103 passed (105)
+   Start at  03:18:45
+   Duration  21.38s (tests 99%)

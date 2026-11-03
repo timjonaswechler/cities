@@ -119,6 +119,18 @@ let city = generate_city(&CityOptions {
 
 Die Darstellung ordnet ursprüngliches X/Y den Bevy-Achsen X/Z zu. Eine ursprüngliche Karteneinheit entspricht vier Metern. Gebäudehöhen und flache Dächer sind eine zusätzliche Darstellung der ursprünglichen 2D-Grundrisse. Terrain bleibt zunächst eben; `HeightField` und `FlatTerrain` bilden die Schnittstelle für den nächsten Schritt. Hangabhängige Straßenplanung, Terrassierung und Geländeänderungen sind noch nicht implementiert.
 
+## Hauslabor: prozedurale 3D-Blockouts im Browser
+
+Die eigenständige [TypeScript-/Three.js-Galerie](house-gallery/README.md) untersucht Mittelalter-Fantasy-Hausformen anhand von 9.136 synthetischen Straßen-, Wege-, Wasser-, Freiflächen- und Nachbarschaftsszenarien. Sie übernimmt keine Rust-Stadtlogik und verändert die Stadtanwendung nicht.
+
+```sh
+cd house-gallery
+npm ci
+npm run dev
+```
+
+Der [Hausgenerator-Plan](docs/procedural-house-plan.md) grenzt aktuellen Stand und spätere Stadtanbindung ab. Matrix und Abnahmekriterien: [ACCEPTANCE.md](house-gallery/ACCEPTANCE.md).
+
 ## Prüfen und Herkunft
 
 ```sh
