@@ -119,17 +119,23 @@ let city = generate_city(&CityOptions {
 
 Die Darstellung ordnet ursprüngliches X/Y den Bevy-Achsen X/Z zu. Eine ursprüngliche Karteneinheit entspricht vier Metern. Gebäudehöhen und flache Dächer sind eine zusätzliche Darstellung der ursprünglichen 2D-Grundrisse. Terrain bleibt zunächst eben; `HeightField` und `FlatTerrain` bilden die Schnittstelle für den nächsten Schritt. Hangabhängige Straßenplanung, Terrassierung und Geländeänderungen sind noch nicht implementiert.
 
-## Hauslabor: prozedurale 3D-Blockouts im Browser
+## Parametrischer Wegeditor im Browser
 
-Die eigenständige [TypeScript-/Three.js-Galerie](house-gallery/README.md) untersucht Mittelalter-Fantasy-Hausformen anhand von 9.136 synthetischen Straßen-, Wege-, Wasser-, Freiflächen- und Nachbarschaftsszenarien. Sie übernimmt keine Rust-Stadtlogik und verändert die Stadtanwendung nicht.
+[Wegwerk](road-editor/README.md) ist eine neue TypeScript-/Three.js-Werkbank:
+Vektorpfade zeichnen und ziehen, Breitenverläufe, gemeinsame Knoten und lokale
+Kreuzungsradien bearbeiten. Darstellung und Sperrflächen verwenden dieselben
+vereinigten Außenringe und Löcher. Keine Häuser, Wasser oder Stadtintegration.
 
 ```sh
-cd house-gallery
+cd road-editor
 npm ci
 npm run dev
 ```
 
-Der [Hausgenerator-Plan](docs/procedural-house-plan.md) grenzt aktuellen Stand und spätere Stadtanbindung ab. Matrix und Abnahmekriterien: [ACCEPTANCE.md](house-gallery/ACCEPTANCE.md).
+Die verworfene Hausgalerie wurde ersetzt, nicht weiterentwickelt.
+[Abnahmekriterien](road-editor/ACCEPTANCE.md) und
+[Nachweise](road-editor/evidence/iterations.md) gehören zum Neustart;
+Rust, TypeScript-Archiv und frühere Experimente bleiben unabhängig.
 
 ## Prüfen und Herkunft
 

@@ -1,0 +1,32 @@
+{
+  "name": "parametric-road-editor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "test": "vitest run tests/geometry.test.ts",
+    "test:browser": "playwright test",
+    "check": "npm run format:check && npm run build && npm test && npm run test:browser",
+    "format:check": "prettier --check src tests package.json tsconfig.json playwright.config.ts index.html README.md ACCEPTANCE.md"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "clipper-lib": "6.4.2",
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/clipper-lib": "6.4.0",
+    "@types/node": "26.0.0",
+    "@types/three": "0.185.0",
+    "prettier": "3.6.2",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}

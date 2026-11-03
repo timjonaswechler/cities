@@ -1,0 +1,57 @@
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+ ❯ tests/geometry.test.ts (28 tests | 2 failed) 553ms
+   ❯ frozen world-coordinate evaluator (28)
+     × S5 repeated curved splits and reversal remain numerically stable 75ms
+     × S5b deterministic rigid-motion probes keep split surfaces stable 47ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S5 repeated curved splits and reversal remain numerically stable
+AssertionError: expected [ { …(2) }, { …(2) } ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/geometry.test.ts:137:29
+    135|       ).toBe(2);
+    136|       const rotatedGraph=transform(structuredClone(n),2,0,0),rotated=c…
+    137|       expect(rotated.areas).toHaveLength(1);
+       |                             ^
+    138|       close(nearestBoundary(rotated,rotatedGraph.nodes.find(p=>p.id===…
+    139|         nearestBoundary(after,n.nodes.find(p=>p.id==="split-1")!)!.dis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S5b deterministic rigid-motion probes keep split surfaces stable
+AssertionError: expected [ { …(2) }, { …(2) } ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/geometry.test.ts:161:23
+    159|         y = Math.cos(i * 0.773) * 91;
+    160|       const moved=transform(structuredClone(n),angle,x,y),s = computeS…
+    161|       expect(s.areas).toHaveLength(1);
+       |                       ^
+    162|       close(nearestBoundary(s,moved.nodes.find(p=>p.id==='split-1')!)!…
+    163|       close(areaSize(s), reference, 0.02);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 26 passed (28)
+   Start at  13:42:07
+   Duration  703ms (tests 90%, transform 7%, import 2%)

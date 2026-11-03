@@ -1,0 +1,35 @@
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+ ❯ tests/geometry.test.ts (26 tests | 1 failed) 298ms
+   ❯ frozen world-coordinate evaluator (26)
+     × S5 repeated curved splits and reversal remain numerically stable 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S5 repeated curved splits and reversal remain numerically stable
+Error: Unable to complete output ring starting at [-58.33832559, -19.73339858]. Last matching segment found ends at [-26.02137779, -18.18070003].
+ ❯ RingOut.factory node_modules/polygon-clipping/dist/polygon-clipping.cjs.js:1348:19
+ ❯ Operation.run node_modules/polygon-clipping/dist/polygon-clipping.cjs.js:1763:30
+ ❯ Object.union node_modules/polygon-clipping/dist/polygon-clipping.cjs.js:1776:20
+ ❯ union src/geometry.ts:84:34
+     82| }
+     83| function union(polys: Polygon[]): MultiPolygon {
+     84|   return polys.length ? clipping.union(polys[0], ...polys.slice(1)) : …
+       |                                  ^
+     85| }
+     86| function projection(p: Point, a: Point, b: Point) {
+ ❯ computeSurface src/geometry.ts:606:27
+ ❯ tests/geometry.test.ts:129:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 25 passed (26)
+   Start at  13:30:28
+   Duration  440ms (tests 86%, transform 10%, import 4%, worker 1%)

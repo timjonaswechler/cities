@@ -1,0 +1,61 @@
+
+> parametric-road-editor@1.0.0 check
+> npm run format:check && npm run build && npm test && npm run test:browser
+
+
+> parametric-road-editor@1.0.0 format:check
+> prettier --check src tests package.json tsconfig.json playwright.config.ts index.html README.md ACCEPTANCE.md
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> parametric-road-editor@1.0.0 build
+> npm run typecheck && vite build
+
+
+> parametric-road-editor@1.0.0 typecheck
+> tsc --noEmit
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 12 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.28 kB
+dist/assets/index-CGsmLZJa.css    4.54 kB │ gzip:   1.61 kB
+dist/assets/index-DYBZm0i3.js   686.79 kB │ gzip: 177.69 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 196ms
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+
+ Test Files  1 passed (1)
+      Tests  30 passed (30)
+   Start at  14:04:21
+   Duration  1.73s (tests 97%, transform 2%, import 1%)
+
+
+> parametric-road-editor@1.0.0 test:browser
+> playwright test
+
+
+Running 6 tests using 1 worker
+
+  ✓  1 tests/browser/editor.spec.ts:68:1 › S1 undo reconciles controls on removed segments (3.3s)
+  ✓  2 tests/browser/editor.spec.ts:87:1 › B01 draw, select, anchor/control drag, numeric width/position, undo/redo (5.1s)
+  ✓  3 tests/browser/editor.spec.ts:130:1 › B02 docking, shared move, detach/connect, shape-preserving segment insertion (4.3s)
+  ✓  4 tests/browser/editor.spec.ts:172:1 › B03 local radius, impossible radius feedback, parameters survive save/load (2.1s)
+  ✓  5 tests/browser/editor.spec.ts:212:1 › B04 holes, conflict visibility, 3D uses identical surface, pan/zoom do not edit (1.6s)
+  ✓  6 tests/browser/editor.spec.ts:242:1 › B05 mixed compound creation, numeric handles, reverse/delete, rejected edits are atomic (2.6s)
+
+  6 passed (20.0s)

@@ -1,0 +1,51 @@
+
+> parametric-road-editor@1.0.0 test
+> vitest run tests/geometry.test.ts
+
+
+ RUN  v5.1.0 <repo>/road-editor
+
+ ❯ tests/geometry.test.ts (31 tests | 2 failed) 805ms
+   ❯ frozen world-coordinate evaluator (31)
+     × S5c short smooth split preserves topology and distance at translated coordinates 19ms
+     × S6 cubic fillet feasibility survives shape-preserving subdivision 39ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S5c short smooth split preserves topology and distance at translated coordinates
+AssertionError: expected [ { …(2) }, { …(2) }, { …(2) }, …(3) ] to have a length of 1 but got 6
+
+- Expected
++ Received
+
+- 1
++ 6
+
+ ❯ tests/geometry.test.ts:282:21
+    280|     expect(before.areas).toHaveLength(1);expect(d).toBeGreaterThan(3);
+    281|     const moved=transform(structuredClone(n),2,7000,9000),s=computeSur…
+    282|     expect(s.areas).toHaveLength(1);close(areaSize(s),areaSize(before)…
+       |                     ^
+    283|     close(nearestBoundary(s,moved.nodes.find(p=>p.id==='near')!)!.dist…
+    284|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/geometry.test.ts > frozen world-coordinate evaluator > S6 cubic fillet feasibility survives shape-preserving subdivision
+AssertionError: expected 0.0031856629300308636 to be less than or equal to 0.000001
+ ❯ close tests/geometry.test.ts:35:27
+     33|   Math.hypot(a.x - b.x, a.y - b.y);
+     34| const close = (a: number, b: number, t = 1e-6) =>
+     35|   expect(Math.abs(a - b)).toBeLessThanOrEqual(t);
+       |                           ^
+     36| function transform(n: Network, angle: number, x: number, y: number) {
+     37|   const f = (p: Point) => ({
+ ❯ tests/geometry.test.ts:305:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 29 passed (31)
+   Start at  14:16:52
+   Duration  968ms (tests 92%, transform 5%, import 2%)

@@ -1,6 +1,9 @@
-# Hauslabor: Abnahmeprotokoll
+# Hauslabor: historisches Abnahmeprotokoll
 
-Die verbindlichen Eingaben und Kriterien stehen in [ACCEPTANCE.md](../../../house-gallery/ACCEPTANCE.md). Dies sind beobachtete Ergebnisse dieser Sitzung, keine aus Paket-Skripten abgeleiteten Erfolgsbehauptungen. In Textprotokollen sind ausschließlich nachlaufende Leerzeichen/Leerzeilen entfernt und absolute Checkout-Pfade als `<repo>` normalisiert; Prüfergebnisse und Fall-IDs sind unverändert.
+Die Galerie wurde verworfen und durch den unabhängigen [Wegeditor](../../../road-editor/README.md) ersetzt.
+Die folgenden Nachweise dokumentieren ausschließlich PR #4, nicht die neue Werkbank.
+
+Die verbindlichen Eingaben und Kriterien stehen in [ACCEPTANCE.md](https://github.com/timjonaswechler/cities/blob/2b02fa1391a254f9836cf4f9f5a4bca9caedcb0e/house-gallery/ACCEPTANCE.md). Dies sind beobachtete Ergebnisse dieser Sitzung, keine aus Paket-Skripten abgeleiteten Erfolgsbehauptungen. In Textprotokollen sind ausschließlich nachlaufende Leerzeichen/Leerzeilen entfernt und absolute Checkout-Pfade als `<repo>` normalisiert; Prüfergebnisse und Fall-IDs sind unverändert.
 
 ## Baseline B0
 
@@ -100,4 +103,4 @@ Alle zwölf fixierten Einzelstudien sowie Desktop-/Mobilüberblick wurden tatsä
 - Automatische Hausfamilie ist eine lokale Präferenz. Ein endlicher Fehlversuch führt zu transparenter Ablehnung, nicht zu einer erschöpfenden Suche über sämtliche Familien und nicht zu einem mathematischen Unbebaubarkeitsbeweis.
 - Stadtadapter, tatsächliche Grundstücke, Fassaden, Innenräume, begehbare Geschosse, Verkehrs-/Wassersimulation und Tragwerksplanung bleiben außerhalb dieser Umsetzung.
 
-Start und Bedienung: [Galerie-README](../../../house-gallery/README.md). Unabhängiges Review: sol-loop, eine Runde mit GPT-6.1 Sol (Provider Pi, `thinking=xhigh`), **APPROVE**, keine fachlichen Befunde, keine abgelehnten Befunde und keine Verhaltensänderung durch das Review. Der Reviewer führte Typprüfung, 113 Tests und eigene Platzierungs-/Zugangsproben über alle 9.136 Seed-42-Fälle aus; Browserprüfungen wurden von ihm nicht erneut ausgeführt. Verbrauchsdaten wurden nicht geliefert. Der vorgelegte Diff umfasste 95 Dateien/14.318 hinzugefügte Zeilen einschließlich Protokollen und Lockfile; danach wurde nur dieser Reviewvermerk ergänzt. CI wird zusätzlich am veröffentlichten PR-Stand geprüft; lokale grüne Prüfungen allein behaupten noch keinen erfolgreichen Merge.
+Start und Bedienung: [Galerie-README](https://github.com/timjonaswechler/cities/blob/2b02fa1391a254f9836cf4f9f5a4bca9caedcb0e/house-gallery/README.md). Unabhängiges Review: sol-loop, eine Runde mit GPT-6.1 Sol (Provider Pi, `thinking=xhigh`), **APPROVE**, keine fachlichen Befunde, keine abgelehnten Befunde und keine Verhaltensänderung durch das Review. Der Reviewer führte Typprüfung, 113 Tests und eigene Platzierungs-/Zugangsproben über alle 9.136 Seed-42-Fälle aus; Browserprüfungen wurden von ihm nicht erneut ausgeführt. Verbrauchsdaten wurden nicht geliefert. Der vorgelegte Diff umfasste 95 Dateien/14.318 hinzugefügte Zeilen einschließlich Protokollen und Lockfile; danach wurde nur dieser Reviewvermerk ergänzt. CI wird zusätzlich am veröffentlichten PR-Stand geprüft; lokale grüne Prüfungen allein behaupten noch keinen erfolgreichen Merge.
