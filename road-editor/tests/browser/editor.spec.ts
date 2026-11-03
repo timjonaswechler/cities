@@ -84,6 +84,102 @@ test("S1 undo reconciles controls on removed segments", async ({ page }) => {
   await page.getByRole("button", { name: "Redo", exact: true }).click();
   expect((await snapshot(page)).network.paths[0].segments).toHaveLength(2);
 });
+test("B06 width link synchronizes either input, unlinks, and participates in undo/redo", async ({
+  page,
+}, testInfo) => {
+  await load(page, quadratic());
+  await page.locator('[data-path="Q"]').first().click({ force: true });
+  const link = page.getByRole("button", {
+    name: "Breiten koppeln",
+    exact: true,
+  });
+  const start = page.getByLabel("Breite Anfang (m)"),
+    end = page.getByLabel("Breite Ende (m)");
+  const width = async (input: typeof start, value: string) => {
+    await input.fill(value);
+    await input.press("Tab");
+  };
+  await expect(link).toHaveAttribute("aria-pressed", "false");
+  await width(start, "8");
+  await expect(end).toHaveValue("4");
+  const taperedArea = (await snapshot(page)).area;
+  await link.click();
+  await expect(link).toHaveAttribute("aria-pressed", "true");
+  await expect(start).toHaveValue("8");
+  await expect(end).toHaveValue("8");
+  expect((await snapshot(page)).area).toBeGreaterThan(taperedArea);
+  await width(end, "6");
+  await expect(start).toHaveValue("6");
+  await expect(end).toHaveValue("6");
+  await width(start, "5");
+  await expect(end).toHaveValue("5");
+  const valid = (await snapshot(page)).network;
+  await width(end, "0");
+  expect((await snapshot(page)).network).toEqual(valid);
+  await expect(start).toHaveValue("5");
+  await expect(end).toHaveValue("5");
+  await expect(page.locator("#status")).toContainText("positiv");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(start).toHaveValue("6");
+  await expect(end).toHaveValue("6");
+  await expect(link).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(start).toHaveValue("5");
+  await expect(end).toHaveValue("5");
+  sameMesh(await snapshot(page));
+  await page.screenshot({ path: testInfo.outputPath("linked-widths.png") });
+  await link.focus();
+  await link.press("Space");
+  await expect(link).toHaveAttribute("aria-pressed", "false");
+  await expect(start).toHaveValue("5");
+  await expect(end).toHaveValue("5");
+  await width(end, "3");
+  await expect(start).toHaveValue("5");
+  await expect(end).toHaveValue("3");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(link).toHaveAttribute("aria-pressed", "true");
+  await expect(start).toHaveValue("5");
+  await expect(end).toHaveValue("5");
+});
+test("B07 width link belongs to its path and survives graph JSON roundtrips", async ({
+  page,
+}) => {
+  const link = page.getByRole("button", {
+    name: "Breiten koppeln",
+    exact: true,
+  });
+  await link.click();
+  await expect(link).toHaveAttribute("aria-pressed", "true");
+  await page.locator('[data-node="c"]').click();
+  await expect(link).toHaveAttribute("aria-pressed", "false");
+  await page.getByLabel("Breite Anfang (m)").fill("7");
+  await page.getByLabel("Breite Anfang (m)").press("Tab");
+  await expect(page.getByLabel("Breite Ende (m)")).toHaveValue("4");
+  await page.locator('[data-node="a"]').click();
+  await expect(link).toHaveAttribute("aria-pressed", "true");
+  const saved = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "JSON speichern", exact: true })
+    .click();
+  const file = (await (await saved).path())!;
+  const before = (await snapshot(page)).network;
+  await page.reload();
+  await expect(link).toHaveAttribute("aria-pressed", "false");
+  await page.locator("#import").setInputFiles(file);
+  await expect.poll(async () => (await snapshot(page)).network).toEqual(before);
+  await page.locator('[data-node="a"]').click();
+  await expect(link).toHaveAttribute("aria-pressed", "true");
+  await page.getByLabel("Breite Ende (m)").fill("5");
+  await page.getByLabel("Breite Ende (m)").press("Tab");
+  const paths = (await snapshot(page)).network.paths;
+  expect(paths[0]).toMatchObject({
+    startWidth: 5,
+    endWidth: 5,
+    widthsLinked: true,
+  });
+  expect(paths[1]).toMatchObject({ startWidth: 7, endWidth: 4 });
+});
 test("B01 draw, select, anchor/control drag, numeric width/position, undo/redo", async ({
   page,
 }) => {

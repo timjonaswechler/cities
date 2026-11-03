@@ -139,6 +139,22 @@ input[type="number"] {
   font-size: 12px;
   padding: 8px 4px;
 }
+.width-row {
+  align-items: flex-end;
+  gap: 6px;
+}
+.width-row .width-link {
+  flex: 0 0 30px;
+  height: 34px;
+  margin-bottom: 12px;
+  padding: 5px;
+  display: grid;
+  place-items: center;
+}
+.width-link svg {
+  width: 18px;
+  height: 18px;
+}
 .danger {
   color: #9c4034;
 }

@@ -14,6 +14,7 @@ export interface Path {
   segments: Segment[];
   startWidth: number;
   endWidth: number;
+  widthsLinked?: boolean;
 }
 export interface Junction {
   node: string;
@@ -82,6 +83,10 @@ export function validate(value: unknown): asserts value is Network {
       p.endWidth <= 0
     )
       fail("Breite muss endlich und positiv sein");
+    if (p.widthsLinked !== undefined && typeof p.widthsLinked !== "boolean")
+      fail("Breitenkopplung muss ein Wahrheitswert sein");
+    if (p.widthsLinked && p.startWidth !== p.endWidth)
+      fail("Gekoppelte Breiten müssen gleich sein");
     if (!Array.isArray(p.segments) || p.segments.length === 0)
       fail("Pfad benötigt Segmente");
     p.segments.forEach((s, i) => {

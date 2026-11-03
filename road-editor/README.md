@@ -28,6 +28,11 @@ ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
   formerhaltend und verwendet den neuen Knoten.
 - Mittellinie auswählen; Breiten am Anfang/Ende numerisch eingeben.
   Gleiche Werte bedeuten konstante Breite, sonst linear über gesamte Bogenlänge.
+  Das **Kettensymbol** zwischen den Feldern koppelt beide Breiten: Beim Einschalten
+  wird die Anfangsbreite für beide übernommen; danach ändert jedes Feld beide Werte.
+  Erneutes Klicken löst die Kopplung, ohne die Werte zu ändern. Die Einstellung gilt
+  pro Pfad, ist undo-fähig und wird im Graph-JSON gespeichert; ältere Dateien ohne
+  diese Einstellung bleiben entkoppelt.
   **Richtung umkehren** kehrt Segmente, Kontrollgriffe und Breitenzuordnung um,
   ohne die physische Fläche zu ändern.
 - Runde Anker ziehen oder deren XY-Position eingeben. Ein gemeinsamer Anker

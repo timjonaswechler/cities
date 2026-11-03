@@ -172,7 +172,7 @@ function render() {
   const input = (label: string, key: string, value: number) =>
     `<label>${label}<input type="number" step="0.1" data-field="${key}" value="${value}"></label>`;
   let panel = p
-    ? `<h3>Pfad <span class="tag">${esc(p.id)}</span></h3><div class="muted">${p.segments.length} Segment(e) · linear über Bogenlänge</div><div class="row">${input("Breite Anfang (m)", "startWidth", p.startWidth)}${input("Breite Ende (m)", "endWidth", p.endWidth)}</div><div class="row"><button data-action="reverse">Richtung umkehren</button><button data-action="delete" class="danger">Pfad löschen</button></div>`
+    ? `<h3>Pfad <span class="tag">${esc(p.id)}</span></h3><div class="muted">${p.segments.length} Segment(e) · linear über Bogenlänge</div><div class="row width-row">${input("Breite Anfang (m)", "startWidth", p.startWidth)}<button type="button" class="width-link ${p.widthsLinked ? "active" : ""}" data-action="link-widths" aria-label="Breiten koppeln" aria-pressed="${!!p.widthsLinked}" title="${p.widthsLinked ? "Kopplung lösen: Breiten unabhängig bearbeiten" : "Breiten koppeln: Anfangsbreite für beide übernehmen"}"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m10 7 2-2a5 5 0 0 1 7 7l-2 2M14 17l-2 2a5 5 0 0 1-7-7l2-2"/>${p.widthsLinked ? '<path d="m8 16 8-8"/>' : '<path d="m3 3 18 18"/>'}</svg></button>${input("Breite Ende (m)", "endWidth", p.endWidth)}</div><div class="row"><button data-action="reverse">Richtung umkehren</button><button data-action="delete" class="danger">Pfad löschen</button></div>`
     : `<p class="muted">Pfad oder Knoten auswählen. Mit „Zeichnen“ einen eigenen Verlauf erstellen.</p>`;
   if (at) {
     panel += `<div class="section"><h3>Knoten <span class="tag">${esc(at.id)}</span></h3><div class="row">${input("Knoten X (m)", "nodeX", at.x)}${input("Knoten Y (m)", "nodeY", at.y)}</div><label>Verbinden mit<select id="join-target" class="inspector-select"><option value="">Knoten wählen …</option>${n.nodes
@@ -514,7 +514,10 @@ $("#inspector").addEventListener("change", (e) => {
       return;
     }
     const p = n.paths.find((p) => p.id === selection.path);
-    if (p && (field === "startWidth" || field === "endWidth")) p[field] = value;
+    if (p && (field === "startWidth" || field === "endWidth")) {
+      p[field] = value;
+      if (p.widthsLinked) p.startWidth = p.endWidth = value;
+    }
     if (selection.node && (field === "nodeX" || field === "nodeY")) {
       const q = node(n, selection.node);
       moveNode(n, q.id, {
@@ -531,10 +534,17 @@ $("#inspector").addEventListener("change", (e) => {
   });
 });
 $("#inspector").addEventListener("click", (e) => {
-  const action = (e.target as HTMLElement).dataset.action;
+  const action = (e.target as Element).closest<HTMLButtonElement>(
+    "button[data-action]",
+  )?.dataset.action;
   if (!action) return;
   const target = $<HTMLSelectElement>("#join-target")?.value;
   apply((n) => {
+    if (action === "link-widths" && selection.path) {
+      const p = n.paths.find((p) => p.id === selection.path)!;
+      p.widthsLinked = !p.widthsLinked;
+      if (p.widthsLinked) p.endWidth = p.startWidth;
+    }
     if (action === "reverse" && selection.path) reversePath(n, selection.path);
     if (action === "delete" && selection.path) {
       n.paths = n.paths.filter((p) => p.id !== selection.path);
@@ -618,6 +628,7 @@ $("#import").addEventListener("change", async (e) => {
 window.addEventListener("keydown", (e) => {
   if ((e.target as HTMLElement).matches("input,select,textarea")) return;
   if (e.code === "Space") {
+    if ((e.target as HTMLElement).closest("button")) return;
     e.preventDefault();
     space = true;
   }
