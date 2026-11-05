@@ -20,11 +20,43 @@ Die von Vite ausgegebene lokale URL öffnen. Ein direkt editierbares Startnetz
 ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
 Änderungen vor dem Schließen als JSON speichern.
 
-## Bearbeiten
+## Zeichnen mit dem Stift
 
-- Material **Weg/Wasser** und Segmenttyp **Gerade/Quadratisch/Kubisch** wählen,
-  dann **Zeichnen** und Start/Endpunkte klicken. Weitere Klicks erweitern denselben
-  Vektor; der Segmenttyp darf wechseln. **Esc/Enter/Auswählen** beendet ihn offen.
+Der Standard ist **Stift · Klick / Ziehen**, angelehnt an die dokumentierten
+Pen-Werkzeuge von Penpot, Figma und Inkscape. [Quellen und bewusste Unterschiede](../docs/vector-tool-interactions.md).
+
+1. **P** aktiviert den Stift; **Zeichnen** nutzt den oben gewählten Modus.
+   Standard ist der Stift. Klicken setzt eine Ecke; Ziehen
+   am neu gesetzten Punkt bestimmt Richtung und Länge seiner Kurvengriffe.
+   Eine gestrichelte Linie zeigt vor dem nächsten Klick die Vorschau.
+2. Weitere Klicks/Ziehgesten erweitern denselben Pfad. Kurven werden nicht
+   vorgeformt: die gezogenen Griffe bestimmen sie. Beim Erzeugen sind die beiden
+   Griffe gespiegelt; danach bleiben sie unabhängig editierbar.
+3. **Enter**, **Offen beenden** oder **V** beendet offen. Klick auf den Startpunkt
+   schließt ausdrücklich **als gefüllte Fläche**, nicht als breiten Weg-Ring.
+   Der Kreisindikator markiert diese Schließgeste.
+4. **Esc während einer Ziehgeste** verwirft nur diese Geste; bereits gesetzte
+   Punkte bleiben. Sonst beendet Esc den Pfad. Ein einzelner unverbundener
+   Startpunkt wird nicht gespeichert. Eine übernommene Punktgeste ist ein Undo-Schritt;
+   danach kann im aktiven Stiftpfad weitergezeichnet werden, auch nach Redo.
+5. Nach dem Beenden lassen sich Punkte und Griffe wie bisher ziehen. Bei kubischen
+   Kurven wandern die angrenzenden Griffe mit ihrem Anker, ohne andere Arme zu
+   glätten oder die Griffe dauerhaft zu koppeln. Dasselbe gilt für geschlossene
+   Konturen und Aussparungen. Alte Quadratik-Kurven behalten ihren einzelnen
+   unabhängigen Kontrollpunkt.
+
+Material und bestehende Streifen-/Flächenregeln bleiben unverändert. Noch keine
+getrennte Objekt-/Punktauswahl, Mehrfachauswahl, automatische Smooth-Knoten oder
+neue Geste zum Wiederaufnehmen alter Pfade. Dies ist ein erster Interaktionsschritt,
+keine vollständige Überarbeitung der Werkbank.
+
+## Weitere Bearbeitung und feste Segmenttypen
+
+- Für explizite Vorgaben **Gerade/Quadratisch/Kubisch (fest)** wählen, dann
+  **Zeichnen** und Start/Endpunkte klicken. Weitere Klicks erweitern denselben
+  Vektor; diese festen Segmenttypen dürfen wechseln. Ein Wechsel zwischen Stift
+  und festen Typen beendet dagegen den laufenden offenen Zeichenablauf.
+  **Esc/Enter/Auswählen** beendet ihn offen.
   Am ersten Anker klicken oder **Pfad schließen** füllt stattdessen sein Inneres.
   Bei offenen Pfaden docken nahe Anker und Mittellinien desselben Materials an;
   Mittellinien werden dabei formerhaltend geteilt. Wasser dockt nicht automatisch
@@ -39,7 +71,8 @@ ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
   **Richtung umkehren** kehrt Segmente, Kontrollgriffe und Breitenzuordnung um,
   ohne die physische Fläche zu ändern.
 - Runde Anker ziehen oder deren XY-Position eingeben. Ein gemeinsamer Anker
-  bewegt alle Anschlüsse. Blaue Rauten sind unabhängige Kontrollgriffe,
+  bewegt alle Anschlüsse und die jeweils angrenzenden kubischen Griffe.
+  Blaue Rauten sind unabhängig voneinander bewegliche Kontrollgriffe,
   **keine** Kreuzungsknoten; nach Griffauswahl ist auch numerische Eingabe möglich.
   Es gibt keine automatische Tangenten- oder Knickglättung.
 - Knoten auswählen: **Knoten verbinden** ersetzt seine Referenzen durch den

@@ -564,6 +564,7 @@ test("B05 mixed compound creation, numeric handles, reverse/delete, rejected edi
   page,
 }) => {
   await page.getByRole("button", { name: "Neu", exact: true }).click();
+  await page.locator("#kind").selectOption("line");
   await page.getByRole("button", { name: "Zeichnen", exact: true }).click();
   await clickWorld(page, -30, -10);
   await clickWorld(page, -10, -10);
