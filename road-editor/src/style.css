@@ -395,7 +395,8 @@ footer {
   height: 1px;
   opacity: 0;
 }
-#inspector button.full {
+#inspector button.full,
+#house-inspector button.full {
   width: 100%;
   margin-top: 8px;
 }

@@ -4,7 +4,9 @@ Eigenständige Browserwerkbank in TypeScript/Three.js, neu implementiert statt
 Fortsetzung der verworfenen Hausgalerie. Wege, Straßen und Wasser verwenden
 dieselben Vektoren: offen mit Breite, ausdrücklich geschlossen als gefüllte
 Fläche ohne Breitenparameter. Das Material ist eine Einstellung, kein Szenariotyp.
-Keine Häuser, Nachbarblocker, Parzellierung oder Rust-/Archiv-Integration.
+Ein neues, getrenntes Hausmodul zeigt Satteldach-Varianten auf einem manuell
+markierten Bauplatz. Keine Nachbarblocker, automatische Parzellierung oder
+Rust-/Archiv-Integration.
 
 ## Starten
 
@@ -100,6 +102,41 @@ füllt nicht automatisch seinen Innenbereich. **Pfad schließen** wandelt einen
 gewählten Pfad ausdrücklich zur gefüllten Kontur um.
 [Begriffe](../GLOSSARY.md).
 
+## Hausvarianten auf einem Bauplatz
+
+1. Einen Weg zeichnen und mit Esc beenden. Unter **Haus am Bauplatz** auf
+   **Bauplatz markieren** klicken und zwei gegenüberliegende Ecken setzen.
+   Zunächst einen rechteckigen Platz neben einem geraden Weg verwenden.
+2. Danach den gewünschten **Wegrand** anklicken; nicht die Mittellinie und
+   nicht das Wasser. **Zugang wählen** ändert diesen Punkt später erneut.
+3. **Hausvariante** schaltet bis zu drei passende Satteldachhäuser um:
+   4 × 6 m/eingeschossig, 6 × 8 m/zweigeschossig, 8 × 5 m/eingeschossig.
+   Proportionen und Firstrichtung unterscheiden sich. **Haus-Seed** verändert
+   die reproduzierbare Platzierungssuche. Draufsicht und **3D prüfen** zeigen
+   denselben Baukörper. Weniger Treffer und Ablehnungsgründe bleiben sichtbar.
+4. **Haus übernehmen** fixiert genau diesen Vorschlag. Zum erneuten Vergleichen
+   erst **Haus entfernen**; Undo stellt ihn wieder her. Neue Bauplatzecken oder
+   ein neuer Zugang erhalten das übernommene Haus und prüfen es erneut.
+5. Änderungen an Wegen und Wasser prüfen das konkrete Haus ebenfalls erneut:
+   Konflikte erscheinen rot und als Text, statt das Haus still zu ersetzen.
+   **Bauplatz löschen** entfernt Platz und Haus. Undo/Redo und JSON speichern
+   Bauplatz, Zugang, Seed, Variantenauswahl und übernommenes Haus.
+
+Die vollständige Dachhülle muss in den Bauplatz passen und mindestens 0,5 m
+Abstand zu Weg und Wasser halten. Der gerade Zugang ist 1,2 m breit, höchstens
+12 m lang und darf kein Wasser oder dazwischenliegende Wege queren. Diese
+Versuchswerte sind keine historischen Normen. Die endliche Suche prüft höchstens
+27 Platzierungen je Profil; kein Treffer beweist nicht, dass kein Haus möglich ist.
+Es gibt zunächst genau einen achsenparallelen Bauplatz, keine Grundstücksautomatik,
+Nachbarhäuser, Innenräume, Anbauten oder Fassadendetails.
+
+Das Hausmodul erhält nur Baufläche, Zugang, getrennte Sperrflächen und Seed;
+`house-project.ts` adaptiert die bestehende Wege-/Wassergeometrie. `houses.ts`
+erzeugt und prüft die Hausbeschreibung; `houseGeometry` ist zugleich Grundlage
+der Three.js-Darstellung. Projekte mit Bauplatz verwenden JSON-Version 4.
+Versionen 1–3 bleiben ladbar; abgeleitete Vorschläge und Meshes werden nicht gespeichert.
+[Checkliste](HOUSE-CHECKLIST.md) · [Feste Hausprüffälle](HOUSE-ACCEPTANCE.md).
+
 ## Geometrie-Interface
 
 `src/network.ts`: `Network`, `parse/serialize`, Graphbearbeitung und `History`.
@@ -190,5 +227,6 @@ korrigieren. Nicht erfüllbare Kreise bleiben explizit ungeglättet.
 Unverbundene Überschneidungen sind rot markiert: geometrische Vereinigung ist
 **keine** automatische Graphverbindung und erfindet keine Überführung.
 Die Sperrfläche bildet eine spätere Grundlage für Gebäudeausrichtung;
-Restfläche ist nicht automatisch genehmigtes Bauland. Keine Stadt-/Hausplanung.
+Restfläche ist nicht automatisch genehmigtes Bauland. Keine automatische
+Stadtplanung; Hausvorschläge benötigen den ausdrücklich markierten Bauplatz.
 Desktopbedienung mit Maus/Tastatur; kein zugesagter Touch-/Mobilworkflow.

@@ -4,6 +4,8 @@ import {
   type AreaBlocker,
 } from "./blockers";
 import { curvePoint, curveDerivative, splitCurve, type Curve } from "./curves";
+import { validateHousePlot } from "./house-state";
+import type { HousePlot } from "./house-types";
 
 export interface Point {
   x: number;
@@ -28,11 +30,12 @@ export interface Junction {
   radius: number;
 }
 export interface Network {
-  version: 1 | 2 | 3;
+  version: 1 | 2 | 3 | 4;
   nodes: Node[];
   paths: Path[];
   junctions: Junction[];
   areaBlockers?: AreaBlocker[];
+  housePlot?: HousePlot;
 }
 export const emptyNetwork = (): Network => ({
   version: 3,
@@ -62,12 +65,16 @@ export function validate(value: unknown): asserts value is Network {
   if (!value || typeof value !== "object") fail("Graph muss ein Objekt sein");
   const n = value as Network;
   if (
-    ![1, 2, 3].includes(n.version) ||
+    ![1, 2, 3, 4].includes(n.version) ||
     !Array.isArray(n.nodes) ||
     !Array.isArray(n.paths) ||
     !Array.isArray(n.junctions)
   )
-    fail("Ungültiges Format / Version (erwartet 1, 2 oder 3)");
+    fail("Ungültiges Format / Version (erwartet 1, 2, 3 oder 4)");
+  if (n.housePlot !== undefined) {
+    if (n.version < 4) fail("Bauplätze benötigen Formatversion 4");
+    validateHousePlot(n.housePlot);
+  }
   if (n.version === 1 && n.areaBlockers !== undefined)
     fail("Flächensperren benötigen Formatversion 2");
   validateAreaBlockers(n.areaBlockers);
@@ -322,7 +329,7 @@ export function closePath(
   };
   validateAreaBlockers([area]);
   const owned = new Set(segments.flatMap((s) => [s.from, s.to]));
-  n.version = 3;
+  if (n.version < 3) n.version = 3;
   n.paths = n.paths.filter((q) => q.id !== id);
   const retained = new Set(
     n.paths.flatMap((q) => q.segments.flatMap((s) => [s.from, s.to])),
@@ -346,7 +353,7 @@ export function openArea(n: Network, id: string): void {
     return { id, x: q.x, y: q.y };
   });
   const edges = contourEdges(area);
-  n.version = 3;
+  if (n.version < 3) n.version = 3;
   n.nodes.push(...nodes);
   n.paths.push({
     id,

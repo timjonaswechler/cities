@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import type { Surface } from "./geometry";
+import { createHouseGroup } from "./house-view";
+import type { House } from "./house-types";
 export interface View {
   x: number;
   y: number;
@@ -9,6 +11,8 @@ export class SurfaceView {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
   private group = new THREE.Group();
+  private houseGroup?: THREE.Group;
+  houseMeshes: { name: string; positions: number[] }[] = [];
   private grid: THREE.GridHelper;
   private top = new THREE.OrthographicCamera();
   private spatial = new THREE.PerspectiveCamera(45, 1, 0.1, 20000);
@@ -161,6 +165,32 @@ export class SurfaceView {
             ),
           );
         }
+  }
+  setHouse(house: House | undefined, conflict: boolean) {
+    if (this.houseGroup) {
+      this.houseGroup.traverse((object) => {
+        if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
+          object.geometry.dispose();
+          const materials = Array.isArray(object.material)
+            ? object.material
+            : [object.material];
+          materials.forEach((m) => m.dispose());
+        }
+      });
+      this.scene.remove(this.houseGroup);
+    }
+    this.houseGroup = house ? createHouseGroup(house, conflict) : undefined;
+    this.houseMeshes = [];
+    if (this.houseGroup) {
+      this.houseGroup.traverse((object) => {
+        if (object instanceof THREE.Mesh)
+          this.houseMeshes.push({
+            name: object.name,
+            positions: Array.from(object.geometry.attributes.position.array),
+          });
+      });
+      this.scene.add(this.houseGroup);
+    }
   }
   render(view: View, spatial: boolean) {
     const w = this.container.clientWidth,

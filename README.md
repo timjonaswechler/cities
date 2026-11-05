@@ -126,7 +126,12 @@ Wege und Wasser mit denselben Linien-/Bézier-Vektoren zeichnen: offen mit Breit
 geschlossen als gefüllte Fläche ohne Breitenangabe. Anker, Kontrollgriffe und
 Aussparungen bleiben editierbar; dazu kommen Netzknoten, lokale Kreuzungsradien,
 Undo/Redo und Graph-JSON. Darstellung und Sperrflächen verwenden dieselben
-vereinigten Außenringe und Löcher. Keine Häuser oder Stadtintegration.
+vereinigten Außenringe und Löcher. Auf einem manuell markierten Bauplatz lassen
+sich jetzt bis zu drei passende Satteldach-Hausvarianten vergleichen und eine
+übernehmen. Das getrennte Hausmodul prüft Dachhülle und Wegzugang; Änderungen
+an Wegen und Wasser melden Konflikte am übernommenen Haus. Noch keine automatische
+Parzellierung oder Integration mit dem Rust-Stadtgenerator.
+[Haus-Meilenstein und Prüffälle](road-editor/HOUSE-ACCEPTANCE.md).
 
 ```sh
 cd road-editor
