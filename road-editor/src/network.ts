@@ -3,7 +3,13 @@ import {
   validateAreaBlockers,
   type AreaBlocker,
 } from "./blockers";
-import { curvePoint, curveDerivative, splitCurve, type Curve } from "./curves";
+import {
+  curvePoint,
+  curveDerivative,
+  splitCurve,
+  moveCubicHandle,
+  type Curve,
+} from "./curves";
 import { validateHousePlot } from "./house-state";
 import type { HousePlot } from "./house-types";
 
@@ -183,7 +189,14 @@ export function derivative(n: Network, s: Segment, t: number): Point {
 export function moveNode(n: Network, id: string, p: Point): void {
   if (!Number.isFinite(p.x) || !Number.isFinite(p.y))
     throw new Error("Position muss endlich sein");
-  Object.assign(node(n, id), p); // Controls are independent world positions; no implicit smoothing.
+  const at = node(n, id),
+    delta = { x: p.x - at.x, y: p.y - at.y };
+  for (const path of n.paths)
+    for (const s of path.segments) {
+      if (s.from === id) moveCubicHandle(s, "start", delta);
+      if (s.to === id) moveCubicHandle(s, "end", delta);
+    }
+  Object.assign(at, p);
 }
 export function reversePath(n: Network, id: string): void {
   const p = n.paths.find((p) => p.id === id);

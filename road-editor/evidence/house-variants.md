@@ -27,7 +27,15 @@ Beide Dachrichtungen, unterschiedliche Volumen, der Abstand zum Weg und die rote
 
 Genau ein manuell markierter achsenparalleler rechteckiger Bauplatz und eine Hausfamilie mit drei festen Profilen. Kein Nachbarhausmodell, keine automatische Parzellierung, keine Innenräume oder Fassadendetails. Scharf geknickte Zugänge können konservativ abgelehnt werden; die endliche Suche beweist nicht, dass ein abgelehnter Platz grundsätzlich unbebaubar ist. Übernommene Häuser müssen vor einem neuen Variantenvergleich ausdrücklich entfernt werden; Undo erhält die alte Auswahl.
 
-## Unabhängiges Review
+## Vektorbedienung in PR #7 integriert
+
+Der Stift-Stand aus `ffdc8c8` wurde in `feat/house-variants` übernommen, nicht in einen neuen PR. Die Konflikte in Werkzeugzustand, Darstellung und Undo/Redo erhalten beide Arbeitsabläufe. Der gemeinsame Zeichenadapter darf ein vorhandenes Hausprojekt nicht von Format 4 auf 3 zurücksetzen: Der neue Browserfall schlug mit der unveränderten Zuweisung fehl und besteht mit dem versionswahrenden Adapter.
+
+Der kombinierte Stand besteht Formatprüfung, Typecheck, Produktionsbuild, 132 reine Tests und 29 Chromium/WebGL-Abläufe. Zusätzlich geprüft: nach Hausübernahme mit Stift und festen Typen weiterzeichnen, Format 4 und Hausdaten durch Undo/Redo erhalten sowie einen Stiftentwurf beim Wechsel zur Bauplatzauswahl verwerfen. Lokale Prüfung auf Port 5189; die vorhandenen Entwicklungsserver mussten dafür nicht beendet werden. Die oben verlinkten Hausaufnahmen wurden mit dem kombinierten Stand erneuert; die Draufsicht und die Pen-Vorschau wurden im Browser aufgenommen und angesehen.
+
+Integrationsreview mit GPT-6.1 Sol über Pi (`thinking: xhigh`), Runde 1: `CHANGES`. V1 (`should`): Entf im aktiven Stift suchte einen nicht mehr vorhandenen Inspektorbutton und warf einen Laufzeitfehler. Der Ablauf wurde im Browser reproduziert; Löschen läuft jetzt für Tastatur und Schaltflächen über eine gemeinsame Modellaktion und beendet die aktive Pen-Sitzung. Der neue Ablauf prüft auch anschließendes Neuzeichnen und besteht nach der Korrektur. Runde 2: `APPROVE`, V1 bestätigt aufgelöst, keine neuen Befunde. Der Reviewer hat sechs relevante Chromium-Fälle einschließlich Löschen/Neuzeichnen, bisheriger Löschabläufe, Hausbedienung und Format-4-Integration erfolgreich nachgeprüft. Keine offenen oder abgelehnten Befunde. Integrationsumfang vor Review: 17 Dateien, +1.020/−88 Zeilen; nach Verhaltenskorrektur: +1.063/−107 Zeilen. Verbrauchsdaten wurden nicht gemeldet. Die gestalterischen Grenzen und die offene gemeinsame Haus-/UI-Beurteilung bleiben bestehen.
+
+## Unabhängiges Review des Haus-Meilensteins
 
 Sol-loop, GPT-6.1 Sol über Pi, `thinking: xhigh`; höchstens drei Runden. Verbrauchsdaten wurden nicht gemeldet. Umfang vor Runde 1: 24 Dateien, +2.508/−23 Zeilen.
 

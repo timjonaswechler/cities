@@ -5,9 +5,11 @@ import {
   contourPoints,
   contourEdges,
   setContourEdges,
+  moveContourAnchor,
   type AreaBlocker,
 } from "./blockers";
 import { createCurve, splitCurve, type Curve } from "./curves";
+import { penCurve, type PenPoint } from "./pen";
 import {
   History,
   cleanJunctions,
@@ -51,8 +53,8 @@ const esc = (s: unknown) =>
       ]!,
   );
 $("#app").innerHTML =
-  `<header><h1>Wegwerk<small>Parametrischer Editor</small></h1><button id="select" class="active">Auswählen</button><button id="draw">Zeichnen</button><select id="material" aria-label="Zeichenmaterial"><option value="road">Weg</option><option value="water">Wasser</option></select><select id="kind" aria-label="Segmenttyp"><option value="line">Gerade</option><option value="quadratic">Quadratisch</option><option value="cubic">Kubisch</option></select><span class="spacer"></span><button id="undo" title="Ctrl/⌘ Z">Undo</button><button id="redo" title="Ctrl/⌘ Shift Z">Redo</button><button id="new">Neu</button><button id="save">JSON speichern</button><button id="load">JSON laden</button><input id="import" type="file" accept="application/json,.json" aria-label="Graph importieren"><button id="spatial">3D prüfen</button></header>
-<main><aside><h2>Werkbank / Meter</h2><div id="inspector"></div><div id="house-inspector"></div><div class="section" id="diagnostics" role="status"></div><div class="section hint">Klick: auswählen · Anker und blaue Griffe: ziehen.<br>Zeichnen: Start, Ende, weitere Endpunkte. An Knoten und Mittellinien andocken.<br>Esc: Pfad beenden · Entf: Pfad löschen.<br>Leertaste + Ziehen / mittlere Taste: Pan.<br>Mausrad: Zoom · <button id="home">Ansicht 0 / 120 m</button><br>Weg und Wasser: offener Vektor + Breite; am ersten Anker oder mit „Pfad schließen“ zur gefüllten Fläche. Esc/Enter beendet offen.<br>Wege + Wasser = Sperrfläche; freier Rest ≠ Bauland.</div></aside><section id="viewport" aria-label="Wegewerkbank"><div id="three"></div><svg id="editor" aria-label="Vektorpfade bearbeiten"></svg><div class="overlay-title"><strong>Vektoren formen.</strong><span id="mode-hint">Direkt am Vektor, in Weltkoordinaten.</span></div><div class="legend"><b style="background:#427c70"></b>Weg <b style="background:#2b91b4"></b>Wasser <b style="background:#edb65a"></b>Auswahl / Radius<br><b style="background:#f8f9ee;border:1px solid #285b4a"></b>Anker <b style="background:#a4c9ed"></b>Kontrollgriff <b style="background:#be503e"></b>Konflikt</div><div class="scale" id="scale">10 m</div></section></main><footer><span id="status" role="status"></span><span id="metrics"></span></footer>`;
+  `<header><h1>Wegwerk<small>Parametrischer Editor</small></h1><button id="select" class="active" title="Auswählen (V)">Auswählen</button><button id="draw" title="Stift zeichnen (P)">Zeichnen</button><select id="material" aria-label="Zeichenmaterial"><option value="road">Weg</option><option value="water">Wasser</option></select><select id="kind" aria-label="Zeichenmodus"><option value="pen">Stift · Klick / Ziehen</option><option value="line">Gerade (fest)</option><option value="quadratic">Quadratisch (fest)</option><option value="cubic">Kubisch (fest)</option></select><span class="spacer"></span><button id="undo" title="Ctrl/⌘ Z">Undo</button><button id="redo" title="Ctrl/⌘ Shift Z">Redo</button><button id="new">Neu</button><button id="save">JSON speichern</button><button id="load">JSON laden</button><input id="import" type="file" accept="application/json,.json" aria-label="Graph importieren"><button id="spatial">3D prüfen</button></header>
+<main><aside><h2>Werkbank / Meter</h2><div id="inspector"></div><div id="house-inspector"></div><div class="section" id="diagnostics" role="status"></div><div class="section hint">Klick: auswählen · Anker und blaue Griffe: ziehen.<br>Stift (P): Klicken setzt Ecken, Ziehen formt Kurven. Vorschau folgt der Maus.<br>Enter: offen beenden · Esc: Ziehgeste verwerfen, sonst beenden · V: Auswahl · Entf: Pfad löschen.<br>Leertaste + Ziehen / mittlere Taste: Pan.<br>Mausrad: Zoom · <button id="home">Ansicht 0 / 120 m</button><br>Weg und Wasser: offener Vektor + Breite; am ersten Anker oder mit „Pfad schließen“ zur gefüllten Fläche. Esc/Enter beendet offen.<br>Wege + Wasser = Sperrfläche; freier Rest ≠ Bauland.</div></aside><section id="viewport" aria-label="Wegewerkbank"><div id="three"></div><svg id="editor" aria-label="Vektorpfade bearbeiten"></svg><div class="overlay-title"><strong>Vektoren formen.</strong><span id="mode-hint">Direkt am Vektor, in Weltkoordinaten.</span></div><div class="legend"><b style="background:#427c70"></b>Weg <b style="background:#2b91b4"></b>Wasser <b style="background:#edb65a"></b>Auswahl / Radius<br><b style="background:#f8f9ee;border:1px solid #285b4a"></b>Anker <b style="background:#a4c9ed"></b>Kontrollgriff <b style="background:#be503e"></b>Konflikt</div><div class="scale" id="scale">10 m</div></section></main><footer><span id="status" role="status"></span><span id="metrics"></span></footer>`;
 const starter: Network = {
   version: 3,
   areaBlockers: [],
@@ -117,9 +119,17 @@ let plotCorner: Point | undefined, plotHover: Point | undefined;
 let houseResult: HouseResult | undefined, housePreview: House | undefined;
 let houseConflicts: string[] = [];
 let invalidHouseSeed: string | undefined;
+let penPoints: PenPoint[] = [];
+let penPath: string | undefined;
+let penHover: Point | undefined;
+let penGesture:
+  | { press: Point; anchor: PenPoint; pointerId: number }
+  | undefined;
 const drawingMaterial = () =>
   $<HTMLSelectElement>("#material").value as "road" | "water";
-const drawingKind = () => $<HTMLSelectElement>("#kind").value as Curve["kind"];
+const usingPen = () => $<HTMLSelectElement>("#kind").value === "pen";
+const drawingKind = () =>
+  usingPen() ? "line" : ($<HTMLSelectElement>("#kind").value as Curve["kind"]);
 const view: View = { x: 0, y: 0, height: 120 };
 const model = () => draft ?? history.value;
 const uid = (n: Network, prefix: string) => {
@@ -193,10 +203,40 @@ function apply(change: (n: Network) => void): boolean {
   render();
   return accepted;
 }
+function cancelPenGesture() {
+  if (penGesture && viewport.hasPointerCapture(penGesture.pointerId))
+    viewport.releasePointerCapture(penGesture.pointerId);
+  penGesture = undefined;
+  penHover = undefined;
+}
+function resetPen() {
+  cancelPenGesture();
+  penPath = undefined;
+  penPoints = [];
+}
+function deleteSelectedVector() {
+  const { area, path } = selection;
+  if (!area && !path) return;
+  if (
+    apply((n) => {
+      if (area) n.areaBlockers = n.areaBlockers?.filter((a) => a.id !== area);
+      else {
+        n.paths = n.paths.filter((p) => p.id !== path);
+        cleanJunctions(n);
+      }
+      selection = {};
+    })
+  ) {
+    resetPen();
+    drawStart = drawPath = undefined;
+    render();
+  }
+}
 function setMode(next: typeof mode) {
   invalidHouseSeed = undefined;
   houseMode = "select";
   plotCorner = plotHover = undefined;
+  resetPen();
   mode = next;
   drawStart = undefined;
   drawPath = undefined;
@@ -288,8 +328,12 @@ function render() {
   renderView();
   $("#select").classList.toggle("active", mode === "select");
   $("#draw").classList.toggle("active", mode === "draw" || mode === "island");
+  viewport.classList.toggle(
+    "pen-mode",
+    !spatial && usingPen() && (mode === "draw" || mode === "island"),
+  );
   $<HTMLButtonElement>("#undo").disabled =
-    !history.canUndo && !waterDraft.length;
+    !history.canUndo && !waterDraft.length && !penPoints.length;
   $<HTMLButtonElement>("#redo").disabled = !history.canRedo;
   $("#spatial").textContent = spatial ? "Draufsicht" : "3D prüfen";
   $("#mode-hint").textContent = spatial
@@ -300,13 +344,17 @@ function render() {
         : "Erste Bauplatzecke setzen · Esc beendet."
       : houseMode === "access"
         ? "Zugang am Wegrand wählen, nicht am Wasser."
-        : mode === "island"
-          ? "Aussparung mit denselben Vektoren zeichnen · Enter schließt · Esc verwirft."
-          : mode === "draw"
-            ? drawStart
-              ? "Endpunkt setzen / andocken. Am Start schließen; Esc/Enter beendet offen."
-              : "Startpunkt setzen / an Knoten oder Segment andocken."
-            : "Direkt am Vektor, in Weltkoordinaten.";
+        : usingPen() && (mode === "draw" || mode === "island")
+          ? "Klick: Ecke · Ziehen: Kurve · Enter: " +
+            (mode === "island" ? "Aussparung schließen" : "offen beenden") +
+            " · am Start: als Fläche schließen"
+          : mode === "island"
+            ? "Aussparung mit denselben Vektoren zeichnen · Enter schließt · Esc verwirft."
+            : mode === "draw"
+              ? drawStart
+                ? "Endpunkt setzen / andocken. Am Start schließen; Esc/Enter beendet offen."
+                : "Startpunkt setzen / an Knoten oder Segment andocken."
+              : "Direkt am Vektor, in Weltkoordinaten.";
   const p = n.paths.find((p) => p.id === selection.path),
     at = n.nodes.find((p) => p.id === selection.node);
   const input = (label: string, key: string, value: number) =>
@@ -362,8 +410,10 @@ function render() {
     if (q)
       panel += `<div class="section"><h3>Kontrollgriff ${key}</h3><div class="row">${input("Griff X (m)", "handleX", q.x)}${input("Griff Y (m)", "handleY", q.y)}</div><p class="hint">Weg und Wasser verwenden dieselben Vektorkurven.</p></div>`;
   }
+  if (mode === "draw" && usingPen())
+    panel = `<h3>Stift zeichnen</h3><p class="muted"><strong>Klicken</strong> setzt eine Ecke.<br><strong>Ziehen</strong> bestimmt Richtung und Länge der Kurvengriffe.</p><p class="muted">${penPoints.length} Anker gesetzt. ${penPoints.length ? "Den nächsten Punkt setzen; die gestrichelte Linie zeigt die Vorschau." : "Den ersten Punkt auf der Zeichenfläche setzen."}</p><button class="full" data-action="finish-drawing">Offen beenden · Enter</button><p class="hint">Am Startpunkt schließt ein Klick ausdrücklich als Fläche. Esc verwirft eine laufende Ziehgeste; sonst beendet es das Zeichnen. V wechselt zur Auswahl.</p>`;
   if (mode === "island")
-    panel = `<h3>Aussparung zeichnen</h3><p class="muted">${waterDraft.length} Anker · Segmenttyp oben wählen. Am ersten Anker oder mit Enter schließen. Esc verwirft.</p><button class="full" data-action="water-close" ${waterDraft.length < 2 ? "disabled" : ""}>Fläche schließen</button><button class="full" data-action="water-cancel">Abbrechen</button>`;
+    panel = `<h3>Aussparung zeichnen</h3><p class="muted">${waterDraft.length} Anker · ${usingPen() ? "Klicken setzt Ecken, Ziehen formt Kurven." : "Segmenttyp oben wählen."} Am ersten Anker oder mit Enter schließen. Esc verwirft.</p><button class="full" data-action="water-close" ${waterDraft.length < 2 ? "disabled" : ""}>Fläche schließen</button><button class="full" data-action="water-cancel">Abbrechen</button>`;
   $("#inspector").innerHTML = panel;
   const warnings = [
     ...surface.diagnostics,
@@ -418,14 +468,17 @@ function renderView() {
     .join("");
   const p = n.paths.find((p) => p.id === selection.path),
     selectedArea = n.areaBlockers?.find((a) => a.id === selection.area);
-  const parts = p
-    ? p.segments.map((s) => ({ s, a: node(n, s.from), b: node(n, s.to) }))
-    : selectedArea
-      ? selectedEdges(n).map((s, i) => {
-          const points = selectedRing(n);
-          return { s, a: points[i], b: points[(i + 1) % points.length] };
-        })
-      : [];
+  const parts =
+    usingPen() && (mode === "draw" || mode === "island")
+      ? []
+      : p
+        ? p.segments.map((s) => ({ s, a: node(n, s.from), b: node(n, s.to) }))
+        : selectedArea
+          ? selectedEdges(n).map((s, i) => {
+              const points = selectedRing(n);
+              return { s, a: points[i], b: points[(i + 1) % points.length] };
+            })
+          : [];
   for (const [i, { s, a, b }] of parts.entries()) {
     const handles =
       s.kind === "quadratic"
@@ -478,7 +531,13 @@ function renderView() {
       )
       .join("");
   }
-  if (!n.paths.length && !n.areaBlockers?.length && !waterDraft.length)
+  if (
+    !n.paths.length &&
+    !n.areaBlockers?.length &&
+    !waterDraft.length &&
+    !penPoints.length &&
+    !penGesture
+  )
     content += `<text class="empty-instruction" x="${view.x}" y="${-view.y}" style="font-size:${16 * unit}px">Material wählen → Vektor zeichnen → offen beenden oder am Start schließen</text>`;
   let bounds = n.housePlot?.bounds;
   if (
@@ -495,6 +554,7 @@ function renderView() {
     conflict: !!houseConflicts.length,
     unit,
   });
+  content += penOverlay(unit);
   svg.innerHTML = content;
   $("#scale").style.width = `${10 / unit}px`;
   $("#scale").hidden = spatial;
@@ -544,7 +604,9 @@ function finishWater() {
   const points = structuredClone(waterDraft),
     edges = [
       ...structuredClone(holeEdges),
-      createCurve(drawingKind(), points.at(-1)!, points[0]),
+      usingPen() && penPoints.length
+        ? penCurve(penPoints.at(-1)!, penPoints[0])
+        : createCurve(drawingKind(), points.at(-1)!, points[0]),
     ];
   if (
     apply((n) => {
@@ -571,6 +633,7 @@ function waterAt(q: Point) {
   if (waterDraft.length)
     holeEdges.push(createCurve(drawingKind(), waterDraft.at(-1)!, q));
   waterDraft.push(q);
+  penPoints.push({ point: q });
   notice = "";
   render();
 }
@@ -582,72 +645,273 @@ function closeSelectedPath() {
     b = node(model(), p.segments[0].from);
   if (
     apply((n) => {
-      closePath(n, p.id, createCurve(drawingKind(), a, b));
+      closePath(
+        n,
+        p.id,
+        usingPen() && penPoints.length
+          ? penCurve(
+              { point: a, outgoing: penPoints.at(-1)?.outgoing },
+              { point: b, outgoing: penPoints[0].outgoing },
+            )
+          : createCurve(drawingKind(), a, b),
+      );
       selection = { area: p.id, ring: 0 };
     })
   )
     setMode("select");
 }
-function drawAt(q: Point) {
-  const current = model().paths.find((p) => p.id === drawPath),
+function drawingTarget(n: Network, q: Point) {
+  const material = drawingMaterial(),
     tol = (12 * view.height) / svg.clientHeight;
-  if (current && distance(node(model(), current.segments[0].from), q) < tol) {
+  const eligible = (id: string) =>
+    id === drawStart ||
+    !n.paths.some((p) =>
+      p.segments.some((s) => s.from === id || s.to === id),
+    ) ||
+    n.paths.some(
+      (p) =>
+        (p.kind ?? "road") === material &&
+        p.segments.some((s) => s.from === id || s.to === id),
+    );
+  const near = n.nodes
+    .filter((p) => eligible(p.id) && distance(p, q) < tol)
+    .sort((a, b) => distance(a, q) - distance(b, q))[0];
+  if (near) return { point: { x: near.x, y: near.y }, node: near.id };
+  const hit = closest(n, q, material);
+  if (hit && hit.distance < tol && hit.t > 1e-5 && hit.t < 1 - 1e-5) {
+    const segment = n.paths.find((p) => p.id === hit.path)!.segments[hit.index];
+    return { point: evaluate(n, segment, hit.t), split: hit };
+  }
+  return { point: q };
+}
+function drawingNode(n: Network, q: Point) {
+  const target = drawingTarget(n, q);
+  if (target.node) return node(n, target.node);
+  const id = uid(n, "K");
+  if (target.split) {
+    const hit = target.split;
+    splitSegment(n, hit.path, hit.index, hit.t, id);
+  } else n.nodes.push({ id, ...target.point });
+  return node(n, id);
+}
+function appendDrawSegment(n: Network, from: string, to: string, curve: Curve) {
+  if (from === to)
+    throw new Error("Endpunkt muss sich vom Start unterscheiden");
+  let p = n.paths.find((p) => p.id === drawPath);
+  if (!p) {
+    if (n.version < 3) n.version = 3;
+    const material = drawingMaterial();
+    drawPath = uid(n, material === "water" ? "Wasser" : "Weg");
+    p = {
+      id: drawPath,
+      kind: material,
+      startWidth: 4,
+      endWidth: 4,
+      segments: [],
+    };
+    n.paths.push(p);
+  }
+  p.segments.push({ ...curve, from, to });
+  drawStart = to;
+  selection = { path: p.id, node: to };
+}
+function drawAt(q: Point) {
+  const current = model().paths.find((p) => p.id === drawPath);
+  if (
+    current &&
+    distance(node(model(), current.segments[0].from), q) <
+      (12 * view.height) / svg.clientHeight
+  ) {
     closeSelectedPath();
     return;
   }
   apply((n) => {
-    const material = drawingMaterial();
-    const eligible = (id: string) =>
-      id === drawStart ||
-      !n.paths.some((p) =>
-        p.segments.some((s) => s.from === id || s.to === id),
-      ) ||
-      n.paths.some(
-        (p) =>
-          (p.kind ?? "road") === material &&
-          p.segments.some((s) => s.from === id || s.to === id),
-      );
-    const near = n.nodes
-      .filter((p) => eligible(p.id) && distance(p, q) < tol)
-      .sort((a, b) => distance(a, q) - distance(b, q))[0];
-    let id = near?.id;
-    if (!id) {
-      const hit = closest(n, q, material);
-      id = uid(n, "K");
-      if (hit && hit.distance < tol && hit.t > 1e-5 && hit.t < 1 - 1e-5)
-        splitSegment(n, hit.path, hit.index, hit.t, id);
-      else n.nodes.push({ id, ...q });
-    }
+    const at = drawingNode(n, q);
     if (!drawStart) {
-      drawStart = id;
-      selection = { node: id };
+      drawStart = at.id;
+      selection = { node: at.id };
       return;
     }
-    if (drawStart === id)
-      throw new Error("Endpunkt muss sich vom Start unterscheiden");
-    const segment: Segment = {
-      ...createCurve(drawingKind(), node(n, drawStart), node(n, id)),
-      from: drawStart,
-      to: id,
-    };
-    let p = n.paths.find((p) => p.id === drawPath);
-    if (!p) {
-      if (n.version < 3) n.version = 3;
-      drawPath = uid(n, material === "water" ? "Wasser" : "Weg");
-      p = {
-        id: drawPath,
-        kind: material,
-        startWidth: 4,
-        endWidth: 4,
-        segments: [],
-      };
-      n.paths.push(p);
-    }
-    p.segments.push(segment);
-    drawStart = id;
-    selection = { path: p.id, node: id };
+    appendDrawSegment(
+      n,
+      drawStart,
+      at.id,
+      createCurve(drawingKind(), node(n, drawStart), at),
+    );
   });
 }
+function beginPen(e: PointerEvent) {
+  const q = world(e),
+    tol = (12 * view.height) / svg.clientHeight;
+  if (
+    mode === "island" &&
+    waterDraft.length > 1 &&
+    distance(q, waterDraft[0]) < tol
+  ) {
+    finishWater();
+    return;
+  }
+  const current = model().paths.find((p) => p.id === drawPath);
+  if (
+    mode === "draw" &&
+    current &&
+    distance(q, node(model(), current.segments[0].from)) < tol
+  ) {
+    closeSelectedPath();
+    return;
+  }
+  penGesture = {
+    press: q,
+    anchor: { point: mode === "island" ? q : drawingTarget(model(), q).point },
+    pointerId: e.pointerId,
+  };
+  penHover = undefined;
+  viewport.setPointerCapture(e.pointerId);
+  renderView();
+}
+function commitPenPoint(anchor: PenPoint) {
+  const previous = penPoints.at(-1);
+  if (mode === "island") {
+    if (previous) holeEdges.push(penCurve(previous, anchor));
+    waterDraft.push(anchor.point);
+    penPoints.push(anchor);
+    notice = "";
+    render();
+    return;
+  }
+  if (!previous) {
+    penPoints.push(anchor);
+    selection = {};
+    notice = "";
+    render();
+    return;
+  }
+  if (
+    apply((n) => {
+      const from = drawStart
+        ? node(n, drawStart)
+        : drawingNode(n, previous.point);
+      const to = drawingNode(n, anchor.point);
+      appendDrawSegment(
+        n,
+        from.id,
+        to.id,
+        penCurve({ ...previous, point: from }, { ...anchor, point: to }),
+      );
+    })
+  ) {
+    penPoints.push(anchor);
+    penPath = drawPath;
+  }
+  render();
+}
+function restorePenPath() {
+  cancelPenGesture();
+  const n = history.value,
+    p = n.paths.find((p) => p.id === penPath);
+  if (!p) {
+    penPoints = penPoints.slice(0, 1);
+    drawStart = drawPath = undefined;
+    selection = {};
+    return;
+  }
+  const handle = (point: Point, control?: Point) =>
+    control && distance(point, control) > 1e-8 ? { ...control } : undefined;
+  penPoints = p.segments.map((s) => {
+    const point = node(n, s.from);
+    return {
+      point,
+      outgoing: handle(point, s.kind === "cubic" ? s.c1 : undefined),
+    };
+  });
+  const last = p.segments.at(-1)!,
+    point = node(n, last.to);
+  penPoints.push({
+    point,
+    outgoing: handle(
+      point,
+      last.kind === "cubic"
+        ? { x: 2 * point.x - last.c2.x, y: 2 * point.y - last.c2.y }
+        : undefined,
+    ),
+  });
+  drawPath = p.id;
+  drawStart = last.to;
+  selection = { path: p.id, node: last.to };
+}
+function penOverlay(unit: number): string {
+  if (!usingPen() || (mode !== "draw" && mode !== "island") || spatial)
+    return "";
+  const previous = penPoints.at(-1);
+  let target = penGesture?.anchor;
+  if (!target && penHover) {
+    let point =
+      mode === "island" ? penHover : drawingTarget(model(), penHover).point;
+    if (penPoints.length > 1 && distance(point, penPoints[0].point) < 12 * unit)
+      point = penPoints[0].point;
+    target = { point };
+  }
+  let content = '<g class="pen-overlay" pointer-events="none">';
+  if (previous && target && distance(previous.point, target.point) > 1e-8) {
+    const closing =
+      penPoints.length > 1 && distance(target.point, penPoints[0].point) < 1e-8;
+    const curve = penCurve(previous, closing ? penPoints[0] : target);
+    content +=
+      '<path class="pen-preview" d="M ' +
+      xy(previous.point) +
+      " " +
+      curveD(curve, target.point) +
+      '"/>';
+    if (closing)
+      content +=
+        '<circle class="pen-close" cx="' +
+        target.point.x +
+        '" cy="' +
+        -target.point.y +
+        '" r="' +
+        9 * unit +
+        '"/>';
+  }
+  for (const anchor of [previous, penGesture?.anchor]) {
+    if (!anchor) continue;
+    const a = anchor.point;
+    if (anchor.outgoing) {
+      const h = anchor.outgoing,
+        incoming = { x: 2 * a.x - h.x, y: 2 * a.y - h.y };
+      content +=
+        '<line class="pen-guide" x1="' +
+        incoming.x +
+        '" y1="' +
+        -incoming.y +
+        '" x2="' +
+        h.x +
+        '" y2="' +
+        -h.y +
+        '"/>';
+      for (const p of [incoming, h])
+        content +=
+          '<circle class="pen-grip" cx="' +
+          p.x +
+          '" cy="' +
+          -p.y +
+          '" r="' +
+          3.5 * unit +
+          '"/>';
+    }
+    content +=
+      '<rect class="pen-anchor" x="' +
+      (a.x - 4 * unit) +
+      '" y="' +
+      (-a.y - 4 * unit) +
+      '" width="' +
+      8 * unit +
+      '" height="' +
+      8 * unit +
+      '"/>';
+  }
+  return content + "</g>";
+}
+
 let drag:
   | {
       type: "node" | "handle" | "pan" | "area";
@@ -662,6 +926,7 @@ let drag:
     }
   | undefined;
 viewport.addEventListener("pointerdown", (e) => {
+  if (penGesture) return;
   if (e.button === 1 || (e.button === 0 && space)) {
     e.preventDefault();
     drag = {
@@ -718,6 +983,10 @@ viewport.addEventListener("pointerdown", (e) => {
       houseMode = "select";
       render();
     }
+    return;
+  }
+  if (usingPen() && (mode === "draw" || mode === "island")) {
+    beginPen(e);
     return;
   }
   if (mode === "island") {
@@ -787,6 +1056,21 @@ viewport.addEventListener("pointermove", (e) => {
     plotHover = world(e);
     renderView();
   }
+  if (penGesture) {
+    const q = world(e),
+      delta = { x: q.x - penGesture.press.x, y: q.y - penGesture.press.y };
+    const a = penGesture.anchor;
+    a.outgoing =
+      Math.hypot(delta.x, delta.y) >= (3 * view.height) / svg.clientHeight
+        ? { x: a.point.x + delta.x, y: a.point.y + delta.y }
+        : undefined;
+    renderView();
+    return;
+  }
+  if (!drag && usingPen() && (mode === "draw" || mode === "island")) {
+    penHover = world(e);
+    renderView();
+  }
   if (!drag) return;
   if (drag.type === "pan") {
     view.x =
@@ -803,8 +1087,7 @@ viewport.addEventListener("pointermove", (e) => {
   if (drag.type === "node") moveNode(next, drag.id!, q);
   else if (drag.type === "area") {
     const a = next.areaBlockers!.find((a) => a.id === drag!.id)!;
-    const ring = drag.ring ? a.holes![drag.ring - 1] : a.outer;
-    ring[drag.vertex!] = q;
+    moveContourAnchor(a, drag.ring ?? 0, drag.vertex!, q);
   } else {
     const s = selectedCurve(next, drag.segment)!;
     (s as unknown as Record<string, Point>)[drag.key!] = q;
@@ -820,6 +1103,12 @@ viewport.addEventListener("pointermove", (e) => {
   render();
 });
 function finishDrag(e: PointerEvent) {
+  if (penGesture) {
+    const anchor = penGesture.anchor;
+    cancelPenGesture();
+    commitPenPoint(anchor);
+    return;
+  }
   if (!drag) return;
   if (drag.type !== "pan" && drag.valid) history.commit(drag.valid);
   drag = undefined;
@@ -829,7 +1118,14 @@ function finishDrag(e: PointerEvent) {
   render();
 }
 viewport.addEventListener("pointerup", finishDrag);
+viewport.addEventListener("pointerleave", () => {
+  if (!penGesture) {
+    penHover = undefined;
+    renderView();
+  }
+});
 viewport.addEventListener("pointercancel", (e) => {
+  cancelPenGesture();
   drag = undefined;
   draft = undefined;
   if (viewport.hasPointerCapture(e.pointerId))
@@ -840,6 +1136,7 @@ $("#viewport").addEventListener(
   "wheel",
   (e) => {
     e.preventDefault();
+    if (penGesture) return;
     const w = e as WheelEvent,
       old = world(w);
     view.height = Math.max(
@@ -897,7 +1194,12 @@ $("#inspector").addEventListener("change", (e) => {
       selection.vertex !== undefined &&
       (field === "areaX" || field === "areaY")
     ) {
-      selectedRing(n)[selection.vertex][field === "areaX" ? "x" : "y"] = value;
+      const a = n.areaBlockers!.find((a) => a.id === selection.area)!;
+      const q = {
+        ...selectedRing(n)[selection.vertex],
+        [field === "areaX" ? "x" : "y"]: value,
+      };
+      moveContourAnchor(a, selection.ring ?? 0, selection.vertex, q);
       return;
     }
     const p = n.paths.find((p) => p.id === selection.path);
@@ -925,6 +1227,14 @@ $("#inspector").addEventListener("click", (e) => {
     "button[data-action]",
   )?.dataset.action;
   if (!action) return;
+  if (action === "delete" || action === "water-delete") {
+    deleteSelectedVector();
+    return;
+  }
+  if (action === "finish-drawing") {
+    setMode("select");
+    return;
+  }
   if (action === "close-path") {
     closeSelectedPath();
     return;
@@ -947,10 +1257,6 @@ $("#inspector").addEventListener("click", (e) => {
       const id = selection.area;
       openArea(n, id);
       selection = { path: id };
-    }
-    if (action === "water-delete" && selection.area) {
-      n.areaBlockers = n.areaBlockers!.filter((a) => a.id !== selection.area);
-      selection = {};
     }
     if (action === "water-remove-hole" && selection.area && selection.ring) {
       const a = n.areaBlockers!.find((a) => a.id === selection.area)!;
@@ -993,11 +1299,6 @@ $("#inspector").addEventListener("click", (e) => {
       if (p.widthsLinked) p.endWidth = p.startWidth;
     }
     if (action === "reverse" && selection.path) reversePath(n, selection.path);
-    if (action === "delete" && selection.path) {
-      n.paths = n.paths.filter((p) => p.id !== selection.path);
-      cleanJunctions(n);
-      selection = {};
-    }
     if (action === "detach" && selection.path && selection.node) {
       const id = uid(n, "K");
       detach(n, selection.path, selection.node, id);
@@ -1065,32 +1366,63 @@ $("#house-inspector").addEventListener("change", (e) => {
 });
 $("#select").addEventListener("click", () => setMode("select"));
 $("#draw").addEventListener("click", () => setMode("draw"));
+let lastDrawingMode = "pen";
+$("#kind").addEventListener("change", () => {
+  const next = $<HTMLSelectElement>("#kind").value;
+  if (mode === "draw" && (lastDrawingMode === "pen" || next === "pen"))
+    setMode("draw");
+  else cancelPenGesture();
+  lastDrawingMode = next;
+  render();
+});
 $("#material").addEventListener("change", () => {
   if (mode === "draw") setMode("draw");
 });
 $("#undo").addEventListener("click", () => {
+  if (penGesture) {
+    cancelPenGesture();
+    render();
+    return;
+  }
+  if (mode === "draw" && penPoints.length && !drawPath) {
+    cancelPenGesture();
+    penPoints = [];
+    render();
+    return;
+  }
   if (waterDraft.length) {
+    penPoints.pop();
     waterDraft.pop();
     holeEdges.pop();
     render();
     return;
   }
+  const continuePen = mode === "draw" && usingPen() && penPath !== undefined;
   history.undo();
   invalidHouseSeed = undefined;
   houseMode = "select";
   plotCorner = plotHover = undefined;
-  drawStart = undefined;
-  drawPath = undefined;
+  if (continuePen) restorePenPath();
+  else {
+    resetPen();
+    drawStart = undefined;
+    drawPath = undefined;
+  }
   notice = "";
   render();
 });
 $("#redo").addEventListener("click", () => {
+  const continuePen = mode === "draw" && usingPen() && penPath !== undefined;
   history.redo();
   invalidHouseSeed = undefined;
   houseMode = "select";
   plotCorner = plotHover = undefined;
-  drawStart = undefined;
-  drawPath = undefined;
+  if (continuePen) restorePenPath();
+  else {
+    resetPen();
+    drawStart = undefined;
+    drawPath = undefined;
+  }
   notice = "";
   render();
 });
@@ -1132,6 +1464,7 @@ $("#import").addEventListener("change", async (e) => {
     const n = parse(await file.text());
     computeSurface(n);
     history.commit(n);
+    resetPen();
     selection = {};
     drawStart = undefined;
     drawPath = undefined;
@@ -1155,7 +1488,27 @@ window.addEventListener("keydown", (e) => {
     e.preventDefault();
     space = true;
   }
+  if (
+    !e.ctrlKey &&
+    !e.metaKey &&
+    !e.altKey &&
+    (e.key.toLowerCase() === "p" || e.key.toLowerCase() === "v")
+  ) {
+    e.preventDefault();
+    if (e.key.toLowerCase() === "p") {
+      $<HTMLSelectElement>("#kind").value = "pen";
+      lastDrawingMode = "pen";
+      setMode("draw");
+    } else setMode("select");
+    return;
+  }
   if (e.key === "Escape") {
+    if (penGesture) {
+      e.preventDefault();
+      cancelPenGesture();
+      render();
+      return;
+    }
     setMode("select");
   }
   if (e.key === "Enter") {
@@ -1167,17 +1520,9 @@ window.addEventListener("keydown", (e) => {
       setMode("select");
     }
   }
-  if (e.key === "Delete" && selection.area) {
+  if (e.key === "Delete" && (selection.area || selection.path)) {
     e.preventDefault();
-    $('#inspector [data-action="water-delete"]')?.dispatchEvent(
-      new MouseEvent("click", { bubbles: true }),
-    );
-  }
-  if (e.key === "Delete" && selection.path) {
-    e.preventDefault();
-    $('#inspector [data-action="delete"]').dispatchEvent(
-      new MouseEvent("click", { bubbles: true }),
-    );
+    deleteSelectedVector();
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
     e.preventDefault();
@@ -1188,7 +1533,9 @@ window.addEventListener("keyup", (e) => {
   if (e.code === "Space") space = false;
 });
 window.addEventListener("blur", () => {
+  cancelPenGesture();
   space = false;
+  renderView();
 });
 new ResizeObserver(() => renderView()).observe($("#viewport"));
 export interface EditorSnapshot {

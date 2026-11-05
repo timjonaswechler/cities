@@ -238,6 +238,47 @@ test("H06 road edits visibly invalidate the accepted house but never replace it"
   expect((await snapshot(page)).network.housePlot!.accepted).toEqual(accepted);
 });
 
+test("pen and fixed drawing preserve a version-4 house project through undo and redo", async ({
+  page,
+}) => {
+  await setup(page);
+  await page
+    .getByRole("button", { name: "Haus übernehmen", exact: true })
+    .click();
+  const plot = (await snapshot(page)).network.housePlot;
+  await page.keyboard.press("p");
+  await click(page, -25, -20);
+  await click(page, -10, -20);
+  await page.keyboard.press("Enter");
+  expect((await snapshot(page)).network.paths).toHaveLength(2);
+  expect((await snapshot(page)).network.version).toBe(4);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await snapshot(page)).network.paths).toHaveLength(1);
+  expect((await snapshot(page)).network.housePlot).toEqual(plot);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  expect((await snapshot(page)).network.paths).toHaveLength(2);
+  await page.locator("#kind").selectOption("line");
+  await page.getByRole("button", { name: "Zeichnen", exact: true }).click();
+  await click(page, 10, -20);
+  await click(page, 25, -20);
+  await page.keyboard.press("Escape");
+  const combined = await snapshot(page);
+  expect(combined.network.paths).toHaveLength(3);
+  expect(combined.network.version).toBe(4);
+  expect(combined.network.housePlot).toEqual(plot);
+  expect(combined.houses.conflicts).toEqual([]);
+  await page.keyboard.press("p");
+  await click(page, -20, -30);
+  await page
+    .getByRole("button", { name: "Bauplatz markieren", exact: true })
+    .click();
+  await click(page, -5, 5);
+  await page.keyboard.press("Escape");
+  expect((await snapshot(page)).network).toEqual(combined.network);
+  await expect(page.locator("#select")).toHaveClass("active");
+  await expect(page.locator(".pen-overlay")).toHaveCount(0);
+});
+
 test("cancels an unfinished plot and rejects invalid seeds/imports without changing the project", async ({
   page,
 }) => {

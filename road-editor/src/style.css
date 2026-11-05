@@ -403,6 +403,38 @@ footer {
 #mode-hint {
   color: #657e6c;
 }
+.pen-mode #editor,
+.pen-mode #editor * {
+  cursor: crosshair;
+}
+.pen-preview,
+.pen-guide,
+.pen-anchor,
+.pen-grip,
+.pen-close {
+  vector-effect: non-scaling-stroke;
+}
+.pen-preview {
+  fill: none;
+  stroke: #315ca1;
+  stroke-width: 2;
+  stroke-dasharray: 5 3;
+}
+.pen-guide {
+  stroke: #547bb3;
+  stroke-width: 1;
+}
+.pen-anchor,
+.pen-grip {
+  fill: #f7fbff;
+  stroke: #315ca1;
+  stroke-width: 1.5;
+}
+.pen-close {
+  fill: #f7fbff66;
+  stroke: #246d4d;
+  stroke-width: 2;
+}
 @media (max-width: 1050px) {
   header {
     gap: 4px;

@@ -1,5 +1,5 @@
 import type { Point } from "./network";
-import { sampleCurve, type Curve } from "./curves";
+import { sampleCurve, moveCubicHandle, type Curve } from "./curves";
 
 export interface AreaBlocker {
   id: string;
@@ -16,6 +16,23 @@ export function contourEdges(a: AreaBlocker, ring = 0): Curve[] {
     (ring ? a.holeEdges?.[ring - 1] : a.outerEdges) ??
     points!.map(() => ({ kind: "line" }))
   );
+}
+export function moveContourAnchor(
+  a: AreaBlocker,
+  ring: number,
+  index: number,
+  point: Point,
+): void {
+  const points = ring ? a.holes![ring - 1] : a.outer;
+  const delta = { x: point.x - points[index].x, y: point.y - points[index].y };
+  const edges = contourEdges(a, ring);
+  moveCubicHandle(
+    edges[(index + edges.length - 1) % edges.length],
+    "end",
+    delta,
+  );
+  moveCubicHandle(edges[index], "start", delta);
+  points[index] = point;
 }
 export function setContourEdges(
   a: AreaBlocker,
