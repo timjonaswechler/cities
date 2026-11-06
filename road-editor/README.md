@@ -4,9 +4,11 @@ Eigenständige Browserwerkbank in TypeScript/Three.js, neu implementiert statt
 Fortsetzung der verworfenen Hausgalerie. Wege, Straßen und Wasser verwenden
 dieselben Vektoren: offen mit Breite, ausdrücklich geschlossen als gefüllte
 Fläche ohne Breitenparameter. Das Material ist eine Einstellung, kein Szenariotyp.
-Ein neues, getrenntes Hausmodul zeigt Satteldach-Varianten auf einem manuell
-markierten Bauplatz. Keine Nachbarblocker, automatische Parzellierung oder
-Rust-/Archiv-Integration.
+**Bauplatz** ist eine weitere Vektorfläche: Kontur schließen, dann entsteht
+automatisch ein Gebäudekomplex. Wege und Wasser bleiben als Blocker erhalten;
+die gezeichnete Kontur wird nicht durch ihre Differenzfläche ersetzt.
+[Bedienung, Modell und Grenzen](PLOTS.md). Keine automatische Parzellierung
+oder Rust-/Archiv-Integration.
 
 ## Starten
 
@@ -96,7 +98,7 @@ keine vollständige Überarbeitung der Werkbank.
 
 ## Offene Vektoren und gefüllte Konturen
 
-Für beide Materialien gilt dieselbe Regel: Ein **offener Vektor** belegt den
+Für Weg und Wasser gilt dieselbe Regel: Ein **offener Vektor** belegt den
 Streifen seiner Breite; eine **geschlossene Kontur** belegt ihr Inneres ohne
 Breitenangabe. Gerade, quadratische und kubische Segmente können gemischt werden.
 Eine Kurvenkontur kann mit zwei Ankern eine Fläche einschließen; degenerierte
@@ -117,7 +119,8 @@ oder selbstschneidende Konturen werden nicht übernommen.
    Die gültige Aussparung wird als ein Undo-Schritt übernommen. Sie ist ein echtes
    Loch und lässt sich ebenfalls mit Ankern und Griffen bearbeiten.
 4. **Kontur öffnen** entfernt das Schließsegment und macht daraus wieder einen
-   offenen Vektor mit zunächst gekoppelten 4 m Breite. Vorher Aussparungen entfernen.
+   offenen Vektor. Weg und Wasser erhalten zunächst gekoppelte 4 m Breite;
+   Bauplatzentwürfe bleiben ohne wirksame Breite. Vorher Aussparungen entfernen.
    Löschen und Undo/Redo gelten unabhängig für die gewählte Fläche.
 
 Wasser ist blau, seine Oberfläche liegt 1,4 m unter der Wegeebene. Die räumliche
@@ -135,7 +138,20 @@ füllt nicht automatisch seinen Innenbereich. **Pfad schließen** wandelt einen
 gewählten Pfad ausdrücklich zur gefüllten Kontur um.
 [Begriffe](../GLOSSARY.md).
 
-## Hausvarianten auf einem Bauplatz
+## Bauplätze als Vektorflächen
+
+Material **Bauplatz** wählen und mit demselben Stift eine geschlossene Kontur
+zeichnen. Ohne manuelle Zugangswahl oder Hausübernahme entsteht ein Komplex.
+Die vollständige Kontur bleibt erhalten; Wege und Wasser sperren nur die
+abgeleitete Bodenfläche. Mehrere getrennte Teilflächen gehören weiterhin zum
+selben Bauplatz. Konturänderungen und Blockeränderungen aktualisieren die Planung.
+**Bauplatz auswählen** erreicht auch verdeckte Konturen; **Neue Bebauung**
+wechselt den Seed. [Details und Grenzen](PLOTS.md).
+
+## Frühere Rechteckplanung / Hausvarianten
+
+Dieser ältere Ablauf bleibt für bestehende Projekte unter **Frühere Rechteckplanung**
+erreichbar. Für neue Bauplätze gilt der Vektorablauf oben.
 
 1. Einen Weg zeichnen und mit Esc beenden. Unter **Haus am Bauplatz** auf
    **Bauplatz markieren** klicken und zwei gegenüberliegende Ecken setzen.

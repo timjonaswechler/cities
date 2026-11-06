@@ -32,6 +32,7 @@ test.beforeEach(async ({ page }) => {
     if (x.type() === "error") e.push(x.text());
   });
   await page.goto("/");
+  await page.locator("#legacy-house-panel > summary").click();
 });
 test.afterEach(({ page }) => {
   expect(errors.get(page)).toEqual([]);

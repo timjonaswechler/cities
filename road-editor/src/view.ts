@@ -2,6 +2,8 @@ import * as THREE from "three";
 import type { Surface } from "./geometry";
 import { createHouseGroup } from "./house-view";
 import type { House } from "./house-types";
+import { createComplexGroup } from "./complex-view";
+import type { BuildingComplex } from "./plot-types";
 export interface View {
   x: number;
   y: number;
@@ -12,6 +14,8 @@ export class SurfaceView {
   private scene = new THREE.Scene();
   private group = new THREE.Group();
   private houseGroup?: THREE.Group;
+  private complexes = new THREE.Group();
+  complexMeshes: { id: string; volumes: number; positions: number[] }[] = [];
   houseMeshes: { name: string; positions: number[] }[] = [];
   private grid: THREE.GridHelper;
   private top = new THREE.OrthographicCamera();
@@ -37,7 +41,7 @@ export class SurfaceView {
       ? this.grid.material
       : [this.grid.material];
     gridMaterials.forEach((m) => (m.depthWrite = false));
-    this.scene.add(this.grid, this.group);
+    this.scene.add(this.grid, this.group, this.complexes);
   }
   setSurface(s: Surface) {
     for (const child of this.group.children.slice()) {
@@ -190,6 +194,33 @@ export class SurfaceView {
           });
       });
       this.scene.add(this.houseGroup);
+    }
+  }
+  setComplexes(complexes: BuildingComplex[]) {
+    this.complexes.traverse((object) => {
+      if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
+        object.geometry.dispose();
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material];
+        materials.forEach((m) => m.dispose());
+      }
+    });
+    this.complexes.clear();
+    this.complexMeshes = [];
+    for (const complex of complexes) {
+      const group = createComplexGroup(complex),
+        positions: number[] = [];
+      group.traverse((object) => {
+        if (object instanceof THREE.Mesh)
+          positions.push(...object.geometry.attributes.position.array);
+      });
+      this.complexMeshes.push({
+        id: complex.id,
+        volumes: complex.volumes.length,
+        positions,
+      });
+      this.complexes.add(group);
     }
   }
   render(view: View, spatial: boolean) {

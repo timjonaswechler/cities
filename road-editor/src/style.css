@@ -355,6 +355,24 @@ footer {
 .road-outline {
   stroke: #163f36;
 }
+.plot-outline {
+  stroke: #93734a;
+  stroke-dasharray: 6 4;
+}
+#plot-inspector .row {
+  margin-top: 8px;
+}
+#plot-inspector button {
+  font-size: 12px;
+}
+#legacy-house-panel > summary {
+  cursor: pointer;
+  color: #647a6b;
+  font-size: 12px;
+}
+#legacy-house-panel[open] > summary {
+  margin-bottom: 12px;
+}
 .selected-water {
   stroke: #edb65a;
   stroke-width: 2;

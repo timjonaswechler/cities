@@ -6,7 +6,7 @@ import {
   contourEdges,
   setContourEdges,
   moveContourAnchor,
-  type AreaBlocker,
+  type Contour,
 } from "./blockers";
 import { createCurve, splitCurve, type Curve } from "./curves";
 import { penCurve, type PenPoint } from "./pen";
@@ -27,6 +27,7 @@ import {
   reversePath,
   serialize,
   splitSegment,
+  vectorAreas,
   type Network,
   type Point,
   type Segment,
@@ -42,6 +43,10 @@ import { generateHouses, validateHouse } from "./houses";
 import { housePanel, houseOverlay, plotFromCorners } from "./house-ui";
 import { houseRequest, pickHouseAccess } from "./house-project";
 import type { House, HouseResult } from "./house-types";
+import { evaluateProject } from "./plot-project";
+import { updateActionPanel } from "./action-panel";
+import { plotPanel, plotOverlay } from "./plot-ui";
+import type { PlotPlan, BuildingComplex } from "./plot-types";
 const $ = <T extends Element = HTMLElement>(s: string) =>
   document.querySelector<T>(s)!;
 const esc = (s: unknown) =>
@@ -53,8 +58,8 @@ const esc = (s: unknown) =>
       ]!,
   );
 $("#app").innerHTML =
-  `<header><h1>Wegwerk<small>Parametrischer Editor</small></h1><button id="select" class="active" title="Auswählen (V)">Auswählen</button><button id="draw" title="Stift zeichnen (P)">Zeichnen</button><select id="material" aria-label="Zeichenmaterial"><option value="road">Weg</option><option value="water">Wasser</option></select><select id="kind" aria-label="Zeichenmodus"><option value="pen">Stift · Klick / Ziehen</option><option value="line">Gerade (fest)</option><option value="quadratic">Quadratisch (fest)</option><option value="cubic">Kubisch (fest)</option></select><span class="spacer"></span><button id="undo" title="Ctrl/⌘ Z">Undo</button><button id="redo" title="Ctrl/⌘ Shift Z">Redo</button><button id="new">Neu</button><button id="save">JSON speichern</button><button id="load">JSON laden</button><input id="import" type="file" accept="application/json,.json" aria-label="Graph importieren"><button id="spatial">3D prüfen</button></header>
-<main><aside><h2>Werkbank / Meter</h2><div id="inspector"></div><div id="house-inspector"></div><div class="section" id="diagnostics" role="status"></div><div class="section hint">Klick: auswählen · Anker und blaue Griffe: ziehen.<br>Stift (P): Klicken setzt Ecken, Ziehen formt Kurven. Vorschau folgt der Maus.<br>Enter: offen beenden · Esc: Ziehgeste verwerfen, sonst beenden · V: Auswahl · Entf: Pfad löschen.<br>Leertaste + Ziehen / mittlere Taste: Pan.<br>Mausrad: Zoom · <button id="home">Ansicht 0 / 120 m</button><br>Weg und Wasser: offener Vektor + Breite; am ersten Anker oder mit „Pfad schließen“ zur gefüllten Fläche. Esc/Enter beendet offen.<br>Wege + Wasser = Sperrfläche; freier Rest ≠ Bauland.</div></aside><section id="viewport" aria-label="Wegewerkbank"><div id="three"></div><svg id="editor" aria-label="Vektorpfade bearbeiten"></svg><div class="overlay-title"><strong>Vektoren formen.</strong><span id="mode-hint">Direkt am Vektor, in Weltkoordinaten.</span></div><div class="legend"><b style="background:#427c70"></b>Weg <b style="background:#2b91b4"></b>Wasser <b style="background:#edb65a"></b>Auswahl / Radius<br><b style="background:#f8f9ee;border:1px solid #285b4a"></b>Anker <b style="background:#a4c9ed"></b>Kontrollgriff <b style="background:#be503e"></b>Konflikt</div><div class="scale" id="scale">10 m</div></section></main><footer><span id="status" role="status"></span><span id="metrics"></span></footer>`;
+  `<header><h1>Wegwerk<small>Parametrischer Editor</small></h1><button id="select" class="active" title="Auswählen (V)">Auswählen</button><button id="draw" title="Stift zeichnen (P)">Zeichnen</button><select id="material" aria-label="Zeichenmaterial"><option value="road">Weg</option><option value="water">Wasser</option><option value="plot">Bauplatz</option></select><select id="kind" aria-label="Zeichenmodus"><option value="pen">Stift · Klick / Ziehen</option><option value="line">Gerade (fest)</option><option value="quadratic">Quadratisch (fest)</option><option value="cubic">Kubisch (fest)</option></select><span class="spacer"></span><button id="undo" title="Ctrl/⌘ Z">Undo</button><button id="redo" title="Ctrl/⌘ Shift Z">Redo</button><button id="new">Neu</button><button id="save">JSON speichern</button><button id="load">JSON laden</button><input id="import" type="file" accept="application/json,.json" aria-label="Graph importieren"><button id="spatial">3D prüfen</button></header>
+<main><aside><h2>Werkbank / Meter</h2><div id="inspector"></div><div id="plot-picker"></div><div id="plot-inspector"></div><details id="legacy-house-panel" class="section"><summary>Frühere Rechteckplanung</summary><div id="house-inspector"></div></details><div class="section" id="diagnostics" role="status"></div><div class="section hint">Klick: auswählen · Anker und blaue Griffe: ziehen.<br>Stift (P): Klicken setzt Ecken, Ziehen formt Kurven. Vorschau folgt der Maus.<br>Enter: offen beenden · Esc: Ziehgeste verwerfen, sonst beenden · V: Auswahl · Entf: Pfad löschen.<br>Leertaste + Ziehen / mittlere Taste: Pan.<br>Mausrad: Zoom · <button id="home">Ansicht 0 / 120 m</button><br>Weg und Wasser: offener Vektor + Breite; am ersten Anker oder mit „Pfad schließen“ zur gefüllten Fläche. Esc/Enter beendet offen.<br>Wege + Wasser = Sperrfläche; freier Rest ≠ Bauland.</div></aside><section id="viewport" aria-label="Wegewerkbank"><div id="three"></div><svg id="editor" aria-label="Vektorpfade bearbeiten"></svg><div class="overlay-title"><strong>Vektoren formen.</strong><span id="mode-hint">Direkt am Vektor, in Weltkoordinaten.</span></div><div class="legend"><b style="background:#427c70"></b>Weg <b style="background:#2b91b4"></b>Wasser <b style="background:#eddbb6"></b>Bauplatz <b style="background:#edb65a"></b>Auswahl / Radius<br><b style="background:#f8f9ee;border:1px solid #285b4a"></b>Anker <b style="background:#a4c9ed"></b>Kontrollgriff <b style="background:#be503e"></b>Konflikt</div><div class="scale" id="scale">10 m</div></section></main><footer><span id="status" role="status"></span><span id="metrics"></span></footer>`;
 const starter: Network = {
   version: 3,
   areaBlockers: [],
@@ -119,6 +124,7 @@ let plotCorner: Point | undefined, plotHover: Point | undefined;
 let houseResult: HouseResult | undefined, housePreview: House | undefined;
 let houseConflicts: string[] = [];
 let invalidHouseSeed: string | undefined;
+let plotPlans: PlotPlan[] = [];
 let penPoints: PenPoint[] = [];
 let penPath: string | undefined;
 let penHover: Point | undefined;
@@ -126,7 +132,7 @@ let penGesture:
   | { press: Point; anchor: PenPoint; pointerId: number }
   | undefined;
 const drawingMaterial = () =>
-  $<HTMLSelectElement>("#material").value as "road" | "water";
+  $<HTMLSelectElement>("#material").value as "road" | "water" | "plot";
 const usingPen = () => $<HTMLSelectElement>("#kind").value === "pen";
 const drawingKind = () =>
   usingPen() ? "line" : ($<HTMLSelectElement>("#kind").value as Curve["kind"]);
@@ -139,7 +145,7 @@ const uid = (n: Network, prefix: string) => {
   } while (
     n.nodes.some((p) => p.id === id) ||
     n.paths.some((p) => p.id === id) ||
-    n.areaBlockers?.some((a) => a.id === id)
+    vectorAreas(n).some((a) => a.id === id)
   );
   return id;
 };
@@ -152,18 +158,18 @@ const curveD = (s: Curve, b: Point) =>
       : `C ${xy(s.c1)} ${xy(s.c2)} ${xy(b)}`;
 const contourD = (points: Point[], edges: Curve[], closed = true) =>
   `M ${xy(points[0])} ${edges.map((s, i) => curveD(s, points[(i + 1) % points.length])).join(" ")} ${closed ? "Z" : ""}`;
-const areaD = (a: AreaBlocker) =>
+const areaD = (a: Contour) =>
   [a.outer, ...(a.holes ?? [])]
     .map((r, i) => contourD(r, contourEdges(a, i)))
     .join(" ");
 function selectedRing(n: Network): Point[] {
-  const a = n.areaBlockers?.find((a) => a.id === selection.area);
+  const a = vectorAreas(n).find((a) => a.id === selection.area);
   const ring = selection.ring ? a?.holes?.[selection.ring - 1] : a?.outer;
   if (!ring) throw new Error("Vektorkontur fehlt");
   return ring;
 }
 function selectedEdges(n: Network): Curve[] {
-  const a = n.areaBlockers?.find((a) => a.id === selection.area);
+  const a = vectorAreas(n).find((a) => a.id === selection.area);
   if (!a) throw new Error("Vektorkontur fehlt");
   return contourEdges(a, selection.ring ?? 0);
 }
@@ -189,7 +195,7 @@ function apply(change: (n: Network) => void): boolean {
   try {
     const next = structuredClone(history.value);
     change(next);
-    computeSurface(next);
+    evaluateProject(next);
     history.commit(next);
     accepted = true;
     notice = "";
@@ -219,8 +225,10 @@ function deleteSelectedVector() {
   if (!area && !path) return;
   if (
     apply((n) => {
-      if (area) n.areaBlockers = n.areaBlockers?.filter((a) => a.id !== area);
-      else {
+      if (area) {
+        n.areaBlockers = n.areaBlockers?.filter((a) => a.id !== area);
+        n.plots = n.plots?.filter((a) => a.id !== area);
+      } else {
         n.paths = n.paths.filter((p) => p.id !== path);
         cleanJunctions(n);
       }
@@ -248,7 +256,7 @@ function setMode(next: typeof mode) {
 }
 function render() {
   const n = model();
-  const area = n.areaBlockers?.find((a) => a.id === selection.area);
+  const area = vectorAreas(n).find((a) => a.id === selection.area);
   if (selection.area && !area) selection = {};
   if (mode === "island" && !area) {
     mode = "select";
@@ -277,7 +285,22 @@ function render() {
     if (!segment || !(selection.handle.key in segment))
       selection.handle = undefined;
   }
-  surface = computeSurface(n);
+  const evaluated = evaluateProject(n);
+  surface = evaluated.surface;
+  plotPlans = evaluated.plots;
+  const selectedPlot = area?.kind === "plot" ? area : undefined;
+  $("#plot-picker").innerHTML = n.plots?.length
+    ? `<label>Bauplatz auswählen<select class="inspector-select" id="plot-select"><option value="">Bauplatz wählen …</option>${n.plots.map((p) => `<option value="${esc(p.id)}" ${p.id === selectedPlot?.id ? "selected" : ""}>${esc(p.id)}</option>`).join("")}</select></label>`
+    : "";
+  updateActionPanel(
+    $("#plot-inspector"),
+    plotPanel(
+      selectedPlot,
+      plotPlans.find((p) => p.id === selectedPlot?.id),
+    ),
+    "data-plot-action",
+  );
+  $("#plot-inspector").hidden = !selectedPlot && drawingMaterial() !== "plot";
   houseResult = n.housePlot
     ? generateHouses(houseRequest(n.housePlot, surface))
     : undefined;
@@ -288,38 +311,24 @@ function render() {
     ? validateHouse(houseRequest(n.housePlot, surface), n.housePlot.accepted)
     : [];
   renderer.setSurface(surface);
+  renderer.setComplexes(
+    plotPlans.map((p) => p.complex).filter((c): c is BuildingComplex => !!c),
+  );
   renderer.setHouse(
     n.housePlot?.accepted ?? housePreview,
     !!houseConflicts.length,
   );
-  const houseTemplate = document.createElement("template");
-  houseTemplate.innerHTML = housePanel({
-    plot: n.housePlot,
-    result: houseResult,
-    preview: housePreview,
-    conflicts: houseConflicts,
-    mode: houseMode,
-  });
-  const actions = houseTemplate.content.querySelector<HTMLElement>(
-    "[data-house-actions]",
-  )!;
-  actions.remove();
-  const inspector = $("#house-inspector");
-  if (!inspector.querySelector("[data-house-body]")) {
-    inspector.innerHTML = "<div data-house-body></div>";
-    inspector.append(actions);
-  } else {
-    // A seed change fires on blur, before the clicked action completes.
-    // Keep action buttons mounted so this render cannot swallow that click.
-    actions.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
-      inspector.querySelector<HTMLButtonElement>(
-        `[data-house-action="${button.dataset.houseAction}"]`,
-      )!.disabled = button.disabled;
-    });
-  }
-  inspector
-    .querySelector("[data-house-body]")!
-    .replaceChildren(houseTemplate.content);
+  updateActionPanel(
+    $("#house-inspector"),
+    housePanel({
+      plot: n.housePlot,
+      result: houseResult,
+      preview: housePreview,
+      conflicts: houseConflicts,
+      mode: houseMode,
+    }),
+    "data-house-action",
+  );
   if (invalidHouseSeed !== undefined) {
     const seedInput = $<HTMLInputElement>('[data-house-field="seed"]');
     seedInput.value = invalidHouseSeed;
@@ -362,6 +371,8 @@ function render() {
   let panel = p
     ? `<h3>Pfad <span class="tag">${esc(p.id)}</span></h3><div class="muted">${p.segments.length} Segment(e) · ${p.segments.at(-1)!.to === p.segments[0].from ? "Netzring mit Breite" : p.kind === "water" ? "offener Wasservektor" : "offener Wegvektor"}</div><div class="row width-row">${input("Breite Anfang (m)", "startWidth", p.startWidth)}<button type="button" class="width-link ${p.widthsLinked ? "active" : ""}" data-action="link-widths" aria-label="Breiten koppeln" aria-pressed="${!!p.widthsLinked}" title="${p.widthsLinked ? "Kopplung lösen: Breiten unabhängig bearbeiten" : "Breiten koppeln: Anfangsbreite für beide übernehmen"}"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m10 7 2-2a5 5 0 0 1 7 7l-2 2M14 17l-2 2a5 5 0 0 1-7-7l2-2"/>${p.widthsLinked ? '<path d="m8 16 8-8"/>' : '<path d="m3 3 18 18"/>'}</svg></button>${input("Breite Ende (m)", "endWidth", p.endWidth)}</div><div class="row"><button data-action="reverse">Richtung umkehren</button><button data-action="delete" class="danger">Pfad löschen</button></div><button class="full" data-action="close-path">Pfad schließen</button>`
     : `<p class="muted">Pfad oder Knoten auswählen. Mit „Zeichnen“ einen eigenen Verlauf erstellen.</p>`;
+  if (p?.kind === "plot")
+    panel = `<h3>Bauplatzkontur</h3><p class="muted">Noch offen: erst die Kontur schließen, dann entsteht die Bebauung. Kein Breitenparameter.</p><button class="full" data-action="close-path">Bauplatz schließen</button><button data-action="delete" class="danger">Kontur löschen</button>`;
   if (at) {
     panel += `<div class="section"><h3>Knoten <span class="tag">${esc(at.id)}</span></h3><div class="row">${input("Knoten X (m)", "nodeX", at.x)}${input("Knoten Y (m)", "nodeY", at.y)}</div><label>Verbinden mit<select id="join-target" class="inspector-select"><option value="">Knoten wählen …</option>${n.nodes
       .filter((q) => q.id !== at.id)
@@ -381,7 +392,7 @@ function render() {
       holes = (area.holes ?? []).map((r, i) =>
         contourPoints(r, area.holeEdges?.[i]),
       );
-    panel = `<h3>${area.kind === "water" ? "Wasser" : "Wegfläche"} <span class="tag">${esc(area.id)}</span></h3><p class="muted">Geschlossener Vektor · gefüllte Fläche ohne Breite${area.kind === "water" ? ` · Wasser −${WATER_DROP} m` : ""}<br>${(Math.abs(ringArea(outer)) - holes.reduce((sum, r) => sum + Math.abs(ringArea(r)), 0)).toFixed(2)} m²</p><button class="full" data-action="water-hole">${area.kind === "water" ? "Insel aussparen" : "Aussparung zeichnen"}</button><button class="full" data-action="open-area" ${area.holes?.length ? 'disabled title="Zuerst Aussparungen entfernen"' : ""}>Kontur öffnen</button><button class="full danger" data-action="water-delete">${area.kind === "water" ? "Wasser löschen" : "Fläche löschen"}</button>`;
+    panel = `<h3>${area.kind === "plot" ? "Geplanter Bauplatz" : area.kind === "water" ? "Wasser" : "Wegfläche"} <span class="tag">${esc(area.id)}</span></h3><p class="muted">Geschlossener Vektor · gefüllte Fläche ohne Breite${area.kind === "water" ? ` · Wasser −${WATER_DROP} m` : ""}<br>${(Math.abs(ringArea(outer)) - holes.reduce((sum, r) => sum + Math.abs(ringArea(r)), 0)).toFixed(2)} m²</p><button class="full" data-action="water-hole">${area.kind === "water" ? "Insel aussparen" : "Aussparung zeichnen"}</button><button class="full" data-action="open-area" ${area.holes?.length ? 'disabled title="Zuerst Aussparungen entfernen"' : ""}>Kontur öffnen</button>${area.kind === "plot" ? "" : `<button class="full danger" data-action="water-delete">${area.kind === "water" ? "Wasser löschen" : "Fläche löschen"}</button>`}`;
     if (selection.vertex !== undefined) {
       const q = selectedRing(n)[selection.vertex],
         edge = selectedEdges(n)[selection.vertex],
@@ -400,8 +411,7 @@ function render() {
         )}</select></label><button class="full" data-action="water-insert">Punkt einfügen</button><button class="full" data-action="water-remove">Punkt entfernen</button></div>`;
     }
     if (selection.ring)
-      panel +=
-        '<button class="full danger" data-action="water-remove-hole">Insel entfernen</button>';
+      panel += `<button class="full danger" data-action="water-remove-hole">${area.kind === "water" ? "Insel entfernen" : "Aussparung entfernen"}</button>`;
   }
   if (selection.handle) {
     const key = selection.handle.key,
@@ -432,7 +442,7 @@ function render() {
       : "");
   $("#status").textContent =
     statusNotice ||
-    `${mode === "draw" ? "Zeichnen" : mode === "island" ? "Aussparung" : "Auswahl"} · ${n.nodes.length} Knoten · ${n.paths.length} Pfade · ${n.areaBlockers?.length ?? 0} geschlossene Flächen`;
+    `${mode === "draw" ? "Zeichnen" : mode === "island" ? "Aussparung" : "Auswahl"} · ${n.nodes.length} Knoten · ${n.paths.length} Pfade · ${(n.areaBlockers?.length ?? 0) + (n.plots?.length ?? 0)} geschlossene Flächen`;
   $("#status").classList.toggle("error", !!statusNotice);
   $("#metrics").textContent =
     `${areaSize(surface).toFixed(2)} m² Sperrfläche · ${surface.areas.length} Fläche(n) · ${surface.areas.reduce((v, a) => v + a.holes.length, 0)} freie Innenbereiche`;
@@ -450,10 +460,10 @@ function renderView() {
   svg.style.visibility = spatial ? "hidden" : "visible";
   renderer.render(view, spatial);
   const conflicts = new Set(surface.conflicts.flatMap((c) => c.split(" × ")));
-  let content = (n.areaBlockers ?? [])
+  let content = vectorAreas(n)
     .map(
       (a) =>
-        `<path class="water-hit" data-area="${esc(a.id)}" d="${areaD(a)}" fill-rule="evenodd"/><path class="water-outline ${a.kind === "road" ? "road-outline" : ""} ${selection.area === a.id ? "selected-water" : ""}" d="${areaD(a)}"/>`,
+        `<path class="water-hit" data-area="${esc(a.id)}" d="${areaD(a)}" fill-rule="evenodd"/><path class="water-outline ${a.kind === "plot" ? "plot-outline" : a.kind === "road" ? "road-outline" : ""} ${selection.area === a.id ? "selected-water" : ""}" d="${areaD(a)}"/>`,
     )
     .join("");
   content += n.paths
@@ -467,7 +477,7 @@ function renderView() {
     )
     .join("");
   const p = n.paths.find((p) => p.id === selection.path),
-    selectedArea = n.areaBlockers?.find((a) => a.id === selection.area);
+    selectedArea = vectorAreas(n).find((a) => a.id === selection.area);
   const parts =
     usingPen() && (mode === "draw" || mode === "island")
       ? []
@@ -510,7 +520,7 @@ function renderView() {
     (r) => r.node === selection.node && r.center,
   ))
     content += `<circle class="fillet" cx="${rs.center!.x}" cy="${-rs.center!.y}" r="${rs.effective}"/>`;
-  const area = n.areaBlockers?.find((a) => a.id === selection.area);
+  const area = vectorAreas(n).find((a) => a.id === selection.area);
   if (area && mode === "select")
     for (const [index, ring] of [area.outer, ...(area.holes ?? [])].entries()) {
       content += ring
@@ -534,6 +544,7 @@ function renderView() {
   if (
     !n.paths.length &&
     !n.areaBlockers?.length &&
+    !n.plots?.length &&
     !waterDraft.length &&
     !penPoints.length &&
     !penGesture
@@ -554,6 +565,7 @@ function renderView() {
     conflict: !!houseConflicts.length,
     unit,
   });
+  content += plotOverlay(plotPlans, selection.area, unit);
   content += penOverlay(unit);
   svg.innerHTML = content;
   $("#scale").style.width = `${10 / unit}px`;
@@ -610,7 +622,7 @@ function finishWater() {
     ];
   if (
     apply((n) => {
-      const a = n.areaBlockers?.find((a) => a.id === selection.area);
+      const a = vectorAreas(n).find((a) => a.id === selection.area);
       if (!a) throw new Error("Fläche für Aussparung fehlt");
       if (n.version < 3) n.version = 3;
       a.holeEdges ??= (a.holes ?? []).map((r) =>
@@ -699,12 +711,21 @@ function appendDrawSegment(n: Network, from: string, to: string, curve: Curve) {
     throw new Error("Endpunkt muss sich vom Start unterscheiden");
   let p = n.paths.find((p) => p.id === drawPath);
   if (!p) {
-    if (n.version < 3) n.version = 3;
     const material = drawingMaterial();
-    drawPath = uid(n, material === "water" ? "Wasser" : "Weg");
+    if (material === "plot") n.version = 5;
+    else if (n.version < 3) n.version = 3;
+    drawPath = uid(
+      n,
+      material === "plot"
+        ? "Bauplatz"
+        : material === "water"
+          ? "Wasser"
+          : "Weg",
+    );
     p = {
       id: drawPath,
       kind: material,
+      ...(material === "plot" ? { plotSeed: 42 } : {}),
       startWidth: 4,
       endWidth: 4,
       segments: [],
@@ -949,7 +970,7 @@ viewport.addEventListener("pointerdown", (e) => {
       if (
         apply((n) => {
           const bounds = plotFromCorners(a, q);
-          n.version = 4;
+          if (n.version < 4) n.version = 4;
           n.housePlot = {
             ...n.housePlot,
             bounds,
@@ -1086,14 +1107,14 @@ viewport.addEventListener("pointermove", (e) => {
     q = world(e);
   if (drag.type === "node") moveNode(next, drag.id!, q);
   else if (drag.type === "area") {
-    const a = next.areaBlockers!.find((a) => a.id === drag!.id)!;
+    const a = vectorAreas(next).find((a) => a.id === drag!.id)!;
     moveContourAnchor(a, drag.ring ?? 0, drag.vertex!, q);
   } else {
     const s = selectedCurve(next, drag.segment)!;
     (s as unknown as Record<string, Point>)[drag.key!] = q;
   }
   try {
-    computeSurface(next);
+    evaluateProject(next);
     draft = next;
     drag.valid = next;
     notice = "";
@@ -1154,7 +1175,7 @@ $("#inspector").addEventListener("change", (e) => {
   const target = e.target as HTMLInputElement;
   if (target.id === "contour-kind") {
     apply((n) => {
-      const a = n.areaBlockers!.find((a) => a.id === selection.area)!,
+      const a = vectorAreas(n).find((a) => a.id === selection.area)!,
         points = selectedRing(n),
         i = selection.vertex!,
         edges = selectedEdges(n);
@@ -1194,7 +1215,7 @@ $("#inspector").addEventListener("change", (e) => {
       selection.vertex !== undefined &&
       (field === "areaX" || field === "areaY")
     ) {
-      const a = n.areaBlockers!.find((a) => a.id === selection.area)!;
+      const a = vectorAreas(n).find((a) => a.id === selection.area)!;
       const q = {
         ...selectedRing(n)[selection.vertex],
         [field === "areaX" ? "x" : "y"]: value,
@@ -1259,7 +1280,7 @@ $("#inspector").addEventListener("click", (e) => {
       selection = { path: id };
     }
     if (action === "water-remove-hole" && selection.area && selection.ring) {
-      const a = n.areaBlockers!.find((a) => a.id === selection.area)!;
+      const a = vectorAreas(n).find((a) => a.id === selection.area)!;
       a.holes!.splice(selection.ring - 1, 1);
       a.holeEdges?.splice(selection.ring - 1, 1);
       selection = { area: a.id, ring: 0 };
@@ -1271,7 +1292,7 @@ $("#inspector").addEventListener("click", (e) => {
       const ring = selectedRing(n),
         i = selection.vertex,
         edges = selectedEdges(n),
-        a = n.areaBlockers!.find((a) => a.id === selection.area)!;
+        a = vectorAreas(n).find((a) => a.id === selection.area)!;
       if (action === "water-insert") {
         const cut = splitCurve(
           ring[i],
@@ -1310,6 +1331,28 @@ $("#inspector").addEventListener("click", (e) => {
       selection.node = target;
     }
   });
+});
+$("#plot-picker").addEventListener("change", (e) => {
+  const id = (e.target as HTMLSelectElement).value;
+  selection = id ? { area: id, ring: 0 } : {};
+  setMode("select");
+});
+$("#plot-inspector").addEventListener("click", (e) => {
+  const action = (e.target as Element).closest<HTMLButtonElement>(
+    "[data-plot-action]",
+  )?.dataset.plotAction;
+  if (action === "new") {
+    $<HTMLSelectElement>("#material").value = "plot";
+    $<HTMLSelectElement>("#kind").value = "pen";
+    lastDrawingMode = "pen";
+    selection = {};
+    setMode("draw");
+  } else if (action === "delete") deleteSelectedVector();
+  else if (action === "regenerate")
+    apply((n) => {
+      const plot = n.plots?.find((p) => p.id === selection.area);
+      if (plot) plot.seed = (plot.seed + 1) >>> 0;
+    });
 });
 $("#house-inspector").addEventListener("click", (e) => {
   const action = (e.target as Element).closest<HTMLButtonElement>(
@@ -1377,6 +1420,7 @@ $("#kind").addEventListener("change", () => {
 });
 $("#material").addEventListener("change", () => {
   if (mode === "draw") setMode("draw");
+  else render();
 });
 $("#undo").addEventListener("click", () => {
   if (penGesture) {
@@ -1431,6 +1475,7 @@ $("#new").addEventListener("click", () => {
   setMode("select");
   apply((n) => {
     delete n.housePlot;
+    delete n.plots;
     Object.assign(n, emptyNetwork());
   });
 });
@@ -1462,10 +1507,11 @@ $("#import").addEventListener("change", async (e) => {
   if (!file) return;
   try {
     const n = parse(await file.text());
-    computeSurface(n);
+    evaluateProject(n);
     history.commit(n);
+    $<HTMLDetailsElement>("#legacy-house-panel").open = !!n.housePlot;
     resetPen();
-    selection = {};
+    selection = n.plots?.length ? { area: n.plots[0].id, ring: 0 } : {};
     drawStart = undefined;
     drawPath = undefined;
     notice = "";
@@ -1547,6 +1593,8 @@ export interface EditorSnapshot {
   view: View;
   selection: typeof selection;
   waterMesh: { heights: number[]; color: string | null };
+  plots: PlotPlan[];
+  complexMeshes: SurfaceView["complexMeshes"];
   houses: {
     result?: HouseResult;
     preview?: House;
@@ -1570,6 +1618,8 @@ window.__wegwerk = {
       view,
       selection,
       waterMesh: { heights: renderer.waterHeights, color: renderer.waterColor },
+      plots: plotPlans,
+      complexMeshes: renderer.complexMeshes,
       houses: {
         result: houseResult,
         preview: housePreview,
