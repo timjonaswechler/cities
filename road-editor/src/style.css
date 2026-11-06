@@ -355,6 +355,24 @@ footer {
 .road-outline {
   stroke: #163f36;
 }
+.plot-outline {
+  stroke: #93734a;
+  stroke-dasharray: 6 4;
+}
+#plot-inspector .row {
+  margin-top: 8px;
+}
+#plot-inspector button {
+  font-size: 12px;
+}
+#legacy-house-panel > summary {
+  cursor: pointer;
+  color: #647a6b;
+  font-size: 12px;
+}
+#legacy-house-panel[open] > summary {
+  margin-bottom: 12px;
+}
 .selected-water {
   stroke: #edb65a;
   stroke-width: 2;
@@ -395,12 +413,45 @@ footer {
   height: 1px;
   opacity: 0;
 }
-#inspector button.full {
+#inspector button.full,
+#house-inspector button.full {
   width: 100%;
   margin-top: 8px;
 }
 #mode-hint {
   color: #657e6c;
+}
+.pen-mode #editor,
+.pen-mode #editor * {
+  cursor: crosshair;
+}
+.pen-preview,
+.pen-guide,
+.pen-anchor,
+.pen-grip,
+.pen-close {
+  vector-effect: non-scaling-stroke;
+}
+.pen-preview {
+  fill: none;
+  stroke: #315ca1;
+  stroke-width: 2;
+  stroke-dasharray: 5 3;
+}
+.pen-guide {
+  stroke: #547bb3;
+  stroke-width: 1;
+}
+.pen-anchor,
+.pen-grip {
+  fill: #f7fbff;
+  stroke: #315ca1;
+  stroke-width: 1.5;
+}
+.pen-close {
+  fill: #f7fbff66;
+  stroke: #246d4d;
+  stroke-width: 2;
 }
 @media (max-width: 1050px) {
   header {

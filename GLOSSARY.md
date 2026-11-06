@@ -12,9 +12,21 @@ _Avoid_: Gebäude als Synonym
 Ein baulich zusammenhängender Baukörper, der eine oder mehrere Nutzungen und Haushalte aufnehmen kann.
 _Avoid_: Betrieb als Synonym
 
+**Gebäudekomplex**:
+Eine als Einheit geplante Gruppe von Gebäuden oder verbundenen Gebäudeteilen.
+_Avoid_: einzelnes Haus als Synonym
+
 **Grundstück**:
 Eine zusammenhängende Fläche mit Gebäuden, Zugängen und gegebenenfalls Hof, Garten oder Wirtschaftsflächen.
 _Avoid_: Gebäudegrundriss als Synonym
+
+**Geplanter Bauplatz**:
+Eine ausdrücklich zur Bebauung vorgesehene Fläche, auch soweit sie sich mit Wegen oder Wasserflächen überschneidet.
+_Avoid_: Gebäudegrundriss als Synonym
+
+**Realer Bauplatz**:
+Der am Boden bebaubare Teil eines geplanten Bauplatzes nach Berücksichtigung der Baublocker. Er kann aus mehreren getrennten Teilflächen bestehen, die weiterhin zum selben geplanten Bauplatz gehören.
+_Avoid_: geplante Fläche als Synonym
 
 **Bebauungsdichte**:
 Der Anteil bebauter Fläche an einer betrachteten Grundstücks- oder Quartiersfläche. Sie beschreibt nicht unmittelbar die Zahl der Bewohner oder die Belegung einzelner Gebäude.
@@ -35,11 +47,14 @@ Eine für Bewegung oder Verkehr bestimmte Fläche. Straßen und Pfade sind Auspr
 Ein von Wasser belegter Bereich mit seinem äußeren Ufer und gegebenenfalls ausgesparten Inseln.
 
 **Kontur**:
-Ein ausdrücklich geschlossener Rand, dessen Inneres eine Weg- oder Wasserfläche bildet. Anders als ein offener Verlauf benötigt er keine Breite.
+Ein ausdrücklich geschlossener Rand, der eine Fläche einschließt, etwa einen Weg, eine Wasserfläche oder einen geplanten Bauplatz. Anders als ein offener Verlauf benötigt er keine Breite.
 
 **Netzzyklus**:
 Eine geschlossene Folge verbundener Wegabschnitte. Die dazwischenliegende Fläche gehört dadurch nicht automatisch zum Weg.
 _Avoid_: gefüllte Kontur als Synonym
 
+**Baublocker**:
+Eine räumliche Einschränkung der Bebauung, etwa durch einen Weg oder ein Gewässer. Ihre Wirkung kann von der Bauhöhe und der vorgesehenen Bauart abhängen.
+
 **Sperrfläche**:
-Eine durch Wege oder Wasser belegte Fläche, die für eine spätere Bebauungsplanung nicht als frei gilt. Der verbleibende freie Rest ist nicht automatisch Bauland.
+Eine am Boden durch Wege oder Wasser belegte Fläche, die für gewöhnliche Bebauung nicht als frei gilt. Der verbleibende freie Rest ist nicht automatisch Bauland.

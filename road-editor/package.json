@@ -10,7 +10,7 @@
     "test": "vitest run tests/*.test.ts",
     "test:browser": "playwright test",
     "check": "npm run format:check && npm run build && npm test && npm run test:browser",
-    "format:check": "prettier --check src tests package.json tsconfig.json playwright.config.ts index.html README.md ACCEPTANCE.md"
+    "format:check": "prettier --check src tests package.json tsconfig.json playwright.config.ts index.html README.md ACCEPTANCE.md HOUSE-ACCEPTANCE.md HOUSE-CHECKLIST.md PLOTS.md"
   },
   "engines": {
     "node": ">=22.12.0"

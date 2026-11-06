@@ -4,7 +4,11 @@ Eigenständige Browserwerkbank in TypeScript/Three.js, neu implementiert statt
 Fortsetzung der verworfenen Hausgalerie. Wege, Straßen und Wasser verwenden
 dieselben Vektoren: offen mit Breite, ausdrücklich geschlossen als gefüllte
 Fläche ohne Breitenparameter. Das Material ist eine Einstellung, kein Szenariotyp.
-Keine Häuser, Nachbarblocker, Parzellierung oder Rust-/Archiv-Integration.
+**Bauplatz** ist eine weitere Vektorfläche: Kontur schließen, dann entsteht
+automatisch ein Gebäudekomplex. Wege und Wasser bleiben als Blocker erhalten;
+die gezeichnete Kontur wird nicht durch ihre Differenzfläche ersetzt.
+[Bedienung, Modell und Grenzen](PLOTS.md). Keine automatische Parzellierung
+oder Rust-/Archiv-Integration.
 
 ## Starten
 
@@ -20,11 +24,43 @@ Die von Vite ausgegebene lokale URL öffnen. Ein direkt editierbares Startnetz
 ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
 Änderungen vor dem Schließen als JSON speichern.
 
-## Bearbeiten
+## Zeichnen mit dem Stift
 
-- Material **Weg/Wasser** und Segmenttyp **Gerade/Quadratisch/Kubisch** wählen,
-  dann **Zeichnen** und Start/Endpunkte klicken. Weitere Klicks erweitern denselben
-  Vektor; der Segmenttyp darf wechseln. **Esc/Enter/Auswählen** beendet ihn offen.
+Der Standard ist **Stift · Klick / Ziehen**, angelehnt an die dokumentierten
+Pen-Werkzeuge von Penpot, Figma und Inkscape. [Quellen und bewusste Unterschiede](../docs/vector-tool-interactions.md).
+
+1. **P** aktiviert den Stift; **Zeichnen** nutzt den oben gewählten Modus.
+   Standard ist der Stift. Klicken setzt eine Ecke; Ziehen
+   am neu gesetzten Punkt bestimmt Richtung und Länge seiner Kurvengriffe.
+   Eine gestrichelte Linie zeigt vor dem nächsten Klick die Vorschau.
+2. Weitere Klicks/Ziehgesten erweitern denselben Pfad. Kurven werden nicht
+   vorgeformt: die gezogenen Griffe bestimmen sie. Beim Erzeugen sind die beiden
+   Griffe gespiegelt; danach bleiben sie unabhängig editierbar.
+3. **Enter**, **Offen beenden** oder **V** beendet offen. Klick auf den Startpunkt
+   schließt ausdrücklich **als gefüllte Fläche**, nicht als breiten Weg-Ring.
+   Der Kreisindikator markiert diese Schließgeste.
+4. **Esc während einer Ziehgeste** verwirft nur diese Geste; bereits gesetzte
+   Punkte bleiben. Sonst beendet Esc den Pfad. Ein einzelner unverbundener
+   Startpunkt wird nicht gespeichert. Eine übernommene Punktgeste ist ein Undo-Schritt;
+   danach kann im aktiven Stiftpfad weitergezeichnet werden, auch nach Redo.
+5. Nach dem Beenden lassen sich Punkte und Griffe wie bisher ziehen. Bei kubischen
+   Kurven wandern die angrenzenden Griffe mit ihrem Anker, ohne andere Arme zu
+   glätten oder die Griffe dauerhaft zu koppeln. Dasselbe gilt für geschlossene
+   Konturen und Aussparungen. Alte Quadratik-Kurven behalten ihren einzelnen
+   unabhängigen Kontrollpunkt.
+
+Material und bestehende Streifen-/Flächenregeln bleiben unverändert. Noch keine
+getrennte Objekt-/Punktauswahl, Mehrfachauswahl, automatische Smooth-Knoten oder
+neue Geste zum Wiederaufnehmen alter Pfade. Dies ist ein erster Interaktionsschritt,
+keine vollständige Überarbeitung der Werkbank.
+
+## Weitere Bearbeitung und feste Segmenttypen
+
+- Für explizite Vorgaben **Gerade/Quadratisch/Kubisch (fest)** wählen, dann
+  **Zeichnen** und Start/Endpunkte klicken. Weitere Klicks erweitern denselben
+  Vektor; diese festen Segmenttypen dürfen wechseln. Ein Wechsel zwischen Stift
+  und festen Typen beendet dagegen den laufenden offenen Zeichenablauf.
+  **Esc/Enter/Auswählen** beendet ihn offen.
   Am ersten Anker klicken oder **Pfad schließen** füllt stattdessen sein Inneres.
   Bei offenen Pfaden docken nahe Anker und Mittellinien desselben Materials an;
   Mittellinien werden dabei formerhaltend geteilt. Wasser dockt nicht automatisch
@@ -39,7 +75,8 @@ ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
   **Richtung umkehren** kehrt Segmente, Kontrollgriffe und Breitenzuordnung um,
   ohne die physische Fläche zu ändern.
 - Runde Anker ziehen oder deren XY-Position eingeben. Ein gemeinsamer Anker
-  bewegt alle Anschlüsse. Blaue Rauten sind unabhängige Kontrollgriffe,
+  bewegt alle Anschlüsse und die jeweils angrenzenden kubischen Griffe.
+  Blaue Rauten sind unabhängig voneinander bewegliche Kontrollgriffe,
   **keine** Kreuzungsknoten; nach Griffauswahl ist auch numerische Eingabe möglich.
   Es gibt keine automatische Tangenten- oder Knickglättung.
 - Knoten auswählen: **Knoten verbinden** ersetzt seine Referenzen durch den
@@ -61,7 +98,7 @@ ist geladen; **Neu** beginnt mit leerem Graphen. Keine Serverpersistenz:
 
 ## Offene Vektoren und gefüllte Konturen
 
-Für beide Materialien gilt dieselbe Regel: Ein **offener Vektor** belegt den
+Für Weg und Wasser gilt dieselbe Regel: Ein **offener Vektor** belegt den
 Streifen seiner Breite; eine **geschlossene Kontur** belegt ihr Inneres ohne
 Breitenangabe. Gerade, quadratische und kubische Segmente können gemischt werden.
 Eine Kurvenkontur kann mit zwei Ankern eine Fläche einschließen; degenerierte
@@ -82,7 +119,8 @@ oder selbstschneidende Konturen werden nicht übernommen.
    Die gültige Aussparung wird als ein Undo-Schritt übernommen. Sie ist ein echtes
    Loch und lässt sich ebenfalls mit Ankern und Griffen bearbeiten.
 4. **Kontur öffnen** entfernt das Schließsegment und macht daraus wieder einen
-   offenen Vektor mit zunächst gekoppelten 4 m Breite. Vorher Aussparungen entfernen.
+   offenen Vektor. Weg und Wasser erhalten zunächst gekoppelte 4 m Breite;
+   Bauplatzentwürfe bleiben ohne wirksame Breite. Vorher Aussparungen entfernen.
    Löschen und Undo/Redo gelten unabhängig für die gewählte Fläche.
 
 Wasser ist blau, seine Oberfläche liegt 1,4 m unter der Wegeebene. Die räumliche
@@ -99,6 +137,54 @@ Alte Netzringe bleiben Streifen: Ein Zyklus aus verbundenen Wegabschnitten
 füllt nicht automatisch seinen Innenbereich. **Pfad schließen** wandelt einen
 gewählten Pfad ausdrücklich zur gefüllten Kontur um.
 [Begriffe](../GLOSSARY.md).
+
+## Bauplätze als Vektorflächen
+
+Material **Bauplatz** wählen und mit demselben Stift eine geschlossene Kontur
+zeichnen. Ohne manuelle Zugangswahl oder Hausübernahme entsteht ein Komplex.
+Die vollständige Kontur bleibt erhalten; Wege und Wasser sperren nur die
+abgeleitete Bodenfläche. Mehrere getrennte Teilflächen gehören weiterhin zum
+selben Bauplatz. Konturänderungen und Blockeränderungen aktualisieren die Planung.
+**Bauplatz auswählen** erreicht auch verdeckte Konturen; **Neue Bebauung**
+wechselt den Seed. [Details und Grenzen](PLOTS.md).
+
+## Frühere Rechteckplanung / Hausvarianten
+
+Dieser ältere Ablauf bleibt für bestehende Projekte unter **Frühere Rechteckplanung**
+erreichbar. Für neue Bauplätze gilt der Vektorablauf oben.
+
+1. Einen Weg zeichnen und mit Esc beenden. Unter **Haus am Bauplatz** auf
+   **Bauplatz markieren** klicken und zwei gegenüberliegende Ecken setzen.
+   Zunächst einen rechteckigen Platz neben einem geraden Weg verwenden.
+2. Danach den gewünschten **Wegrand** anklicken; nicht die Mittellinie und
+   nicht das Wasser. **Zugang wählen** ändert diesen Punkt später erneut.
+3. **Hausvariante** schaltet bis zu drei passende Satteldachhäuser um:
+   4 × 6 m/eingeschossig, 6 × 8 m/zweigeschossig, 8 × 5 m/eingeschossig.
+   Proportionen und Firstrichtung unterscheiden sich. **Haus-Seed** verändert
+   die reproduzierbare Platzierungssuche. Draufsicht und **3D prüfen** zeigen
+   denselben Baukörper. Weniger Treffer und Ablehnungsgründe bleiben sichtbar.
+4. **Haus übernehmen** fixiert genau diesen Vorschlag. Zum erneuten Vergleichen
+   erst **Haus entfernen**; Undo stellt ihn wieder her. Neue Bauplatzecken oder
+   ein neuer Zugang erhalten das übernommene Haus und prüfen es erneut.
+5. Änderungen an Wegen und Wasser prüfen das konkrete Haus ebenfalls erneut:
+   Konflikte erscheinen rot und als Text, statt das Haus still zu ersetzen.
+   **Bauplatz löschen** entfernt Platz und Haus. Undo/Redo und JSON speichern
+   Bauplatz, Zugang, Seed, Variantenauswahl und übernommenes Haus.
+
+Die vollständige Dachhülle muss in den Bauplatz passen und mindestens 0,5 m
+Abstand zu Weg und Wasser halten. Der gerade Zugang ist 1,2 m breit, höchstens
+12 m lang und darf kein Wasser oder dazwischenliegende Wege queren. Diese
+Versuchswerte sind keine historischen Normen. Die endliche Suche prüft höchstens
+27 Platzierungen je Profil; kein Treffer beweist nicht, dass kein Haus möglich ist.
+Es gibt zunächst genau einen achsenparallelen Bauplatz, keine Grundstücksautomatik,
+Nachbarhäuser, Innenräume, Anbauten oder Fassadendetails.
+
+Das Hausmodul erhält nur Baufläche, Zugang, getrennte Sperrflächen und Seed;
+`house-project.ts` adaptiert die bestehende Wege-/Wassergeometrie. `houses.ts`
+erzeugt und prüft die Hausbeschreibung; `houseGeometry` ist zugleich Grundlage
+der Three.js-Darstellung. Projekte mit Bauplatz verwenden JSON-Version 4.
+Versionen 1–3 bleiben ladbar; abgeleitete Vorschläge und Meshes werden nicht gespeichert.
+[Checkliste](HOUSE-CHECKLIST.md) · [Feste Hausprüffälle](HOUSE-ACCEPTANCE.md).
 
 ## Geometrie-Interface
 
@@ -190,5 +276,6 @@ korrigieren. Nicht erfüllbare Kreise bleiben explizit ungeglättet.
 Unverbundene Überschneidungen sind rot markiert: geometrische Vereinigung ist
 **keine** automatische Graphverbindung und erfindet keine Überführung.
 Die Sperrfläche bildet eine spätere Grundlage für Gebäudeausrichtung;
-Restfläche ist nicht automatisch genehmigtes Bauland. Keine Stadt-/Hausplanung.
+Restfläche ist nicht automatisch genehmigtes Bauland. Keine automatische
+Stadtplanung; Hausvorschläge benötigen den ausdrücklich markierten Bauplatz.
 Desktopbedienung mit Maus/Tastatur; kein zugesagter Touch-/Mobilworkflow.

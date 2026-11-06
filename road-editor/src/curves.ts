@@ -106,6 +106,17 @@ export function splitCurve(
     right: { kind: "cubic", c1: mix(b1, c1, t), c2: c1 },
   };
 }
+// An anchor carries its adjacent cubic handle; this does not couple the
+// incoming and outgoing handles or introduce a persistent smooth-node type.
+export function moveCubicHandle(
+  s: Curve,
+  end: "start" | "end",
+  delta: Point,
+): void {
+  if (s.kind !== "cubic") return;
+  const key = end === "start" ? "c1" : "c2";
+  s[key] = { x: s[key].x + delta.x, y: s[key].y + delta.y };
+}
 export function createCurve(kind: Curve["kind"], a: Point, b: Point): Curve {
   const c = mix(a, b, 0.5),
     v = { x: -(b.y - a.y) * 0.25, y: (b.x - a.x) * 0.25 };
