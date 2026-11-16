@@ -1,9 +1,21 @@
 import {
   contourEdges,
   validateAreaBlockers,
+  validateContour,
+  type Contour,
   type AreaBlocker,
 } from "./blockers";
-import { curvePoint, curveDerivative, splitCurve, type Curve } from "./curves";
+import {
+  curvePoint,
+  curveDerivative,
+  splitCurve,
+  moveCubicHandle,
+  type Curve,
+} from "./curves";
+import { validateHousePlot } from "./house-state";
+import type { HousePlot } from "./house-types";
+import type { PlannedPlot } from "./plot-types";
+import { validatePlots } from "./plot-state";
 
 export interface Point {
   x: number;
@@ -15,7 +27,8 @@ export interface Node extends Point {
 export type Segment = Curve & { from: string; to: string };
 export interface Path {
   id: string;
-  kind?: "road" | "water";
+  kind?: "road" | "water" | "plot";
+  plotSeed?: number;
   segments: Segment[];
   startWidth: number;
   endWidth: number;
@@ -28,12 +41,18 @@ export interface Junction {
   radius: number;
 }
 export interface Network {
-  version: 1 | 2 | 3;
+  version: 1 | 2 | 3 | 4 | 5;
   nodes: Node[];
   paths: Path[];
   junctions: Junction[];
   areaBlockers?: AreaBlocker[];
+  housePlot?: HousePlot;
+  plots?: PlannedPlot[];
 }
+export const vectorAreas = (n: Network) => [
+  ...(n.plots ?? []),
+  ...(n.areaBlockers ?? []),
+];
 export const emptyNetwork = (): Network => ({
   version: 3,
   nodes: [],
@@ -62,12 +81,25 @@ export function validate(value: unknown): asserts value is Network {
   if (!value || typeof value !== "object") fail("Graph muss ein Objekt sein");
   const n = value as Network;
   if (
-    ![1, 2, 3].includes(n.version) ||
+    ![1, 2, 3, 4, 5].includes(n.version) ||
     !Array.isArray(n.nodes) ||
     !Array.isArray(n.paths) ||
     !Array.isArray(n.junctions)
   )
-    fail("Ungültiges Format / Version (erwartet 1, 2 oder 3)");
+    fail("Ungültiges Format / Version (erwartet 1 bis 5)");
+  if (n.plots !== undefined && n.version < 5)
+    fail("Vektorbauplätze benötigen Formatversion 5");
+  validatePlots(n.plots);
+  for (const plot of n.plots ?? [])
+    if (
+      n.paths.some((p) => p.id === plot.id) ||
+      n.areaBlockers?.some((a) => a.id === plot.id)
+    )
+      fail("Bauplatz-ID ist bereits als anderer Vektor vergeben");
+  if (n.housePlot !== undefined) {
+    if (n.version < 4) fail("Bauplätze benötigen Formatversion 4");
+    validateHousePlot(n.housePlot);
+  }
   if (n.version === 1 && n.areaBlockers !== undefined)
     fail("Flächensperren benötigen Formatversion 2");
   validateAreaBlockers(n.areaBlockers);
@@ -98,11 +130,19 @@ export function validate(value: unknown): asserts value is Network {
     paths.add(p.id);
     if (
       p.kind !== undefined &&
-      (n.version < 3 || !["road", "water"].includes(p.kind))
+      (n.version < 3 ||
+        !["road", "water", "plot"].includes(p.kind) ||
+        (p.kind === "plot" && n.version < 5))
     )
-      fail(
-        "Pfadmaterial benötigt Formatversion 3 und muss Weg oder Wasser sein",
-      );
+      fail("Ungültiges Pfadmaterial oder veraltete Formatversion");
+    if (
+      p.plotSeed !== undefined &&
+      (p.kind !== "plot" ||
+        !Number.isInteger(p.plotSeed) ||
+        p.plotSeed < 0 ||
+        p.plotSeed > 0xffffffff)
+    )
+      fail("Ungültiger Bauplatz-Seed");
     if (
       !Number.isFinite(p.startWidth) ||
       !Number.isFinite(p.endWidth) ||
@@ -176,7 +216,14 @@ export function derivative(n: Network, s: Segment, t: number): Point {
 export function moveNode(n: Network, id: string, p: Point): void {
   if (!Number.isFinite(p.x) || !Number.isFinite(p.y))
     throw new Error("Position muss endlich sein");
-  Object.assign(node(n, id), p); // Controls are independent world positions; no implicit smoothing.
+  const at = node(n, id),
+    delta = { x: p.x - at.x, y: p.y - at.y };
+  for (const path of n.paths)
+    for (const s of path.segments) {
+      if (s.from === id) moveCubicHandle(s, "start", delta);
+      if (s.to === id) moveCubicHandle(s, "end", delta);
+    }
+  Object.assign(at, p);
 }
 export function reversePath(n: Network, id: string): void {
   const p = n.paths.find((p) => p.id === id);
@@ -304,15 +351,14 @@ export function closePath(
   closing: Curve = { kind: "line" },
 ): void {
   const p = n.paths.find((p) => p.id === id);
-  if (!p?.segments.length || n.areaBlockers?.some((a) => a.id === id))
+  if (!p?.segments.length || vectorAreas(n).some((a) => a.id === id))
     throw new Error("Pfad kann nicht geschlossen werden");
   const segments = [...p.segments],
     first = segments[0].from;
   if (segments.at(-1)!.to !== first)
     segments.push({ ...closing, from: segments.at(-1)!.to, to: first });
-  const area: AreaBlocker = {
+  const area: Contour = {
     id,
-    kind: p.kind ?? "road",
     outer: segments.map((s) => {
       const q = node(n, s.from);
       return { x: q.x, y: q.y };
@@ -320,19 +366,22 @@ export function closePath(
     outerEdges: segments.map(({ from: _from, to: _to, ...edge }) => edge),
     holes: [],
   };
-  validateAreaBlockers([area]);
+  validateContour(area);
   const owned = new Set(segments.flatMap((s) => [s.from, s.to]));
-  n.version = 3;
+  if (n.version < 3) n.version = 3;
   n.paths = n.paths.filter((q) => q.id !== id);
   const retained = new Set(
     n.paths.flatMap((q) => q.segments.flatMap((s) => [s.from, s.to])),
   );
   n.nodes = n.nodes.filter((q) => !owned.has(q.id) || retained.has(q.id));
-  (n.areaBlockers ??= []).push(area);
+  if (p.kind === "plot") {
+    n.version = 5;
+    (n.plots ??= []).push({ ...area, kind: "plot", seed: p.plotSeed ?? 42 });
+  } else (n.areaBlockers ??= []).push({ ...area, kind: p.kind ?? "road" });
   cleanJunctions(n);
 }
 export function openArea(n: Network, id: string): void {
-  const area = n.areaBlockers?.find((a) => a.id === id);
+  const area = vectorAreas(n).find((a) => a.id === id);
   if (!area || area.holes?.length || n.paths.some((p) => p.id === id))
     throw new Error("Zum Öffnen zuerst die Aussparungen entfernen");
   const used = new Set(n.nodes.map((q) => q.id));
@@ -346,11 +395,12 @@ export function openArea(n: Network, id: string): void {
     return { id, x: q.x, y: q.y };
   });
   const edges = contourEdges(area);
-  n.version = 3;
+  if (n.version < 3) n.version = 3;
   n.nodes.push(...nodes);
   n.paths.push({
     id,
     kind: area.kind,
+    ...(area.kind === "plot" ? { plotSeed: area.seed } : {}),
     startWidth: 4,
     endWidth: 4,
     widthsLinked: true,
@@ -358,7 +408,8 @@ export function openArea(n: Network, id: string): void {
       .slice(0, -1)
       .map((s, i) => ({ ...s, from: nodes[i].id, to: nodes[i + 1].id })),
   });
-  n.areaBlockers = n.areaBlockers!.filter((a) => a.id !== id);
+  if (area.kind === "plot") n.plots = n.plots!.filter((a) => a.id !== id);
+  else n.areaBlockers = n.areaBlockers!.filter((a) => a.id !== id);
 }
 export class History {
   private past: Network[] = [];

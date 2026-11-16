@@ -1,24 +1,43 @@
 import type { Point } from "./network";
-import { sampleCurve, type Curve } from "./curves";
+import { sampleCurve, moveCubicHandle, type Curve } from "./curves";
 
-export interface AreaBlocker {
+export interface Contour {
   id: string;
-  kind: "road" | "water";
   outer: Point[];
   holes?: Point[][];
   outerEdges?: Curve[];
   holeEdges?: Curve[][];
 }
+export interface AreaBlocker extends Contour {
+  kind: "road" | "water";
+}
 export const WATER_DROP = 1.4;
-export function contourEdges(a: AreaBlocker, ring = 0): Curve[] {
+export function contourEdges(a: Contour, ring = 0): Curve[] {
   const points = ring ? a.holes?.[ring - 1] : a.outer;
   return (
     (ring ? a.holeEdges?.[ring - 1] : a.outerEdges) ??
     points!.map(() => ({ kind: "line" }))
   );
 }
+export function moveContourAnchor(
+  a: Contour,
+  ring: number,
+  index: number,
+  point: Point,
+): void {
+  const points = ring ? a.holes![ring - 1] : a.outer;
+  const delta = { x: point.x - points[index].x, y: point.y - points[index].y };
+  const edges = contourEdges(a, ring);
+  moveCubicHandle(
+    edges[(index + edges.length - 1) % edges.length],
+    "end",
+    delta,
+  );
+  moveCubicHandle(edges[index], "start", delta);
+  points[index] = point;
+}
 export function setContourEdges(
-  a: AreaBlocker,
+  a: Contour,
   ring: number,
   edges: Curve[],
 ): void {
@@ -156,6 +175,44 @@ function validateRing(value: unknown): asserts value is Point[] {
     }
   }
 }
+export function validateContour(value: unknown): asserts value is Contour {
+  if (!value || typeof value !== "object")
+    throw new Error("Ungültige Vektorkontur");
+  const item = value as Contour;
+  if (typeof item.id !== "string" || !item.id)
+    throw new Error("Ungültige Kontur-ID");
+  const outer = contourPoints(item.outer, item.outerEdges);
+  validateRing(outer);
+  if (item.holes !== undefined && !Array.isArray(item.holes))
+    throw new Error("Aussparungen müssen eine Liste von Konturen sein");
+  const rawHoles = item.holes ?? [];
+  if (
+    item.holeEdges !== undefined &&
+    (!Array.isArray(item.holeEdges) ||
+      item.holeEdges.length !== rawHoles.length)
+  )
+    throw new Error("Aussparungssegmente müssen zu den Konturen passen");
+  const holes = rawHoles.map((points, i) =>
+    contourPoints(points, item.holeEdges?.[i]),
+  );
+  for (let i = 0; i < holes.length; i++) {
+    const hole = holes[i];
+    validateRing(hole);
+    if (!hole.every((p) => inside(p, outer)) || ringsTouch(hole, outer))
+      throw new Error(
+        "Aussparung muss vollständig innerhalb der Außenkontur liegen",
+      );
+    for (let j = 0; j < i; j++)
+      if (
+        ringsTouch(hole, holes[j]) ||
+        inside(hole[0], holes[j]) ||
+        inside(holes[j][0], hole)
+      )
+        throw new Error(
+          "Aussparungen dürfen sich nicht überlappen oder einschließen",
+        );
+  }
+}
 export function validateAreaBlockers(
   value: unknown,
 ): asserts value is AreaBlocker[] | undefined {
@@ -164,48 +221,11 @@ export function validateAreaBlockers(
     throw new Error("Flächensperren müssen eine Liste sein");
   const ids = new Set<string>();
   for (const item of value) {
-    if (
-      !item ||
-      typeof item !== "object" ||
-      typeof item.id !== "string" ||
-      !item.id ||
-      ids.has(item.id)
-    )
-      throw new Error("Ungültige oder doppelte Flächensperren-ID");
+    validateContour(item);
+    if (ids.has(item.id)) throw new Error("Doppelte Flächensperren-ID");
     ids.add(item.id);
-    if (item.kind !== "water" && item.kind !== "road")
+    const kind = (item as AreaBlocker).kind;
+    if (kind !== "water" && kind !== "road")
       throw new Error("Unbekannte Flächensperre");
-    const outer = contourPoints(item.outer, item.outerEdges);
-    validateRing(outer);
-    if (item.holes !== undefined && !Array.isArray(item.holes))
-      throw new Error("Inseln müssen eine Liste von Konturen sein");
-    const rawHoles: Point[][] = item.holes ?? [];
-    if (
-      item.holeEdges !== undefined &&
-      (!Array.isArray(item.holeEdges) ||
-        item.holeEdges.length !== rawHoles.length)
-    )
-      throw new Error("Inselsegmente müssen zu den Konturen passen");
-    const holes = rawHoles.map((points, i) =>
-      contourPoints(points, item.holeEdges?.[i]),
-    );
-    for (let i = 0; i < holes.length; i++) {
-      const hole = holes[i];
-      validateRing(hole);
-      if (!hole.every((p) => inside(p, outer)) || ringsTouch(hole, outer))
-        throw new Error(
-          "Inselkontur muss vollständig innerhalb der Wasserfläche liegen",
-        );
-      for (let j = 0; j < i; j++) {
-        if (
-          ringsTouch(hole, holes[j]) ||
-          inside(hole[0], holes[j]) ||
-          inside(holes[j][0], hole)
-        )
-          throw new Error(
-            "Inselkonturen dürfen sich nicht überlappen oder einschließen",
-          );
-      }
-    }
   }
 }

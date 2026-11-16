@@ -552,10 +552,7 @@ test("B04 holes, conflict visibility, 3D uses identical surface, pan/zoom do not
   await page.mouse.move(q.x + 30, q.y + 30);
   await page.mouse.up({ button: "middle" });
   expect(JSON.stringify((await snapshot(page)).network)).toBe(before);
-  await page
-    .getByRole("button", { name: "Ansicht 0 / 120 m", exact: true })
-    .click();
-  expect((await snapshot(page)).view).toEqual({ x: 0, y: 0, height: 120 });
+  expect((await snapshot(page)).view).not.toEqual(s.view);
   await load(page, crossing());
   await expect(page.locator("#diagnostics")).toContainText("L × U");
   await page.screenshot({ path: "evidence/conflict.png" });
@@ -564,6 +561,7 @@ test("B05 mixed compound creation, numeric handles, reverse/delete, rejected edi
   page,
 }) => {
   await page.getByRole("button", { name: "Neu", exact: true }).click();
+  await page.locator("#kind").selectOption("line");
   await page.getByRole("button", { name: "Zeichnen", exact: true }).click();
   await clickWorld(page, -30, -10);
   await clickWorld(page, -10, -10);

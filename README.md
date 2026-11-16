@@ -126,7 +126,13 @@ Wege und Wasser mit denselben Linien-/Bézier-Vektoren zeichnen: offen mit Breit
 geschlossen als gefüllte Fläche ohne Breitenangabe. Anker, Kontrollgriffe und
 Aussparungen bleiben editierbar; dazu kommen Netzknoten, lokale Kreuzungsradien,
 Undo/Redo und Graph-JSON. Darstellung und Sperrflächen verwenden dieselben
-vereinigten Außenringe und Löcher. Keine Häuser oder Stadtintegration.
+vereinigten Außenringe und Löcher. **Bauplätze werden als weitere Vektorflächen
+gezeichnet.** Aus der vollständigen Kontur und den Weg-/Wasserblockern entsteht
+höchstens ein Gebäudekomplex pro Bauplatz. Bebaubare Bodenflächen werden abgeleitet;
+die Originalkontur und getrennte Teilflächen bleiben erhalten. Noch keine automatische
+Parzellierung, Torüberbauung oder Integration mit dem Rust-Stadtgenerator.
+[Bauplatzbedienung und Modell](road-editor/PLOTS.md). Die frühere Rechteckplanung
+bleibt für bestehende Projekte verfügbar.
 
 ```sh
 cd road-editor

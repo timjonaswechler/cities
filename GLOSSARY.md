@@ -9,12 +9,36 @@ Eine wirtschaftliche Tätigkeit mit eigenen Anforderungen an Räume, Zugang und 
 _Avoid_: Gebäude als Synonym
 
 **Gebäude**:
-Ein baulich zusammenhängender Baukörper, der eine oder mehrere Nutzungen und Haushalte aufnehmen kann.
+Eine bauliche Einheit aus mehreren Bauelementen, die Aufenthaltsbereiche für Menschen enthält und eine oder mehrere Nutzungen und Haushalte aufnehmen kann.
 _Avoid_: Betrieb als Synonym
 
+**Gebäudekomplex**:
+Eine als Einheit geplante Gruppe mehrerer Aufenthaltsbereiche mit einem gemeinsamen Hauptknoten. Die Bereiche können direkt aneinander anschließen oder indirekt über Gänge, Höfe oder Wege verbunden sein und in einem oder mehreren Gebäuden liegen.
+_Avoid_: einzelnes Bauelement oder einzelner Aufenthaltsbereich als Synonym
+
+**Aufenthaltsbereich**:
+Ein räumlicher Bereich, den Menschen nutzen können. Dach, Mauer und andere feste Bauelemente sind nicht selbst solche Bereiche; ein Raumkörper kann einen Aufenthaltsbereich umschließen.
+
+**Hauptknoten**:
+Der gemeinsame logische Bezugspunkt eines Gebäudekomplexes, an den seine Bereiche und Verbindungen angeschlossen sind. Er ist kein eigener Mesh-Baustein.
+
+**Bauelement / Feature**:
+Ein einzeln prüfbarer, parametrisierter Baustein oder eine geometrische Veränderung, etwa Raumkörper, Dach, Überhang, Durchfahrt oder Mauer. Eigenschaften, Baustoffe und Anschlüsse beschreiben seine Geometrie und zulässige Verwendung.
+
+**Lokation**:
+Der bauliche Kontext eines Standorts. Sie bündelt je Feature die Freigabe, zulässige Baustoffe und Eigenschaftsgrenzen. Ein Bauplatz beschreibt dagegen seine konkrete räumliche Kontur; mehrere Bauplätze können dieselben Lokationsregeln verwenden.
+
 **Grundstück**:
-Eine zusammenhängende Fläche mit Gebäuden, Zugängen und gegebenenfalls Hof, Garten oder Wirtschaftsflächen.
+Eine zusammenhängende Fläche mit Gebäuden, Zugängen und gegebenenfalls Hof, Garten oder Wirtschaftsflächen. Sie kann mehrere direkt oder indirekt miteinander verbundene Gebäudekomplexe enthalten.
 _Avoid_: Gebäudegrundriss als Synonym
+
+**Geplanter Bauplatz**:
+Eine ausdrücklich zur Bebauung vorgesehene Fläche, auch soweit sie sich mit Wegen oder Wasserflächen überschneidet. Ein Bauplatz kann mehrere Gebäudekomplexe aufnehmen; deren Zahl ist eine Planungsregel, keine Eigenschaft der Kontur.
+_Avoid_: Gebäudegrundriss als Synonym
+
+**Realer Bauplatz**:
+Der am Boden bebaubare Teil eines geplanten Bauplatzes nach Berücksichtigung der Baublocker. Er kann aus mehreren getrennten Teilflächen bestehen, die weiterhin zum selben geplanten Bauplatz gehören.
+_Avoid_: geplante Fläche als Synonym
 
 **Bebauungsdichte**:
 Der Anteil bebauter Fläche an einer betrachteten Grundstücks- oder Quartiersfläche. Sie beschreibt nicht unmittelbar die Zahl der Bewohner oder die Belegung einzelner Gebäude.
@@ -35,11 +59,14 @@ Eine für Bewegung oder Verkehr bestimmte Fläche. Straßen und Pfade sind Auspr
 Ein von Wasser belegter Bereich mit seinem äußeren Ufer und gegebenenfalls ausgesparten Inseln.
 
 **Kontur**:
-Ein ausdrücklich geschlossener Rand, dessen Inneres eine Weg- oder Wasserfläche bildet. Anders als ein offener Verlauf benötigt er keine Breite.
+Ein ausdrücklich geschlossener Rand, der eine Fläche einschließt, etwa einen Weg, eine Wasserfläche oder einen geplanten Bauplatz. Anders als ein offener Verlauf benötigt er keine Breite.
 
 **Netzzyklus**:
 Eine geschlossene Folge verbundener Wegabschnitte. Die dazwischenliegende Fläche gehört dadurch nicht automatisch zum Weg.
 _Avoid_: gefüllte Kontur als Synonym
 
+**Baublocker**:
+Eine räumliche Einschränkung der Bebauung, etwa durch einen Weg oder ein Gewässer. Ihre Wirkung kann von der Bauhöhe und der vorgesehenen Bauart abhängen.
+
 **Sperrfläche**:
-Eine durch Wege oder Wasser belegte Fläche, die für eine spätere Bebauungsplanung nicht als frei gilt. Der verbleibende freie Rest ist nicht automatisch Bauland.
+Eine am Boden durch Wege oder Wasser belegte Fläche, die für gewöhnliche Bebauung nicht als frei gilt. Der verbleibende freie Rest ist nicht automatisch Bauland.
