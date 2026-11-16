@@ -43,7 +43,7 @@ const union = (areas: HouseArea[]): MultiPolygon =>
     ? clipping.union(areaPolygon(areas[0]), ...areas.slice(1).map(areaPolygon))
     : [];
 
-/** The only construction of the wall, roof, ridge and front entrance geometry. */
+/** The only construction of the wall, roof, ridge and main entrance geometry. */
 export function houseGeometry(house: House): HouseGeometry {
   const c = Math.cos(house.angle),
     s = Math.sin(house.angle);
@@ -71,7 +71,14 @@ export function houseGeometry(house: House): HouseGeometry {
         : [world(0, -rd), world(0, rd)],
     eaveHeight,
     ridgeHeight: eaveHeight + (house.ridge === "width" ? rd : rw),
-    entrance: world(0, -d),
+    entrance:
+      house.entranceSide === "right"
+        ? world(w, 0)
+        : house.entranceSide === "back"
+          ? world(0, d)
+          : house.entranceSide === "left"
+            ? world(-w, 0)
+            : world(0, -d),
   };
 }
 

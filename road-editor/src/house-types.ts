@@ -24,6 +24,8 @@ export interface House {
   depth: number;
   storeys: 1 | 2;
   ridge: "width" | "depth";
+  // Local wall side; older houses default to the front (-Y) wall.
+  entranceSide?: "front" | "right" | "back" | "left";
 }
 export interface HouseRequest {
   bounds: PlotBounds;

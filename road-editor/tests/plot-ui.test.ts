@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createComplexGroup } from "../src/complex-view";
 import * as houseView from "../src/house-view";
+import { houseGeometry } from "../src/houses";
 import { plotOverlay, plotPanel } from "../src/plot-ui";
 import type { BuildingComplex, PlannedPlot, PlotPlan } from "../src/plot-types";
 
@@ -27,20 +28,10 @@ const complex: BuildingComplex = {
     {
       id: "Flügel",
       role: "wing",
-      center: { x: 25, y: 23 },
-      width: 4,
-      depth: 6,
-      angle: 0.3,
-      storeys: 1,
-      ridge: "width",
-    },
-    {
-      id: "Nebenbau",
-      role: "outbuilding",
-      center: { x: 25, y: 13 },
-      width: 2,
-      depth: 3,
-      angle: Math.PI / 2,
+      center: { x: 8, y: 25 },
+      width: 3,
+      depth: 4,
+      angle: 0,
       storeys: 1,
       ridge: "depth",
     },
@@ -94,14 +85,14 @@ describe("automatic plot panel", () => {
     );
   });
 
-  it("reports drawn, usable and excluded area with one complex across disconnected parts", () => {
+  it("reports all ground parts while the connected complex occupies only one part", () => {
     const before = structuredClone({ plot, plan }),
       html = plotPanel(plot, plan);
     expect(html).toContain("Gezeichnet: <strong>591 m²</strong>");
     expect(html).toContain("Bebaubar: <strong>388 m²</strong>");
     expect(html).toContain("Ausgeschlossen: <strong>203 m²</strong>");
     expect(html).toContain(
-      "2 getrennte Teilflächen · 1 Gebäudekomplex · 3 Baukörper",
+      "2 getrennte Teilflächen · 1 Gebäudekomplex · 2 Baukörper",
     );
     expect(html).not.toContain("2 Gebäudekomplexe");
     for (const name of ["new", "regenerate", "delete"])
@@ -218,7 +209,58 @@ describe("plot SVG overlay", () => {
     expect(html.match(/class="plot-label"/g)).toHaveLength(1);
     expect(html).toContain('x="0" y="-31.75" font-size="2.75"');
     expect(html).toContain('paint-order="stroke"');
-    expect(html).toContain("Bauplatz-1 · 388 m² bebaubar · 3 Baukörper");
+    expect(html).toContain("Bauplatz-1 · 388 m² bebaubar · 2 Baukörper");
+  });
+
+  it("marks each main entrance at the same world position as the 3D geometry", () => {
+    const description = structuredClone(plan);
+    description.complex!.volumes[0].entranceSide = "right";
+    description.complex!.volumes[1].entranceSide = "back";
+    const html = plotOverlay([description], undefined, 0.25);
+    expect(html.match(/class="plot-entrance"/g)).toHaveLength(1);
+    expect(html.match(/<title>Haupteingang<\/title>/g)).toHaveLength(1);
+    expect(html).not.toContain('data-volume-id="Flügel"');
+    for (const volume of description.complex!.volumes) {
+      if (volume.role === "wing") continue;
+      const entry = houseGeometry(volume).entrance;
+      expect(html).toContain(
+        `<circle cx="${entry.x}" cy="${-entry.y}" r="0.625"`,
+      );
+    }
+    expect(
+      plotOverlay([{ ...description, complex: undefined }], undefined, 1),
+    ).not.toContain('class="plot-entrance"');
+    const id = 'body"><script>&',
+      unsafe = structuredClone(description);
+    unsafe.complex!.volumes[0].id = id;
+    const escaped = plotOverlay([unsafe], undefined, 1);
+    expect(escaped).toContain(
+      'data-volume-id="body&quot;&gt;&lt;script&gt;&amp;"',
+    );
+    expect(escaped).not.toContain(id);
+  });
+
+  it("shows the exact street target only for the selected plot, without implying a walkable route", () => {
+    const description = structuredClone(plan),
+      main = description.complex!.volumes[0];
+    main.entranceSide = "right";
+    main.entranceTarget = { x: 40, y: 24 };
+    const html = plotOverlay([description], description.id, 0.25),
+      entrance = houseGeometry(main).entrance;
+    expect(html.match(/class="plot-frontage"/g)).toHaveLength(1);
+    expect(html).toContain(`d="M ${entrance.x},${-entrance.y} L 40,-24"`);
+    expect(html).toContain('<circle cx="40" cy="-24" r="0.5"');
+    expect(html).toContain(
+      "Ausrichtung zur nächsten Straßenkante – kein Zugangsweg",
+    );
+    expect(plotOverlay([description], undefined, 1)).not.toContain(
+      'class="plot-frontage"',
+    );
+    const withoutStreet = structuredClone(description);
+    delete withoutStreet.complex!.volumes[0].entranceTarget;
+    expect(plotOverlay([withoutStreet], withoutStreet.id, 1)).not.toContain(
+      'class="plot-frontage"',
+    );
   });
 
   it("escapes ids in both SVG attributes and text without using them as paint ids", () => {
@@ -287,7 +329,7 @@ afterEach(() => {
 });
 
 describe("Three.js building complex", () => {
-  it("aggregates disconnected volumes in one semantic group using the existing house renderer", () => {
+  it("renders the main body and attached wing in one semantic group", () => {
     const before = structuredClone(complex),
       createHouse = vi.spyOn(houseView, "createHouseGroup"),
       group = renderComplex(complex);
@@ -297,12 +339,17 @@ describe("Three.js building complex", () => {
       kind: "building-complex",
       complexId: complex.id,
     });
-    expect(group.children).toHaveLength(3);
-    expect(createHouse).toHaveBeenCalledTimes(3);
+    expect(group.children).toHaveLength(2);
+    expect(createHouse).toHaveBeenCalledTimes(2);
     const meshes: THREE.Mesh[] = [];
     for (const [index, child] of group.children.entries()) {
       const volume = complex.volumes[index];
-      expect(createHouse).toHaveBeenNthCalledWith(index + 1, volume);
+      expect(createHouse).toHaveBeenNthCalledWith(
+        index + 1,
+        volume,
+        false,
+        volume.role !== "wing",
+      );
       expect(child.name).toBe(`volume:${volume.id}`);
       expect(child.parent).toBe(group);
       expect(child.userData.houseId).toBe(volume.id);
@@ -322,21 +369,26 @@ describe("Three.js building complex", () => {
         expect(Number.isFinite(geometry.boundingSphere!.radius)).toBe(true);
       });
     }
-    expect(meshes).toHaveLength(6);
+    expect(meshes).toHaveLength(4);
     expect(meshes.filter((mesh) => mesh.name === "house-walls")).toHaveLength(
-      3,
+      2,
     );
-    expect(meshes.filter((mesh) => mesh.name === "house-roof")).toHaveLength(3);
+    expect(meshes.filter((mesh) => mesh.name === "house-roof")).toHaveLength(2);
     const bounds = new THREE.Box3().setFromObject(group);
     expect(bounds.min.x).toBeLessThan(5);
-    expect(bounds.max.x).toBeGreaterThan(25);
+    expect(bounds.max.x).toBeGreaterThan(8);
     expect(complex).toEqual(before);
   });
 
   it("preserves the exact house geometry without a second roof algorithm", () => {
     const group = renderComplex(complex);
     for (const [index, child] of group.children.entries()) {
-      const house = houseView.createHouseGroup(complex.volumes[index]);
+      const volume = complex.volumes[index],
+        house = houseView.createHouseGroup(
+          volume,
+          false,
+          volume.role !== "wing",
+        );
       groups.push(house);
       expect(child.children.map((object) => object.name)).toEqual(
         house.children.map((object) => object.name),
@@ -349,6 +401,31 @@ describe("Three.js building complex", () => {
           Array.from(expected.geometry.attributes.position.array),
         );
       }
+    }
+  });
+
+  it("uses the selected entrance side for the single 3D entrance marker", () => {
+    const description = structuredClone(complex);
+    description.volumes[0].entranceSide = "right";
+    description.volumes[1].entranceSide = "back";
+    const group = renderComplex(description);
+    for (const [index, child] of group.children.entries()) {
+      const volume = description.volumes[index];
+      if (volume.role === "wing") {
+        expect(child.getObjectByName("house-entrance")).toBeUndefined();
+        continue;
+      }
+      const entrance = houseGeometry(volume).entrance,
+        dx = entrance.x - volume.center.x,
+        dy = entrance.y - volume.center.y,
+        length = Math.hypot(dx, dy),
+        marker = child.getObjectByName("house-entrance") as THREE.LineSegments,
+        positions = marker.geometry.getAttribute("position");
+      expect(
+        child.children.filter((o) => o.name === "house-entrance"),
+      ).toHaveLength(1);
+      expect(positions.getX(1)).toBeCloseTo(entrance.x + (dx / length) * 0.05);
+      expect(positions.getY(1)).toBeCloseTo(entrance.y + (dy / length) * 0.05);
     }
   });
 

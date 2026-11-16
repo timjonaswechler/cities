@@ -86,11 +86,20 @@ function assertRoofs(plan: PlotPlan, blockers: BuildBlocker[]) {
   const volumes = plan.complex!.volumes;
   expect(volumes.filter((v) => v.role === "main")).toHaveLength(1);
   expect(new Set(volumes.map((v) => v.id)).size).toBe(volumes.length);
-  expect(volumes.length).toBeLessThanOrEqual(4);
+  expect(volumes.length).toBeLessThanOrEqual(2);
+  const footprints = volumes.map((v) => envelope(houseGeometry(v).footprint)),
+    roofs = volumes.map((v) => envelope(houseGeometry(v).roof));
+  // One semantic id is not enough: all walls must be physically connected,
+  // and the entire complex must fit the same connected ground component.
+  expect(clipping.union(footprints)).toHaveLength(1);
+  expect(allowed.some((part) => !clipping.difference(roofs, part).length)).toBe(
+    true,
+  );
   for (const volume of volumes) {
     expect(volume.width).toBeGreaterThan(0);
     expect(volume.depth).toBeGreaterThan(0);
-    expect(volume.angle).toBe(volumes[0].angle);
+    expect(Number.isFinite(volume.angle)).toBe(true);
+    if (volume.role === "wing") expect(volume.angle).toBe(volumes[0].angle);
     expect(volume.ridge).toBe(volumes[0].ridge);
     const geometry = houseGeometry(volume);
     for (const ring of [geometry.footprint, geometry.roof]) {
@@ -154,28 +163,34 @@ describe("pure plot planning", () => {
     assertRoofs(plan, blockers);
   });
 
-  it("keeps road-split parts and coordinates volumes on both under one complex", () => {
-    const blockers = [blocker("road", rectangle(28, -10, 32, 40))],
-      plans = planPlots([plot("split", rectangle(0, 0, 60, 30))], blockers),
-      [plan] = plans;
-    expect(plans).toHaveLength(1);
-    expect(plan.buildable).toHaveLength(2);
-    expect(plan.buildableArea).toBe(1680);
-    expect(plan.excludedArea).toBe(120);
-    expect(plan.complex!.volumes.some((v) => v.role === "outbuilding")).toBe(
-      true,
-    );
-    for (const part of plan.buildable)
-      expect(
+  it.each(["road", "water"] as const)(
+    "retains all %s-split ground parts but places one physically connected complex on only one part",
+    (kind) => {
+      const site = plot("split", rectangle(0, 0, 60, 30)),
+        source = structuredClone(site),
+        blockers = [blocker(kind, rectangle(22, -10, 26, 40))],
+        plans = planPlots([site], blockers),
+        [plan] = plans;
+      expect(plans).toHaveLength(1);
+      expect(plan.buildable).toHaveLength(2);
+      expect(plan.buildableArea).toBe(1680);
+      expect(plan.excludedArea).toBe(120);
+      const occupiedParts = plan.buildable.filter((part) =>
         plan.complex!.volumes.some(
           (v) =>
             !clipping.difference(envelope(houseGeometry(v).roof), polygon(part))
               .length,
         ),
-      ).toBe(true);
-    assertAccounting(plan);
-    assertRoofs(plan, blockers);
-  });
+      );
+      expect(occupiedParts).toHaveLength(1);
+      expect(plan.messages.join()).toContain(
+        "nur ein zusammenhängender Gebäudekomplex",
+      );
+      expect(site).toEqual(source);
+      assertAccounting(plan);
+      assertRoofs(plan, blockers);
+    },
+  );
 
   it("unions crossing river and roads without double-counting their shared area", () => {
     const blockers = [
@@ -336,9 +351,9 @@ describe("pure plot planning", () => {
       expect(rejected.buildableArea).toBe(232);
       expect(rejected.complex).toBeUndefined();
       expect(rejected.messages.join()).toContain("Keine passende Dachhülle");
-      // One setup operation of each kind plus at most 176 roof tests.
-      expect(difference.mock.calls.length).toBeLessThanOrEqual(177);
-      expect(intersection.mock.calls.length).toBeLessThanOrEqual(177);
+      // One setup operation of each kind plus at most 128 roof tests.
+      expect(difference.mock.calls.length).toBeLessThanOrEqual(129);
+      expect(intersection.mock.calls.length).toBeLessThanOrEqual(129);
     } finally {
       difference.mockRestore();
       intersection.mockRestore();

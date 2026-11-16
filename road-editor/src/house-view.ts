@@ -21,7 +21,11 @@ const quad = (
   d: THREE.Vector3,
 ) => target.push(a, b, c, a, c, d);
 
-export function createHouseGroup(house: House, conflict = false): THREE.Group {
+export function createHouseGroup(
+  house: House,
+  conflict = false,
+  showEntrance = true,
+): THREE.Group {
   const shape = houseGeometry(house),
     footprint = counterclockwise(shape.footprint),
     roof = counterclockwise(shape.roof),
@@ -127,6 +131,7 @@ export function createHouseGroup(house: House, conflict = false): THREE.Group {
     edges.name = name;
     group.add(edges);
   }
+  if (!showEntrance) return group;
   const center = footprint
       .reduce<THREE.Vector3>(
         (sum, p) => sum.add(vector(p, 0)),

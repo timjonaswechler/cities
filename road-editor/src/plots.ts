@@ -11,13 +11,11 @@ import type {
 } from "./plot-types";
 
 const INSET = 0.35;
-// Per plot, at most 176 roof tests (each at most two overlay operations).
+// Per plot, at most 128 roof tests (each at most two overlay operations).
 // Geometry is never truncated: only the optional blockout search is bounded.
 const MAIN_TESTS = 96;
 const WING_TESTS = 32;
-const OUTBUILDING_TESTS = 48;
 const MAIN_COMPONENTS = 4;
-const OUTBUILDINGS = 2;
 
 const polygon = (area: HouseArea): Polygon =>
   [area.outer, ...area.holes].map((ring) => ring.map(({ x, y }) => [x, y]));
@@ -136,14 +134,10 @@ interface Size {
   width: number;
   depth: number;
 }
-function sizes(space: Frame, scale: number, main?: ComplexVolume): Size[] {
-  const width = main
-    ? clamp(main.width * 0.55, 3, 6)
-    : clamp((space.bounds.maxX - space.bounds.minX) * scale, 4, 14);
-  const depth = main
-    ? clamp(main.depth * 0.6, 3, 5)
-    : clamp((space.bounds.maxY - space.bounds.minY) * scale, 4, 10);
-  const minimum = main ? 3 : 4;
+function sizes(space: Frame, scale: number): Size[] {
+  const width = clamp((space.bounds.maxX - space.bounds.minX) * scale, 4, 14),
+    depth = clamp((space.bounds.maxY - space.bounds.minY) * scale, 4, 10),
+    minimum = 4;
   return [
     { width, depth },
     {
@@ -206,6 +200,90 @@ function fits(
     !clipping.intersection(roof, blocked).length
   );
 }
+function faceRoad(volume: ComplexVolume, roads: MultiPolygon): ComplexVolume {
+  // Only the union boundary is a street edge, including edges around holes.
+  // Distance is measured from this body's centre, not the plot or road axis.
+  let nearest: HousePoint | undefined,
+    distance = Infinity;
+  for (const area of roads)
+    for (const ring of area)
+      for (let i = 1; i < ring.length; i++) {
+        const [ax, ay] = ring[i - 1],
+          [bx, by] = ring[i],
+          dx = bx - ax,
+          dy = by - ay,
+          lengthSquared = dx * dx + dy * dy;
+        if (!lengthSquared) continue;
+        const t = clamp(
+            ((volume.center.x - ax) * dx + (volume.center.y - ay) * dy) /
+              lengthSquared,
+            0,
+            1,
+          ),
+          point = { x: ax + t * dx, y: ay + t * dy },
+          d = Math.hypot(point.x - volume.center.x, point.y - volume.center.y);
+        if (
+          d < distance ||
+          (d === distance &&
+            nearest &&
+            (point.x < nearest.x ||
+              (point.x === nearest.x && point.y < nearest.y)))
+        ) {
+          nearest = point;
+          distance = d;
+        }
+      }
+  if (!nearest) return volume;
+  const local = rotate(
+    { x: nearest.x - volume.center.x, y: nearest.y - volume.center.y },
+    -volume.angle,
+  );
+  const entranceSide =
+      Math.abs(local.x) > Math.abs(local.y)
+        ? local.x > 0
+          ? "right"
+          : "left"
+        : local.y > 0
+          ? "back"
+          : "front",
+    nx = entranceSide === "right" ? 1 : entranceSide === "left" ? -1 : 0,
+    ny = entranceSide === "back" ? 1 : entranceSide === "front" ? -1 : 0,
+    turn = Math.atan2(nx * local.y - ny * local.x, nx * local.x + ny * local.y);
+  // Rotate the body, not just a marker. The doorway lies on the segment
+  // from the centre to its nearest street point, so that point is also
+  // nearest to the doorway. Roof fitting happens AFTER this rotation.
+  return {
+    ...volume,
+    angle: volume.angle + (Math.abs(turn) < 1e-12 ? 0 : turn),
+    entranceSide,
+    entranceTarget: nearest,
+  };
+}
+function entranceClear(volume: ComplexVolume, other: ComplexVolume): boolean {
+  const entrance = houseGeometry(volume).entrance,
+    dx = entrance.x - volume.center.x,
+    dy = entrance.y - volume.center.y,
+    length = Math.hypot(dx, dy),
+    normal = { x: dx / length, y: dy / length },
+    side = {
+      x: (-normal.y * HOUSE_RULES.accessWidth) / 2,
+      y: (normal.x * HOUSE_RULES.accessWidth) / 2,
+    },
+    approach: Polygon = [
+      [
+        [entrance.x + side.x, entrance.y + side.y],
+        [entrance.x - side.x, entrance.y - side.y],
+        [entrance.x - side.x + normal.x, entrance.y - side.y + normal.y],
+        [entrance.x + side.x + normal.x, entrance.y + side.y + normal.y],
+      ],
+    ],
+    footprint: Polygon = [
+      houseGeometry(other).footprint.map(({ x, y }) => [x, y]),
+    ];
+  // Keep the door's 1.2 m wide, 1 m deep approach out of an attached body.
+  // This is local door clearance, not a route or a guaranteed street access.
+  return !clipping.intersection(approach, footprint).length;
+}
 function wings(main: ComplexVolume, next: () => number): ComplexVolume[] {
   const width = clamp(main.width * 0.42, 3, 5),
     depth = clamp(main.depth * 0.65, 3, 6);
@@ -221,7 +299,8 @@ function wings(main: ComplexVolume, next: () => number): ComplexVolume[] {
         main.angle,
       );
       return {
-        ...main,
+        angle: main.angle,
+        ridge: main.ridge,
         id: `${main.id}-wing`,
         role: "wing" as const,
         center: { x: main.center.x + offset.x, y: main.center.y + offset.y },
@@ -236,6 +315,7 @@ function buildComplex(
   plan: PlotPlan,
   seed: number,
   blocked: MultiPolygon,
+  roads: MultiPolygon,
 ): BuildingComplex | undefined {
   const parts = [...plan.buildable]
       .sort((a, b) => areaSize(b) - areaSize(a))
@@ -245,9 +325,7 @@ function buildComplex(
     id = `complex-${plan.id}`;
   let mainTests = 0,
     wingTests = 0;
-  let chosen:
-    | { main: ComplexVolume; part: Component; wing?: ComplexVolume }
-    | undefined;
+  let chosen: { main: ComplexVolume; wing?: ComplexVolume } | undefined;
   search: for (const part of parts.slice(0, MAIN_COMPONENTS)) {
     const edge = part.edges[0],
       angle = Math.atan2(edge.b.y - edge.a.y, edge.b.x - edge.a.x);
@@ -256,21 +334,24 @@ function buildComplex(
       for (const size of sizes(space, scale))
         for (const center of centers(space, size, next)) {
           if (mainTests++ >= MAIN_TESTS) break search;
-          const main: ComplexVolume = {
-            id: `${id}-main`,
-            role: "main",
-            center,
-            angle: orientation,
-            ...size,
-            storeys: 2,
-            ridge: "width",
-          };
+          const main = faceRoad(
+            {
+              id: `${id}-main`,
+              role: "main",
+              center,
+              angle: orientation,
+              ...size,
+              storeys: 2,
+              ridge: "width",
+            },
+            roads,
+          );
           if (!fits(main, part, blocked)) continue;
-          chosen ??= { main, part };
+          chosen ??= { main };
           for (const wing of wings(main, next)) {
             if (wingTests++ >= WING_TESTS) break search;
-            if (fits(wing, part, blocked)) {
-              chosen = { main, part, wing };
+            if (fits(wing, part, blocked) && entranceClear(main, wing)) {
+              chosen = { main, wing };
               break search;
             }
           }
@@ -280,33 +361,13 @@ function buildComplex(
   if (!chosen) return undefined;
   const volumes: ComplexVolume[] = [chosen.main];
   if (chosen.wing) volumes.push(chosen.wing);
-  let outbuildingTests = 0,
-    outbuildings = 0;
-  extras: for (const part of parts) {
-    if (part === chosen.part) continue;
-    if (outbuildings >= OUTBUILDINGS) break;
-    const space = frame(part, chosen.main.angle);
-    for (const size of sizes(space, scale, chosen.main))
-      for (const center of centers(space, size, next)) {
-        if (outbuildingTests++ >= OUTBUILDING_TESTS) break extras;
-        const outbuilding: ComplexVolume = {
-          ...chosen.main,
-          id: `${id}-outbuilding-${outbuildings + 1}`,
-          role: "outbuilding",
-          storeys: 1,
-          center,
-          ...size,
-        };
-        if (fits(outbuilding, part, blocked)) {
-          volumes.push(outbuilding);
-          outbuildings++;
-          continue extras;
-        }
-      }
-  }
-  if (parts.length > 1 + outbuildings)
+  if (parts.length > 1)
     plan.messages.push(
-      "Weitere Teilflächen bleiben unbebaut (begrenzte Blockout-Suche).",
+      "Weitere Teilflächen bleiben frei: nur ein zusammenhängender Gebäudekomplex pro Bauplatz.",
+    );
+  if (!roads.length)
+    plan.messages.push(
+      "Keine Straße vorhanden: Haupteingänge vorläufig an der Vorderseite.",
     );
   return { id, volumes };
 }
@@ -319,8 +380,13 @@ export function planPlots(
   // Both blocker kinds remain caller-owned source data. Only current ground
   // usability is derived here; never replace the drawn site with its difference.
   const blocked: MultiPolygon = clipping.union(
-    blockers.flatMap((blocker) => blocker.areas.map(polygon)),
-  );
+      blockers.flatMap((blocker) => blocker.areas.map(polygon)),
+    ),
+    roads = clipping.union(
+      blockers
+        .filter((blocker) => blocker.kind === "road")
+        .flatMap((blocker) => blocker.areas.map(polygon)),
+    );
   const plans: PlotPlan[] = plots.map((plot) => {
     const planned: HouseArea = {
       outer:
@@ -386,7 +452,7 @@ export function planPlots(
   for (let i = 0; i < plans.length; i++) {
     const plan = plans[i];
     if (conflicts.has(i) || plan.buildableArea <= 0) continue;
-    const complex = buildComplex(plan, plots[i].seed, blocked);
+    const complex = buildComplex(plan, plots[i].seed, blocked, roads);
     if (complex) plan.complex = complex;
     else
       plan.messages.push(

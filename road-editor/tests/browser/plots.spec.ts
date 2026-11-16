@@ -1,6 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 import { houseGeometry } from "../../src/houses";
 import clipping, { type MultiPolygon } from "../../src/overlay";
+import { quadratic } from "../fixtures";
+import type { PlotPlan } from "../../src/plot-types";
 const snapshot = (page: Page) =>
   page.evaluate(() => window.__wegwerk.snapshot());
 async function at(page: Page, x: number, y: number) {
@@ -82,6 +84,27 @@ function area(polys: MultiPolygon) {
   );
 }
 
+function assertOneBuilding(plan: PlotPlan) {
+  expect(plan.complex).toBeDefined();
+  const volumes = plan.complex!.volumes,
+    footprints: MultiPolygon = volumes.map((v) => [
+      houseGeometry(v).footprint.map((p) => [p.x, p.y]),
+    ]),
+    roofs: MultiPolygon = volumes.map((v) => [
+      houseGeometry(v).roof.map((p) => [p.x, p.y]),
+    ]),
+    parts: MultiPolygon = plan.buildable.map((a) =>
+      [a.outer, ...a.holes].map((r) => r.map((p) => [p.x, p.y])),
+    );
+  expect(volumes.filter((v) => v.role === "main")).toHaveLength(1);
+  expect(volumes.length).toBeLessThanOrEqual(2);
+  expect(clipping.union(footprints)).toHaveLength(1);
+  expect(parts.some((part) => !clipping.difference(roofs, part).length)).toBe(
+    true,
+  );
+  return volumes;
+}
+
 test("draw a vector plot in an empty scene: one automatic complex, no manual access, source-only JSON and history", async ({
   page,
 }, info) => {
@@ -144,6 +167,120 @@ test("draw a vector plot in an empty scene: one automatic complex, no manual acc
   expect((await snapshot(page)).network).toEqual(saved);
 });
 
+test("main entrances follow the nearest street automatically through drawing, import and undo", async ({
+  page,
+}) => {
+  await rectangle(page, "plot");
+  const source = structuredClone((await snapshot(page)).network.plots);
+  await expect(page.locator("#plot-inspector")).toContainText(
+    "Keine Straße vorhanden",
+  );
+  await begin(page, "road");
+  await click(page, 35, -30);
+  await click(page, 35, 30);
+  await page.keyboard.press("Escape");
+  const east = await snapshot(page);
+  await page.getByLabel("Bauplatz auswählen").selectOption(source![0].id);
+  await expect(page.locator("#plot-inspector")).not.toContainText(
+    "Keine Straße vorhanden",
+  );
+
+  async function assertEntrances(sign: number) {
+    const current = await snapshot(page),
+      volumes = current.plots[0].complex!.volumes,
+      buildings = volumes.filter((v) => v.role !== "wing");
+    expect(buildings.length).toBeGreaterThan(0);
+    expect(volumes.some((v) => v.role === "wing")).toBe(true);
+    await expect(page.locator(".plot-entrance")).toHaveCount(buildings.length);
+    for (const volume of buildings) {
+      const entrance = houseGeometry(volume).entrance,
+        marker = page.locator(
+          `.plot-entrance[data-volume-id="${volume.id}"] circle`,
+        );
+      expect((entrance.x - volume.center.x) * sign).toBeGreaterThan(0);
+      expect(entrance.y).toBeCloseTo(volume.center.y);
+      expect(Number(await marker.getAttribute("cx"))).toBeCloseTo(entrance.x);
+      expect(Number(await marker.getAttribute("cy"))).toBeCloseTo(-entrance.y);
+    }
+    expect(current.network.plots).toEqual(source);
+    expect(JSON.stringify(current.network)).not.toContain("entranceSide");
+    expect(JSON.stringify(current.network)).not.toContain("entranceTarget");
+  }
+
+  await assertEntrances(1);
+  const west = structuredClone(east.network);
+  for (const node of west.nodes) node.x = -35;
+  await page.locator("#import").setInputFiles({
+    name: "street-west.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(west)),
+  });
+  await expect.poll(async () => (await snapshot(page)).network).toEqual(west);
+  await assertEntrances(-1);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect
+    .poll(async () => (await snapshot(page)).network)
+    .toEqual(east.network);
+  await assertEntrances(1);
+});
+
+test("a road curve gets one connected building with one exact nearest-edge target", async ({
+  page,
+}) => {
+  const project = quadratic();
+  project.version = 5;
+  project.nodes[0].x = -60;
+  project.nodes[1].x = 60;
+  Object.assign(project.paths[0].segments[0], { control: { x: 0, y: 60 } });
+  project.plots = [
+    {
+      id: "curve-site",
+      kind: "plot",
+      seed: 42,
+      outer: [
+        { x: -15, y: -35 },
+        { x: 60, y: -35 },
+        { x: 60, y: 48 },
+        { x: -15, y: 48 },
+      ],
+    },
+  ];
+  await page.locator("#import").setInputFiles({
+    name: "curved-street.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(project)),
+  });
+  await page.getByLabel("Bauplatz auswählen").selectOption("curve-site");
+  const current = await snapshot(page),
+    volumes = assertOneBuilding(current.plots[0]),
+    buildings = volumes.filter((v) => v.role !== "wing"),
+    main = buildings.find((v) => v.role === "main")!;
+  expect(current.plots[0].buildable.length).toBeGreaterThan(1);
+  expect(buildings).toHaveLength(1);
+  await expect(page.locator(".plot-frontage")).toHaveCount(buildings.length);
+  for (const volume of buildings) {
+    const entrance = houseGeometry(volume).entrance,
+      target = volume.entranceTarget!,
+      nx = entrance.x - volume.center.x,
+      ny = entrance.y - volume.center.y,
+      dx = target.x - entrance.x,
+      dy = target.y - entrance.y,
+      normalizer = Math.hypot(nx, ny) * Math.hypot(dx, dy);
+    expect((nx * dy - ny * dx) / normalizer).toBeCloseTo(0, 8);
+    expect((nx * dx + ny * dy) / normalizer).toBeCloseTo(1, 8);
+    await expect(
+      page.locator(`.plot-frontage[data-volume-id="${volume.id}"] path`),
+    ).toHaveAttribute(
+      "d",
+      `M ${entrance.x},${-entrance.y} L ${target.x},${-target.y}`,
+    );
+  }
+  for (const wing of volumes.filter((v) => v.role === "wing"))
+    expect(wing.angle).toBe(main.angle);
+  expect(current.network.plots).toEqual(project.plots);
+  expect(JSON.stringify(current.network)).not.toContain("entranceTarget");
+});
+
 test("road and river are ground blockers, not destructive plot cuts or additional plot objects", async ({
   page,
 }, info) => {
@@ -165,8 +302,8 @@ test("road and river are ground blockers, not destructive plot cuts or additiona
   expect(plan.excludedArea).toBeCloseTo(488, 5);
   expect(plan.buildableArea).toBeCloseTo(1512, 5);
   expect(s.complexMeshes).toHaveLength(1);
-  expect(plan.complex!.volumes.some((v) => v.center.y > 0)).toBe(true);
-  expect(plan.complex!.volumes.some((v) => v.center.y < 0)).toBe(true);
+  assertOneBuilding(plan);
+  await expect(page.locator(".plot-entrance")).toHaveCount(1);
   const permitted: MultiPolygon = plan.buildable.map((a) =>
     [a.outer, ...a.holes].map((r) => r.map((p) => [p.x, p.y])),
   );
@@ -177,6 +314,9 @@ test("road and river are ground blockers, not destructive plot cuts or additiona
     expect(area(clipping.difference([roof], permitted))).toBeLessThan(1e-6);
   }
   await page.getByLabel("Bauplatz auswählen").selectOption(source![0].id);
+  await expect(page.locator("#plot-inspector")).toContainText(
+    "nur ein zusammenhängender Gebäudekomplex",
+  );
   await page.screenshot({ path: info.outputPath("plot-blockers.png") });
   const plannedBefore = structuredClone(s.network.plots);
   await page.getByLabel("Zeichenmaterial").selectOption("road");

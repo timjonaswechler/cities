@@ -1,0 +1,1946 @@
+{
+  "format": "wegwerk.building-authoring-draft",
+  "modelVersion": 1,
+  "status": "superseded-by-feature-zoo",
+  "catalog": {
+    "id": "fantasy-houses",
+    "revision": "draft-1"
+  },
+  "coordinates": {
+    "groundPlane": "XY",
+    "up": "+Z",
+    "lengthUnit": "m",
+    "angleUnit": "deg",
+    "frameYawUnit": "rad"
+  },
+  "properties": [
+    {
+      "id": "layout.width",
+      "label": "Breite des Hauptbaus",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 4,
+        "max": 14
+      },
+      "default": 8,
+      "presets": [
+        {
+          "id": "narrow",
+          "value": 5
+        },
+        {
+          "id": "regular",
+          "value": 8
+        },
+        {
+          "id": "wide",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": "layout.depth",
+      "label": "Tiefe des Hauptbaus",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 4,
+        "max": 16
+      },
+      "default": 10,
+      "presets": [
+        {
+          "id": "short",
+          "value": 6
+        },
+        {
+          "id": "regular",
+          "value": 10
+        },
+        {
+          "id": "long",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": "storey.height",
+      "label": "Geschosshöhe",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 2.4,
+        "max": 6
+      },
+      "default": 2.8,
+      "presets": [
+        {
+          "id": "low",
+          "value": 2.6
+        },
+        {
+          "id": "regular",
+          "value": 2.8
+        },
+        {
+          "id": "hall",
+          "value": 4.2
+        }
+      ]
+    },
+    {
+      "id": "roof.pitch",
+      "label": "Dachneigung",
+      "type": "number",
+      "unit": "deg",
+      "domain": {
+        "min": 20,
+        "max": 60
+      },
+      "default": 40,
+      "presets": [
+        {
+          "id": "low",
+          "value": 30
+        },
+        {
+          "id": "regular",
+          "value": 40
+        },
+        {
+          "id": "steep",
+          "value": 50
+        }
+      ]
+    },
+    {
+      "id": "roof.eaves",
+      "label": "Dachüberstand",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 0,
+        "max": 0.8
+      },
+      "default": 0.3,
+      "presets": [
+        {
+          "id": "flush",
+          "value": 0
+        },
+        {
+          "id": "small",
+          "value": 0.3
+        },
+        {
+          "id": "wide",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "id": "overhang.depth",
+      "label": "Obergeschossvorstoß",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 0,
+        "max": 1.2
+      },
+      "default": 0.35,
+      "presets": [
+        {
+          "id": "small",
+          "value": 0.35
+        },
+        {
+          "id": "deep",
+          "value": 0.65
+        }
+      ]
+    },
+    {
+      "id": "passage.width",
+      "label": "Durchfahrtsbreite",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 1.2,
+        "max": 5
+      },
+      "default": 3,
+      "presets": [
+        {
+          "id": "pedestrian",
+          "value": 1.2
+        },
+        {
+          "id": "cart",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "passage.clearance",
+      "label": "Freie Höhe unter dem Bogen",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 2,
+        "max": 5
+      },
+      "default": 3.2,
+      "presets": [
+        {
+          "id": "pedestrian",
+          "value": 2.2
+        },
+        {
+          "id": "cart",
+          "value": 3.2
+        }
+      ]
+    },
+    {
+      "id": "passage.rise",
+      "label": "Bogenanstieg über der freien Höhe",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 0.2,
+        "max": 1.5
+      },
+      "default": 0.8,
+      "presets": [
+        {
+          "id": "shallow",
+          "value": 0.4
+        },
+        {
+          "id": "regular",
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "id": "wall.height",
+      "label": "Grundstücksmauerhöhe",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 0.5,
+        "max": 4.5
+      },
+      "default": 1.2,
+      "presets": [
+        {
+          "id": "low",
+          "value": 1.2
+        },
+        {
+          "id": "enclosure",
+          "value": 2.2
+        }
+      ]
+    },
+    {
+      "id": "wall.thickness",
+      "label": "Grundstücksmauerdicke",
+      "type": "number",
+      "unit": "m",
+      "domain": {
+        "min": 0.15,
+        "max": 0.8
+      },
+      "default": 0.3,
+      "presets": [
+        {
+          "id": "thin",
+          "value": 0.25
+        },
+        {
+          "id": "thick",
+          "value": 0.4
+        }
+      ]
+    },
+    {
+      "id": "facade.material",
+      "label": "Fassadenmaterial",
+      "type": "choice",
+      "valueType": "material-id",
+      "options": [
+        "plaster",
+        "timber",
+        "stone"
+      ],
+      "default": "plaster"
+    },
+    {
+      "id": "roof.material",
+      "label": "Dachmaterial",
+      "type": "choice",
+      "valueType": "material-id",
+      "options": [
+        "clay-tile",
+        "wood-shingle"
+      ],
+      "default": "clay-tile"
+    },
+    {
+      "id": "roof.ridge-axis",
+      "label": "Firstrichtung",
+      "type": "choice",
+      "valueType": "roof-axis",
+      "options": [
+        "frontage",
+        "depth"
+      ],
+      "default": "depth"
+    }
+  ],
+  "materials": [
+    {
+      "id": "plaster",
+      "color": "#d6c6a8",
+      "roughness": 0.9
+    },
+    {
+      "id": "timber",
+      "color": "#78624b",
+      "roughness": 0.9
+    },
+    {
+      "id": "stone",
+      "color": "#8e9188",
+      "roughness": 1
+    },
+    {
+      "id": "clay-tile",
+      "color": "#80604c",
+      "roughness": 0.85
+    },
+    {
+      "id": "wood-shingle",
+      "color": "#655b4d",
+      "roughness": 0.95
+    }
+  ],
+  "operators": [
+    {
+      "id": "solid.extrude",
+      "inputs": {
+        "outline": "region"
+      },
+      "parameters": {
+        "height": "length",
+        "material": "material-id"
+      },
+      "outputs": {
+        "solid": "solid",
+        "topOutline": "region",
+        "topFrame": "frame",
+        "facades": "facades"
+      }
+    },
+    {
+      "id": "roof.gable",
+      "inputs": {
+        "outline": "region"
+      },
+      "parameters": {
+        "pitch": "angle",
+        "eaves": "length",
+        "material": "material-id",
+        "axis": "roof-axis"
+      },
+      "outputs": {
+        "solid": "solid"
+      }
+    },
+    {
+      "id": "roof.hip",
+      "inputs": {
+        "outline": "region"
+      },
+      "parameters": {
+        "pitch": "angle",
+        "eaves": "length",
+        "material": "material-id"
+      },
+      "outputs": {
+        "solid": "solid"
+      }
+    },
+    {
+      "id": "region.offsetEdge",
+      "inputs": {
+        "outline": "region",
+        "edge": "edge"
+      },
+      "parameters": {
+        "depth": "length"
+      },
+      "outputs": {
+        "outline": "region"
+      }
+    },
+    {
+      "id": "solid.archPrism",
+      "inputs": {
+        "axis": "segment3"
+      },
+      "parameters": {
+        "width": "length",
+        "clearance": "length",
+        "rise": "length"
+      },
+      "outputs": {
+        "solid": "solid"
+      }
+    },
+    {
+      "id": "solid.boxPrism",
+      "inputs": {
+        "axis": "segment3"
+      },
+      "parameters": {
+        "width": "length",
+        "height": "length"
+      },
+      "outputs": {
+        "solid": "solid"
+      }
+    },
+    {
+      "id": "solid.subtract",
+      "inputs": {
+        "host": "solid",
+        "cut": "solid"
+      },
+      "parameters": {},
+      "outputs": {
+        "solid": "solid"
+      }
+    },
+    {
+      "id": "volume.corridor",
+      "inputs": {
+        "axis": "segment3"
+      },
+      "parameters": {
+        "width": "length",
+        "height": "length"
+      },
+      "outputs": {
+        "volume": "volume"
+      }
+    },
+    {
+      "id": "wall.sweep",
+      "inputs": {
+        "path": "path"
+      },
+      "parameters": {
+        "height": "length",
+        "thickness": "length",
+        "material": "material-id"
+      },
+      "outputs": {
+        "solid": "solid"
+      }
+    },
+    {
+      "id": "solid.union",
+      "inputs": {
+        "a": "solid",
+        "b": "solid"
+      },
+      "parameters": {},
+      "outputs": {
+        "solid": "solid"
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "id": "storey",
+      "inputs": {
+        "outline": "region"
+      },
+      "properties": {
+        "height": "storey.height",
+        "material": "facade.material"
+      },
+      "nodes": [
+        {
+          "id": "body",
+          "operator": "solid.extrude",
+          "inputs": {
+            "outline": {
+              "source": "input",
+              "id": "outline"
+            }
+          },
+          "parameters": {
+            "height": {
+              "source": "property",
+              "id": "height"
+            },
+            "material": {
+              "source": "property",
+              "id": "material"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "body",
+          "output": "solid"
+        },
+        "topOutline": {
+          "source": "node",
+          "id": "body",
+          "output": "topOutline"
+        },
+        "topFrame": {
+          "source": "node",
+          "id": "body",
+          "output": "topFrame"
+        },
+        "facades": {
+          "source": "node",
+          "id": "body",
+          "output": "facades"
+        }
+      }
+    },
+    {
+      "id": "roof-gable",
+      "inputs": {
+        "outline": "region"
+      },
+      "properties": {
+        "pitch": "roof.pitch",
+        "eaves": "roof.eaves",
+        "material": "roof.material",
+        "axis": "roof.ridge-axis"
+      },
+      "nodes": [
+        {
+          "id": "roof",
+          "operator": "roof.gable",
+          "inputs": {
+            "outline": {
+              "source": "input",
+              "id": "outline"
+            }
+          },
+          "parameters": {
+            "pitch": {
+              "source": "property",
+              "id": "pitch"
+            },
+            "eaves": {
+              "source": "property",
+              "id": "eaves"
+            },
+            "material": {
+              "source": "property",
+              "id": "material"
+            },
+            "axis": {
+              "source": "property",
+              "id": "axis"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "roof",
+          "output": "solid"
+        }
+      }
+    },
+    {
+      "id": "roof-hip",
+      "inputs": {
+        "outline": "region"
+      },
+      "properties": {
+        "pitch": "roof.pitch",
+        "eaves": "roof.eaves",
+        "material": "roof.material"
+      },
+      "nodes": [
+        {
+          "id": "roof",
+          "operator": "roof.hip",
+          "inputs": {
+            "outline": {
+              "source": "input",
+              "id": "outline"
+            }
+          },
+          "parameters": {
+            "pitch": {
+              "source": "property",
+              "id": "pitch"
+            },
+            "eaves": {
+              "source": "property",
+              "id": "eaves"
+            },
+            "material": {
+              "source": "property",
+              "id": "material"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "roof",
+          "output": "solid"
+        }
+      }
+    },
+    {
+      "id": "upper-projection",
+      "inputs": {
+        "outline": "region",
+        "edge": "edge"
+      },
+      "properties": {
+        "depth": "overhang.depth"
+      },
+      "nodes": [
+        {
+          "id": "projection",
+          "operator": "region.offsetEdge",
+          "inputs": {
+            "outline": {
+              "source": "input",
+              "id": "outline"
+            },
+            "edge": {
+              "source": "input",
+              "id": "edge"
+            }
+          },
+          "parameters": {
+            "depth": {
+              "source": "property",
+              "id": "depth"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "outline": {
+          "source": "node",
+          "id": "projection",
+          "output": "outline"
+        }
+      }
+    },
+    {
+      "id": "passage-arched",
+      "inputs": {
+        "host": "solid",
+        "axis": "segment3"
+      },
+      "properties": {
+        "width": "passage.width",
+        "clearance": "passage.clearance",
+        "rise": "passage.rise"
+      },
+      "nodes": [
+        {
+          "id": "opening",
+          "operator": "solid.archPrism",
+          "inputs": {
+            "axis": {
+              "source": "input",
+              "id": "axis"
+            }
+          },
+          "parameters": {
+            "width": {
+              "source": "property",
+              "id": "width"
+            },
+            "clearance": {
+              "source": "property",
+              "id": "clearance"
+            },
+            "rise": {
+              "source": "property",
+              "id": "rise"
+            }
+          }
+        },
+        {
+          "id": "cut",
+          "operator": "solid.subtract",
+          "inputs": {
+            "host": {
+              "source": "input",
+              "id": "host"
+            },
+            "cut": {
+              "source": "node",
+              "id": "opening",
+              "output": "solid"
+            }
+          },
+          "parameters": {}
+        },
+        {
+          "id": "reserve",
+          "operator": "volume.corridor",
+          "inputs": {
+            "axis": {
+              "source": "input",
+              "id": "axis"
+            }
+          },
+          "parameters": {
+            "width": {
+              "source": "property",
+              "id": "width"
+            },
+            "height": {
+              "source": "property",
+              "id": "clearance"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "cut",
+          "output": "solid"
+        },
+        "clearance": {
+          "source": "node",
+          "id": "reserve",
+          "output": "volume"
+        }
+      }
+    },
+    {
+      "id": "passage-rectangular",
+      "inputs": {
+        "host": "solid",
+        "axis": "segment3"
+      },
+      "properties": {
+        "width": "passage.width",
+        "clearance": "passage.clearance"
+      },
+      "nodes": [
+        {
+          "id": "opening",
+          "operator": "solid.boxPrism",
+          "inputs": {
+            "axis": {
+              "source": "input",
+              "id": "axis"
+            }
+          },
+          "parameters": {
+            "width": {
+              "source": "property",
+              "id": "width"
+            },
+            "height": {
+              "source": "property",
+              "id": "clearance"
+            }
+          }
+        },
+        {
+          "id": "cut",
+          "operator": "solid.subtract",
+          "inputs": {
+            "host": {
+              "source": "input",
+              "id": "host"
+            },
+            "cut": {
+              "source": "node",
+              "id": "opening",
+              "output": "solid"
+            }
+          },
+          "parameters": {}
+        },
+        {
+          "id": "reserve",
+          "operator": "volume.corridor",
+          "inputs": {
+            "axis": {
+              "source": "input",
+              "id": "axis"
+            }
+          },
+          "parameters": {
+            "width": {
+              "source": "property",
+              "id": "width"
+            },
+            "height": {
+              "source": "property",
+              "id": "clearance"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "cut",
+          "output": "solid"
+        },
+        "clearance": {
+          "source": "node",
+          "id": "reserve",
+          "output": "volume"
+        }
+      }
+    },
+    {
+      "id": "annex-gable",
+      "inputs": {
+        "outline": "region"
+      },
+      "properties": {
+        "height": "storey.height",
+        "pitch": "roof.pitch",
+        "eaves": "roof.eaves",
+        "wallMaterial": "facade.material",
+        "roofMaterial": "roof.material",
+        "axis": "roof.ridge-axis"
+      },
+      "nodes": [
+        {
+          "id": "body",
+          "operator": "solid.extrude",
+          "inputs": {
+            "outline": {
+              "source": "input",
+              "id": "outline"
+            }
+          },
+          "parameters": {
+            "height": {
+              "source": "property",
+              "id": "height"
+            },
+            "material": {
+              "source": "property",
+              "id": "wallMaterial"
+            }
+          }
+        },
+        {
+          "id": "roof",
+          "operator": "roof.gable",
+          "inputs": {
+            "outline": {
+              "source": "node",
+              "id": "body",
+              "output": "topOutline"
+            }
+          },
+          "parameters": {
+            "pitch": {
+              "source": "property",
+              "id": "pitch"
+            },
+            "eaves": {
+              "source": "property",
+              "id": "eaves"
+            },
+            "material": {
+              "source": "property",
+              "id": "roofMaterial"
+            },
+            "axis": {
+              "source": "property",
+              "id": "axis"
+            }
+          }
+        },
+        {
+          "id": "joined",
+          "operator": "solid.union",
+          "inputs": {
+            "a": {
+              "source": "node",
+              "id": "body",
+              "output": "solid"
+            },
+            "b": {
+              "source": "node",
+              "id": "roof",
+              "output": "solid"
+            }
+          },
+          "parameters": {}
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "joined",
+          "output": "solid"
+        }
+      }
+    },
+    {
+      "id": "boundary-wall",
+      "inputs": {
+        "path": "path"
+      },
+      "properties": {
+        "height": "wall.height",
+        "thickness": "wall.thickness",
+        "material": "facade.material"
+      },
+      "nodes": [
+        {
+          "id": "wall",
+          "operator": "wall.sweep",
+          "inputs": {
+            "path": {
+              "source": "input",
+              "id": "path"
+            }
+          },
+          "parameters": {
+            "height": {
+              "source": "property",
+              "id": "height"
+            },
+            "thickness": {
+              "source": "property",
+              "id": "thickness"
+            },
+            "material": {
+              "source": "property",
+              "id": "material"
+            }
+          }
+        }
+      ],
+      "exports": {
+        "solid": {
+          "source": "node",
+          "id": "wall",
+          "output": "solid"
+        }
+      }
+    }
+  ],
+  "features": [
+    {
+      "id": "storey",
+      "kind": "part",
+      "owner": "building",
+      "variants": [
+        {
+          "id": "plain",
+          "recipe": "storey",
+          "defaults": {
+            "material": {
+              "value": "plaster"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "roof",
+      "kind": "part",
+      "owner": "building",
+      "variants": [
+        {
+          "id": "gable",
+          "recipe": "roof-gable"
+        },
+        {
+          "id": "hip",
+          "recipe": "roof-hip"
+        }
+      ]
+    },
+    {
+      "id": "upper-overhang",
+      "kind": "region-modifier",
+      "owner": "consumer",
+      "variants": [
+        {
+          "id": "front",
+          "recipe": "upper-projection"
+        }
+      ]
+    },
+    {
+      "id": "passage",
+      "kind": "solid-modifier",
+      "owner": "host",
+      "variants": [
+        {
+          "id": "arched",
+          "recipe": "passage-arched"
+        },
+        {
+          "id": "rectangular",
+          "recipe": "passage-rectangular"
+        }
+      ]
+    },
+    {
+      "id": "annex",
+      "kind": "part",
+      "owner": "building",
+      "variants": [
+        {
+          "id": "domestic",
+          "recipe": "annex-gable",
+          "defaults": {
+            "height": {
+              "preset": "regular"
+            }
+          }
+        },
+        {
+          "id": "workshop",
+          "recipe": "annex-gable",
+          "defaults": {
+            "height": {
+              "preset": "hall"
+            },
+            "wallMaterial": {
+              "value": "stone"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "boundary-wall",
+      "kind": "plot-element",
+      "owner": "plot",
+      "variants": [
+        {
+          "id": "plain",
+          "recipe": "boundary-wall",
+          "defaults": {
+            "material": {
+              "value": "stone"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "one-building",
+      "kind": "hard",
+      "predicate": "building.singleConnectedSolidGroup",
+      "arguments": {
+        "count": 1,
+        "excludeOwner": "plot"
+      }
+    },
+    {
+      "id": "fit-envelope",
+      "kind": "hard",
+      "predicate": "site.containsFinalGeometry",
+      "arguments": {
+        "includeRoofs": true,
+        "includeEaves": true
+      }
+    },
+    {
+      "id": "free-clearances",
+      "kind": "hard",
+      "predicate": "geometry.reservedVolumesAreEmpty"
+    },
+    {
+      "id": "road-permission",
+      "kind": "hard",
+      "predicate": "site.roadOverbuildAuthorized",
+      "arguments": {
+        "permission": "road-overbuild",
+        "requireBoth": [
+          "building-profile",
+          "site"
+        ]
+      }
+    },
+    {
+      "id": "one-main-entrance",
+      "kind": "hard",
+      "predicate": "access.oneMainEntranceHasRouteToRoad"
+    },
+    {
+      "id": "projection-needs-upper",
+      "kind": "hard",
+      "when": {
+        "slotEnabled": "projection"
+      },
+      "predicate": "assembly.slotEnabled",
+      "arguments": {
+        "slot": "upper"
+      }
+    },
+    {
+      "id": "valid-joints",
+      "kind": "hard",
+      "predicate": "assembly.jointsAreGeometricallyValid"
+    },
+    {
+      "id": "proportions",
+      "kind": "preference",
+      "metric": "design.profileProportions",
+      "weight": 1
+    },
+    {
+      "id": "retain-plan",
+      "kind": "preference",
+      "metric": "design.preservePreviousChoices",
+      "weight": 2
+    }
+  ],
+  "globalRules": [
+    "one-building",
+    "fit-envelope",
+    "free-clearances",
+    "road-permission",
+    "one-main-entrance",
+    "valid-joints"
+  ],
+  "templates": [
+    {
+      "id": "single-house",
+      "layoutProperties": {
+        "width": "layout.width",
+        "depth": "layout.depth"
+      },
+      "slots": [
+        {
+          "id": "ground",
+          "feature": "storey",
+          "variants": [
+            {
+              "variant": "plain",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "inputs": {
+            "outline": {
+              "placement": "mainFootprint"
+            }
+          }
+        },
+        {
+          "id": "passage",
+          "feature": "passage",
+          "variants": [
+            {
+              "variant": "arched",
+              "weight": 3
+            },
+            {
+              "variant": "rectangular",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 0,
+            "max": 1
+          },
+          "inputs": {
+            "host": {
+              "slot": "ground",
+              "instance": "only",
+              "output": "solid"
+            },
+            "axis": {
+              "placement": "passageAxis"
+            }
+          },
+          "presenceWeights": {
+            "enabled": 1,
+            "disabled": 2
+          }
+        },
+        {
+          "id": "projection",
+          "feature": "upper-overhang",
+          "variants": [
+            {
+              "variant": "front",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 0,
+            "max": 1
+          },
+          "inputs": {
+            "outline": {
+              "slot": "ground",
+              "instance": "only",
+              "output": "topOutline"
+            },
+            "edge": {
+              "edgeOf": {
+                "slot": "ground",
+                "instance": "only",
+                "output": "topOutline"
+              },
+              "tag": "front"
+            }
+          },
+          "presenceWeights": {
+            "enabled": 1,
+            "disabled": 2
+          }
+        },
+        {
+          "id": "upper",
+          "feature": "storey",
+          "variants": [
+            {
+              "variant": "plain",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 0,
+            "max": 1
+          },
+          "inputs": {
+            "outline": {
+              "firstEnabled": [
+                {
+                  "slot": "projection",
+                  "instance": "only",
+                  "output": "outline"
+                },
+                {
+                  "slot": "ground",
+                  "instance": "only",
+                  "output": "topOutline"
+                }
+              ]
+            }
+          },
+          "joint": {
+            "kind": "stack",
+            "hostSlot": "ground"
+          },
+          "presenceWeights": {
+            "enabled": 1,
+            "disabled": 2
+          }
+        },
+        {
+          "id": "roof",
+          "feature": "roof",
+          "variants": [
+            {
+              "variant": "gable",
+              "weight": 4
+            },
+            {
+              "variant": "hip",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "inputs": {
+            "outline": {
+              "firstEnabled": [
+                {
+                  "slot": "upper",
+                  "instance": "only",
+                  "output": "topOutline"
+                },
+                {
+                  "slot": "ground",
+                  "instance": "only",
+                  "output": "topOutline"
+                }
+              ]
+            }
+          },
+          "joint": {
+            "kind": "roof-cover",
+            "hostSlots": [
+              "upper",
+              "ground"
+            ],
+            "select": "first-enabled"
+          }
+        },
+        {
+          "id": "annex",
+          "feature": "annex",
+          "variants": [
+            {
+              "variant": "domestic",
+              "weight": 1
+            },
+            {
+              "variant": "workshop",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 0,
+            "max": 1
+          },
+          "inputs": {
+            "outline": {
+              "placement": "attachedAnnexFootprint"
+            }
+          },
+          "joint": {
+            "kind": "wall-join",
+            "hostSlot": "ground",
+            "hostOutput": "facades",
+            "allowedTags": [
+              "left",
+              "right",
+              "back"
+            ]
+          },
+          "presenceWeights": {
+            "enabled": 1,
+            "disabled": 2
+          }
+        },
+        {
+          "id": "boundary",
+          "feature": "boundary-wall",
+          "variants": [
+            {
+              "variant": "plain",
+              "weight": 1
+            }
+          ],
+          "count": {
+            "min": 0,
+            "max": 1
+          },
+          "inputs": {
+            "path": {
+              "placement": "boundaryWallPathWithAccessGaps"
+            }
+          },
+          "presenceWeights": {
+            "enabled": 1,
+            "disabled": 2
+          }
+        }
+      ],
+      "finalGeometry": [
+        {
+          "id": "ground",
+          "source": {
+            "firstEnabled": [
+              {
+                "slot": "passage",
+                "instance": "only",
+                "output": "solid"
+              },
+              {
+                "slot": "ground",
+                "instance": "only",
+                "output": "solid"
+              }
+            ]
+          }
+        },
+        {
+          "id": "upper",
+          "source": {
+            "slot": "upper",
+            "instance": "only",
+            "output": "solid"
+          },
+          "ifEnabled": "upper"
+        },
+        {
+          "id": "roof",
+          "source": {
+            "slot": "roof",
+            "instance": "only",
+            "output": "solid"
+          }
+        },
+        {
+          "id": "annex",
+          "source": {
+            "slot": "annex",
+            "instance": "only",
+            "output": "solid"
+          },
+          "ifEnabled": "annex"
+        },
+        {
+          "id": "boundary",
+          "source": {
+            "slot": "boundary",
+            "instance": "only",
+            "output": "solid"
+          },
+          "ifEnabled": "boundary"
+        }
+      ],
+      "reservedVolumes": [
+        {
+          "source": {
+            "slot": "passage",
+            "instance": "only",
+            "output": "clearance"
+          },
+          "ifEnabled": "passage"
+        }
+      ],
+      "mainEntrance": {
+        "placement": "mainEntrance",
+        "preferPassageStartIfEnabled": "passage"
+      },
+      "preferences": [
+        "proportions",
+        "retain-plan"
+      ],
+      "rules": [
+        "projection-needs-upper"
+      ]
+    }
+  ],
+  "buildingProfiles": [
+    {
+      "id": "farmhouse",
+      "template": "single-house",
+      "permissions": [],
+      "slotConstraints": {
+        "passage": {
+          "count": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "projection": {
+          "count": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      },
+      "defaults": {
+        "layout": {
+          "width": {
+            "preset": "regular"
+          },
+          "depth": {
+            "preset": "long"
+          }
+        },
+        "slots": {
+          "ground": {
+            "height": {
+              "preset": "regular"
+            }
+          },
+          "roof": {
+            "pitch": {
+              "preset": "regular"
+            },
+            "material": {
+              "value": "wood-shingle"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "townhouse",
+      "template": "single-house",
+      "permissions": [
+        "road-overbuild"
+      ],
+      "slotConstraints": {
+        "upper": {
+          "count": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      },
+      "propertyLimits": {
+        "overhang.depth": {
+          "max": 0.65
+        }
+      },
+      "defaults": {
+        "layout": {
+          "width": {
+            "preset": "narrow"
+          },
+          "depth": {
+            "preset": "regular"
+          }
+        },
+        "slots": {
+          "roof": {
+            "pitch": {
+              "preset": "steep"
+            }
+          },
+          "projection": {
+            "depth": {
+              "choose": [
+                {
+                  "preset": "small",
+                  "weight": 3
+                },
+                {
+                  "preset": "deep",
+                  "weight": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "hall-house",
+      "template": "single-house",
+      "permissions": [],
+      "slotConstraints": {
+        "upper": {
+          "count": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "projection": {
+          "count": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "passage": {
+          "count": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      },
+      "defaults": {
+        "layout": {
+          "width": {
+            "preset": "wide"
+          },
+          "depth": {
+            "preset": "long"
+          }
+        },
+        "slots": {
+          "ground": {
+            "height": {
+              "preset": "hall"
+            },
+            "material": {
+              "value": "stone"
+            }
+          },
+          "roof": {
+            "pitch": {
+              "preset": "regular"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "useProfiles": [
+    {
+      "id": "rural-household",
+      "slotConstraints": {
+        "annex": {
+          "count": {
+            "min": 0,
+            "max": 1
+          },
+          "variants": [
+            {
+              "variant": "domestic",
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "template": "single-house"
+    },
+    {
+      "id": "urban-living",
+      "slotConstraints": {
+        "annex": {
+          "count": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      },
+      "template": "single-house"
+    },
+    {
+      "id": "smith-workshop",
+      "slotConstraints": {
+        "annex": {
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "variants": [
+            {
+              "variant": "workshop",
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "template": "single-house"
+    },
+    {
+      "id": "guild-hall",
+      "slotConstraints": {
+        "upper": {
+          "count": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      },
+      "template": "single-house"
+    }
+  ],
+  "sites": [
+    {
+      "id": "rural-plot",
+      "sourcePlotId": "plot-rural",
+      "plannedArea": {
+        "outer": [
+          [
+            0,
+            0
+          ],
+          [
+            30,
+            0
+          ],
+          [
+            30,
+            24
+          ],
+          [
+            0,
+            24
+          ]
+        ],
+        "holes": []
+      },
+      "maxHeight": 10,
+      "permissions": [],
+      "roads": [
+        {
+          "id": "road-rural",
+          "area": {
+            "outer": [
+              [
+                -5,
+                -5
+              ],
+              [
+                35,
+                -5
+              ],
+              [
+                35,
+                -1
+              ],
+              [
+                -5,
+                -1
+              ]
+            ],
+            "holes": []
+          },
+          "requiredClearHeight": 3.2
+        }
+      ],
+      "protectedVolumes": [],
+      "propertyLimits": {
+        "overhang.depth": {
+          "max": 0.5
+        }
+      }
+    },
+    {
+      "id": "urban-plot",
+      "sourcePlotId": "plot-urban",
+      "plannedArea": {
+        "outer": [
+          [
+            0,
+            0
+          ],
+          [
+            14,
+            0
+          ],
+          [
+            14,
+            20
+          ],
+          [
+            0,
+            20
+          ]
+        ],
+        "holes": []
+      },
+      "maxHeight": 12,
+      "permissions": [],
+      "roads": [
+        {
+          "id": "road-urban",
+          "area": {
+            "outer": [
+              [
+                -5,
+                -5
+              ],
+              [
+                20,
+                -5
+              ],
+              [
+                20,
+                0
+              ],
+              [
+                -5,
+                0
+              ]
+            ],
+            "holes": []
+          },
+          "requiredClearHeight": 3.2
+        }
+      ],
+      "protectedVolumes": [],
+      "propertyLimits": {
+        "overhang.depth": {
+          "max": 0.5
+        }
+      }
+    },
+    {
+      "id": "gate-plot",
+      "sourcePlotId": "plot-gate",
+      "plannedArea": {
+        "outer": [
+          [
+            0,
+            0
+          ],
+          [
+            18,
+            0
+          ],
+          [
+            18,
+            20
+          ],
+          [
+            0,
+            20
+          ]
+        ],
+        "holes": []
+      },
+      "maxHeight": 12,
+      "permissions": [
+        {
+          "capability": "road-overbuild",
+          "roadIds": [
+            "road-through"
+          ]
+        }
+      ],
+      "roads": [
+        {
+          "id": "road-through",
+          "area": {
+            "outer": [
+              [
+                -5,
+                8
+              ],
+              [
+                23,
+                8
+              ],
+              [
+                23,
+                12
+              ],
+              [
+                -5,
+                12
+              ]
+            ],
+            "holes": []
+          },
+          "requiredClearHeight": 3.2
+        }
+      ],
+      "protectedVolumes": [],
+      "propertyLimits": {
+        "overhang.depth": {
+          "max": 0.5
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": "farm-example",
+      "catalogRevision": "draft-1",
+      "site": "rural-plot",
+      "buildingProfile": "farmhouse",
+      "useProfile": "rural-household",
+      "seed": 42,
+      "choices": {
+        "slots": {
+          "annex": {
+            "enabled": true,
+            "variant": "domestic"
+          },
+          "boundary": {
+            "enabled": true
+          }
+        }
+      }
+    },
+    {
+      "id": "urban-example",
+      "catalogRevision": "draft-1",
+      "site": "urban-plot",
+      "buildingProfile": "townhouse",
+      "useProfile": "urban-living",
+      "seed": 42,
+      "choices": {
+        "slots": {
+          "roof": {
+            "variant": "gable"
+          },
+          "projection": {
+            "enabled": true,
+            "depth": {
+              "preset": "small"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "urban-hip-example",
+      "catalogRevision": "draft-1",
+      "site": "urban-plot",
+      "buildingProfile": "townhouse",
+      "useProfile": "urban-living",
+      "seed": 42,
+      "choices": {
+        "slots": {
+          "roof": {
+            "variant": "hip"
+          },
+          "projection": {
+            "enabled": false
+          }
+        }
+      }
+    },
+    {
+      "id": "smith-example",
+      "catalogRevision": "draft-1",
+      "site": "rural-plot",
+      "buildingProfile": "farmhouse",
+      "useProfile": "smith-workshop",
+      "seed": 43
+    },
+    {
+      "id": "guild-example",
+      "catalogRevision": "draft-1",
+      "site": "rural-plot",
+      "buildingProfile": "hall-house",
+      "useProfile": "guild-hall",
+      "seed": 44
+    },
+    {
+      "id": "gate-example",
+      "catalogRevision": "draft-1",
+      "site": "gate-plot",
+      "buildingProfile": "townhouse",
+      "useProfile": "urban-living",
+      "seed": 45,
+      "choices": {
+        "slots": {
+          "passage": {
+            "enabled": true,
+            "variant": "arched",
+            "width": {
+              "value": 4.5
+            },
+            "clearance": {
+              "preset": "cart"
+            }
+          },
+          "ground": {
+            "height": {
+              "preset": "hall"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

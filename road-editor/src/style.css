@@ -365,14 +365,6 @@ footer {
 #plot-inspector button {
   font-size: 12px;
 }
-#legacy-house-panel > summary {
-  cursor: pointer;
-  color: #647a6b;
-  font-size: 12px;
-}
-#legacy-house-panel[open] > summary {
-  margin-bottom: 12px;
-}
 .selected-water {
   stroke: #edb65a;
   stroke-width: 2;
@@ -413,8 +405,7 @@ footer {
   height: 1px;
   opacity: 0;
 }
-#inspector button.full,
-#house-inspector button.full {
+#inspector button.full {
   width: 100%;
   margin-top: 8px;
 }

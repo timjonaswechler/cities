@@ -276,6 +276,29 @@ describe("canonical geometry and plot boundaries", () => {
     expect(distance(...g.ridge)).toBeCloseTo(7);
   });
 
+  it.each([
+    ["front", { x: 10, y: 17 }],
+    ["right", { x: 12, y: 20 }],
+    ["back", { x: 10, y: 23 }],
+    ["left", { x: 8, y: 20 }],
+  ] as const)(
+    "places one %s entrance without changing the wall or roof envelope",
+    (entranceSide, expected) => {
+      const fixed = house({ center: { x: 10, y: 20 } }),
+        original = houseGeometry(fixed),
+        changed = houseGeometry({ ...fixed, entranceSide });
+      expect(changed.entrance).toEqual(expected);
+      expect({ ...changed, entrance: original.entrance }).toEqual(original);
+      const rotated = houseGeometry({
+        ...fixed,
+        entranceSide,
+        angle: Math.PI / 2,
+      });
+      expect(rotated.entrance.x).toBeCloseTo(10 - (expected.y - 20));
+      expect(rotated.entrance.y).toBeCloseTo(20 + (expected.x - 10));
+    },
+  );
+
   it("requires the entire roof rectangle in the plot, not just the footprint", () => {
     const input = request(),
       fixed = house({ center: { x: 9.75, y: 8 } });

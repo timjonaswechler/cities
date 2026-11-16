@@ -73,6 +73,26 @@ describe("house project adapter and persistence", () => {
     h.redo();
     expect(h.value.housePlot?.accepted).toEqual(chosen);
   });
+  it("round-trips explicit entrance sides and rejects malformed sides atomically", () => {
+    const n = project();
+    n.housePlot!.accepted = generateHouses(
+      houseRequest(n.housePlot!, computeSurface(n)),
+    ).houses[0];
+    for (const entranceSide of ["front", "right", "back", "left"] as const) {
+      n.housePlot!.accepted.entranceSide = entranceSide;
+      expect(parse(serialize(n))).toEqual(n);
+    }
+    const history = new History(n);
+    for (const invalid of ["roof", "", null, 0, {}]) {
+      const bad = structuredClone(n);
+      Object.assign(bad.housePlot!.accepted!, { entranceSide: invalid });
+      expect(() => history.commit(parse(JSON.stringify(bad)))).toThrow(
+        "Hausdaten",
+      );
+      expect(history.value).toEqual(n);
+    }
+  });
+
   it("revalidates a saved concrete house when the road changes without replacing it", () => {
     const n = project();
     n.housePlot!.accepted = generateHouses(

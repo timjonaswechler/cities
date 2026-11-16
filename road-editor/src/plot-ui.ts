@@ -1,4 +1,5 @@
 import type { HouseArea, HousePoint } from "./house-types";
+import { houseGeometry } from "./houses";
 import type { PlannedPlot, PlotPlan } from "./plot-types";
 
 const esc = (value: unknown) =>
@@ -85,6 +86,22 @@ export function plotOverlay(
           y = -Math.max(...plan.planned.outer.map((p) => p.y)) - 7 * scale;
         html += `<text class="plot-label" x="${x}" y="${y}" font-size="${11 * scale}" font-family="system-ui, sans-serif" font-weight="600" fill="#674c2c" stroke="#fffaf0" stroke-width="${3 * scale}" stroke-linejoin="round" paint-order="stroke">${esc(plan.id)} · ${areaLabel(plan.buildableArea)} bebaubar · ${bodiesLabel(bodyCount(plan))}</text>`;
       }
+    }
+    for (const volume of plan.complex?.volumes ?? []) {
+      if (volume.role === "wing") continue;
+      const entrance = houseGeometry(volume).entrance,
+        dx = entrance.x - volume.center.x,
+        dy = entrance.y - volume.center.y,
+        length = Math.hypot(dx, dy),
+        tip = {
+          x: entrance.x + (dx / length) * 8 * scale,
+          y: entrance.y + (dy / length) * 8 * scale,
+        };
+      if (selected && volume.entranceTarget) {
+        const target = volume.entranceTarget;
+        html += `<g class="plot-frontage" data-volume-id="${esc(volume.id)}"><title>Ausrichtung zur nächsten Straßenkante – kein Zugangsweg</title><path d="M ${point(entrance)} L ${point(target)}" fill="none" stroke="#285b4a" stroke-opacity="0.65" stroke-width="1" stroke-dasharray="4 4" ${stroke}/><circle cx="${target.x}" cy="${-target.y}" r="${2 * scale}" fill="#fffaf0" stroke="#285b4a" stroke-width="1" ${stroke}/></g>`;
+      }
+      html += `<g class="plot-entrance" data-volume-id="${esc(volume.id)}"><title>Haupteingang</title><path d="M ${point(entrance)} L ${point(tip)}" fill="none" stroke="#285b4a" stroke-width="2" ${stroke}/><circle cx="${entrance.x}" cy="${-entrance.y}" r="${2.5 * scale}" fill="#285b4a" stroke="#fffaf0" stroke-width="1" ${stroke}/></g>`;
     }
     html += "</g>";
   }

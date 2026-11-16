@@ -1,5 +1,5 @@
 import type { Contour } from "./blockers";
-import type { House, HouseArea } from "./house-types";
+import type { House, HouseArea, HousePoint } from "./house-types";
 
 export interface PlannedPlot extends Contour {
   kind: "plot";
@@ -12,7 +12,10 @@ export interface BuildBlocker {
   areas: HouseArea[];
 }
 export interface ComplexVolume extends House {
-  role: "main" | "wing" | "outbuilding";
+  // Attached wings share the main building's entrance.
+  role: "main" | "wing";
+  // Derived nearest street-edge point; not a walkable access route.
+  entranceTarget?: HousePoint;
 }
 export interface BuildingComplex {
   id: string;

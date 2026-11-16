@@ -7,7 +7,8 @@ export function createComplexGroup(complex: BuildingComplex): THREE.Group {
   group.name = `complex:${complex.id}`;
   group.userData = { kind: "building-complex", complexId: complex.id };
   for (const volume of complex.volumes) {
-    const child = createHouseGroup(volume);
+    // An attached wing shares the main building's entrance.
+    const child = createHouseGroup(volume, false, volume.role !== "wing");
     child.name = `volume:${volume.id}`;
     child.traverse((object) => {
       Object.assign(object.userData, {

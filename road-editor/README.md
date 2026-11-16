@@ -89,8 +89,8 @@ keine vollständige Überarbeitung der Werkbank.
   **Undo/Redo** (Ctrl/⌘ Z, Ctrl/⌘ Shift Z) arbeitet pro abgeschlossener
   Bearbeitung; eine Ziehbewegung ist ein Schritt. JSON-Import ist ebenfalls undo-fähig.
 - Pan: mittlere Taste oder Leertaste + Ziehen; Mausrad zoomt unabhängig vom Modell.
-  **Ansicht 0 / 120 m** setzt die Kamera zurück. **3D prüfen** zeigt dieselben
-  Flächen räumlich, **Draufsicht** kehrt zum Editieren zurück.
+  **3D prüfen** zeigt dieselben Flächen räumlich, **Draufsicht** kehrt zum
+  Editieren zurück.
 - **JSON speichern/laden** exportiert/importiert den versionierten editierbaren
   Graphen mit IDs, Segmenten, Griffen, Breiten, Radien und gefüllten Konturen — keine
   abgeleiteten Meshes. Ungültige Importe/Parameter ersetzen nicht den letzten
@@ -148,43 +148,38 @@ selben Bauplatz. Konturänderungen und Blockeränderungen aktualisieren die Plan
 **Bauplatz auswählen** erreicht auch verdeckte Konturen; **Neue Bebauung**
 wechselt den Seed. [Details und Grenzen](PLOTS.md).
 
-## Frühere Rechteckplanung / Hausvarianten
+Im **[Bauteil-Zoo](feature-zoo.html)** lassen sich Raumkörper, Dächer, Anbauten,
+Überhänge, Torbögen, Mauern und Verbindungsgänge einzeln mit Reglern prüfen.
+Lokationen bündeln pro Feature Freigaben, Grenzwerte und erlaubte Baustoffe.
+[Bedienung und Grenzen](FEATURE-ZOO.md). Der Zusammenbau zu Gebäudekomplexen folgt
+später; der frühere große Datenmodell-Entwurf ist zurückgestellt.
 
-Dieser ältere Ablauf bleibt für bestehende Projekte unter **Frühere Rechteckplanung**
-erreichbar. Für neue Bauplätze gilt der Vektorablauf oben.
+## Kompatibilität mit früheren Hausprojekten
 
-1. Einen Weg zeichnen und mit Esc beenden. Unter **Haus am Bauplatz** auf
-   **Bauplatz markieren** klicken und zwei gegenüberliegende Ecken setzen.
-   Zunächst einen rechteckigen Platz neben einem geraden Weg verwenden.
-2. Danach den gewünschten **Wegrand** anklicken; nicht die Mittellinie und
-   nicht das Wasser. **Zugang wählen** ändert diesen Punkt später erneut.
-3. **Hausvariante** schaltet bis zu drei passende Satteldachhäuser um:
-   4 × 6 m/eingeschossig, 6 × 8 m/zweigeschossig, 8 × 5 m/eingeschossig.
-   Proportionen und Firstrichtung unterscheiden sich. **Haus-Seed** verändert
-   die reproduzierbare Platzierungssuche. Draufsicht und **3D prüfen** zeigen
-   denselben Baukörper. Weniger Treffer und Ablehnungsgründe bleiben sichtbar.
-4. **Haus übernehmen** fixiert genau diesen Vorschlag. Zum erneuten Vergleichen
-   erst **Haus entfernen**; Undo stellt ihn wieder her. Neue Bauplatzecken oder
-   ein neuer Zugang erhalten das übernommene Haus und prüfen es erneut.
-5. Änderungen an Wegen und Wasser prüfen das konkrete Haus ebenfalls erneut:
-   Konflikte erscheinen rot und als Text, statt das Haus still zu ersetzen.
-   **Bauplatz löschen** entfernt Platz und Haus. Undo/Redo und JSON speichern
-   Bauplatz, Zugang, Seed, Variantenauswahl und übernommenes Haus.
+Die Rechteck-/Hausvariantenbedienung wurde aus der Seitenleiste entfernt.
+Neue Bauplätze verwenden ausschließlich den Vektorablauf oben. Bestehende
+Projekte mit `housePlot` bleiben ladbar und werden weiterhin dargestellt.
+JSON speichern/laden und Undo/Redo erhalten ihre Hausdaten unverändert.
+Änderungen an Wegen und Wasser prüfen gespeicherte Häuser erneut; Konflikte
+werden rot dargestellt, statt das Haus still zu ersetzen.
+
+Für dieses ältere Hausmodul gelten weiterhin die folgenden Prüfregeln:
 
 Die vollständige Dachhülle muss in den Bauplatz passen und mindestens 0,5 m
 Abstand zu Weg und Wasser halten. Der gerade Zugang ist 1,2 m breit, höchstens
 12 m lang und darf kein Wasser oder dazwischenliegende Wege queren. Diese
 Versuchswerte sind keine historischen Normen. Die endliche Suche prüft höchstens
 27 Platzierungen je Profil; kein Treffer beweist nicht, dass kein Haus möglich ist.
-Es gibt zunächst genau einen achsenparallelen Bauplatz, keine Grundstücksautomatik,
-Nachbarhäuser, Innenräume, Anbauten oder Fassadendetails.
+Dieses ältere Hausmodul modelliert einen achsenparallelen Bauplatz ohne
+Grundstücksautomatik, Nachbarhäuser, Innenräume, Anbauten oder Fassadendetails.
 
 Das Hausmodul erhält nur Baufläche, Zugang, getrennte Sperrflächen und Seed;
 `house-project.ts` adaptiert die bestehende Wege-/Wassergeometrie. `houses.ts`
 erzeugt und prüft die Hausbeschreibung; `houseGeometry` ist zugleich Grundlage
 der Three.js-Darstellung. Projekte mit Bauplatz verwenden JSON-Version 4.
 Versionen 1–3 bleiben ladbar; abgeleitete Vorschläge und Meshes werden nicht gespeichert.
-[Checkliste](HOUSE-CHECKLIST.md) · [Feste Hausprüffälle](HOUSE-ACCEPTANCE.md).
+Historischer Meilenstein: [Checkliste](HOUSE-CHECKLIST.md) ·
+[damalige Abnahmekriterien](HOUSE-ACCEPTANCE.md).
 
 ## Geometrie-Interface
 

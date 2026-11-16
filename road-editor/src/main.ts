@@ -40,8 +40,8 @@ import {
 } from "./geometry";
 import { SurfaceView, type View } from "./view";
 import { generateHouses, validateHouse } from "./houses";
-import { housePanel, houseOverlay, plotFromCorners } from "./house-ui";
-import { houseRequest, pickHouseAccess } from "./house-project";
+import { houseOverlay } from "./house-ui";
+import { houseRequest } from "./house-project";
 import type { House, HouseResult } from "./house-types";
 import { evaluateProject } from "./plot-project";
 import { updateActionPanel } from "./action-panel";
@@ -59,7 +59,7 @@ const esc = (s: unknown) =>
   );
 $("#app").innerHTML =
   `<header><h1>Wegwerk<small>Parametrischer Editor</small></h1><button id="select" class="active" title="Auswählen (V)">Auswählen</button><button id="draw" title="Stift zeichnen (P)">Zeichnen</button><select id="material" aria-label="Zeichenmaterial"><option value="road">Weg</option><option value="water">Wasser</option><option value="plot">Bauplatz</option></select><select id="kind" aria-label="Zeichenmodus"><option value="pen">Stift · Klick / Ziehen</option><option value="line">Gerade (fest)</option><option value="quadratic">Quadratisch (fest)</option><option value="cubic">Kubisch (fest)</option></select><span class="spacer"></span><button id="undo" title="Ctrl/⌘ Z">Undo</button><button id="redo" title="Ctrl/⌘ Shift Z">Redo</button><button id="new">Neu</button><button id="save">JSON speichern</button><button id="load">JSON laden</button><input id="import" type="file" accept="application/json,.json" aria-label="Graph importieren"><button id="spatial">3D prüfen</button></header>
-<main><aside><h2>Werkbank / Meter</h2><div id="inspector"></div><div id="plot-picker"></div><div id="plot-inspector"></div><details id="legacy-house-panel" class="section"><summary>Frühere Rechteckplanung</summary><div id="house-inspector"></div></details><div class="section" id="diagnostics" role="status"></div><div class="section hint">Klick: auswählen · Anker und blaue Griffe: ziehen.<br>Stift (P): Klicken setzt Ecken, Ziehen formt Kurven. Vorschau folgt der Maus.<br>Enter: offen beenden · Esc: Ziehgeste verwerfen, sonst beenden · V: Auswahl · Entf: Pfad löschen.<br>Leertaste + Ziehen / mittlere Taste: Pan.<br>Mausrad: Zoom · <button id="home">Ansicht 0 / 120 m</button><br>Weg und Wasser: offener Vektor + Breite; am ersten Anker oder mit „Pfad schließen“ zur gefüllten Fläche. Esc/Enter beendet offen.<br>Wege + Wasser = Sperrfläche; freier Rest ≠ Bauland.</div></aside><section id="viewport" aria-label="Wegewerkbank"><div id="three"></div><svg id="editor" aria-label="Vektorpfade bearbeiten"></svg><div class="overlay-title"><strong>Vektoren formen.</strong><span id="mode-hint">Direkt am Vektor, in Weltkoordinaten.</span></div><div class="legend"><b style="background:#427c70"></b>Weg <b style="background:#2b91b4"></b>Wasser <b style="background:#eddbb6"></b>Bauplatz <b style="background:#edb65a"></b>Auswahl / Radius<br><b style="background:#f8f9ee;border:1px solid #285b4a"></b>Anker <b style="background:#a4c9ed"></b>Kontrollgriff <b style="background:#be503e"></b>Konflikt</div><div class="scale" id="scale">10 m</div></section></main><footer><span id="status" role="status"></span><span id="metrics"></span></footer>`;
+<main><aside><h2>Werkbank / Meter</h2><div id="inspector"></div><div id="plot-picker"></div><div id="plot-inspector"></div><div class="section" id="diagnostics" role="status"></div></aside><section id="viewport" aria-label="Wegewerkbank"><div id="three"></div><svg id="editor" aria-label="Vektorpfade bearbeiten"></svg><div class="overlay-title"><strong>Vektoren formen.</strong><span id="mode-hint">Direkt am Vektor, in Weltkoordinaten.</span></div><div class="legend"><b style="background:#427c70"></b>Weg <b style="background:#2b91b4"></b>Wasser <b style="background:#eddbb6"></b>Bauplatz <b style="background:#edb65a"></b>Auswahl / Radius<br><b style="background:#f8f9ee;border:1px solid #285b4a"></b>Anker <b style="background:#a4c9ed"></b>Kontrollgriff <b style="background:#be503e"></b>Konflikt</div><div class="scale" id="scale">10 m</div></section></main><footer><span id="status" role="status"></span><span id="metrics"></span></footer>`;
 const starter: Network = {
   version: 3,
   areaBlockers: [],
@@ -119,11 +119,8 @@ let drawStart: string | undefined,
   space = false;
 let waterDraft: Point[] = [];
 let holeEdges: Curve[] = [];
-let houseMode: "select" | "plot" | "access" = "select";
-let plotCorner: Point | undefined, plotHover: Point | undefined;
 let houseResult: HouseResult | undefined, housePreview: House | undefined;
 let houseConflicts: string[] = [];
-let invalidHouseSeed: string | undefined;
 let plotPlans: PlotPlan[] = [];
 let penPoints: PenPoint[] = [];
 let penPath: string | undefined;
@@ -241,9 +238,6 @@ function deleteSelectedVector() {
   }
 }
 function setMode(next: typeof mode) {
-  invalidHouseSeed = undefined;
-  houseMode = "select";
-  plotCorner = plotHover = undefined;
   resetPen();
   mode = next;
   drawStart = undefined;
@@ -318,22 +312,6 @@ function render() {
     n.housePlot?.accepted ?? housePreview,
     !!houseConflicts.length,
   );
-  updateActionPanel(
-    $("#house-inspector"),
-    housePanel({
-      plot: n.housePlot,
-      result: houseResult,
-      preview: housePreview,
-      conflicts: houseConflicts,
-      mode: houseMode,
-    }),
-    "data-house-action",
-  );
-  if (invalidHouseSeed !== undefined) {
-    const seedInput = $<HTMLInputElement>('[data-house-field="seed"]');
-    seedInput.value = invalidHouseSeed;
-    seedInput.setAttribute("aria-invalid", "true");
-  }
   renderView();
   $("#select").classList.toggle("active", mode === "select");
   $("#draw").classList.toggle("active", mode === "draw" || mode === "island");
@@ -347,23 +325,17 @@ function render() {
   $("#spatial").textContent = spatial ? "Draufsicht" : "3D prüfen";
   $("#mode-hint").textContent = spatial
     ? "Dieselben Flächenringe räumlich geprüft. Bearbeiten in der Draufsicht."
-    : houseMode === "plot"
-      ? plotCorner
-        ? "Zweite Bauplatzecke setzen · Esc verwirft."
-        : "Erste Bauplatzecke setzen · Esc beendet."
-      : houseMode === "access"
-        ? "Zugang am Wegrand wählen, nicht am Wasser."
-        : usingPen() && (mode === "draw" || mode === "island")
-          ? "Klick: Ecke · Ziehen: Kurve · Enter: " +
-            (mode === "island" ? "Aussparung schließen" : "offen beenden") +
-            " · am Start: als Fläche schließen"
-          : mode === "island"
-            ? "Aussparung mit denselben Vektoren zeichnen · Enter schließt · Esc verwirft."
-            : mode === "draw"
-              ? drawStart
-                ? "Endpunkt setzen / andocken. Am Start schließen; Esc/Enter beendet offen."
-                : "Startpunkt setzen / an Knoten oder Segment andocken."
-              : "Direkt am Vektor, in Weltkoordinaten.";
+    : usingPen() && (mode === "draw" || mode === "island")
+      ? "Klick: Ecke · Ziehen: Kurve · Enter: " +
+        (mode === "island" ? "Aussparung schließen" : "offen beenden") +
+        " · am Start: als Fläche schließen"
+      : mode === "island"
+        ? "Aussparung mit denselben Vektoren zeichnen · Enter schließt · Esc verwirft."
+        : mode === "draw"
+          ? drawStart
+            ? "Endpunkt setzen / andocken. Am Start schließen; Esc/Enter beendet offen."
+            : "Startpunkt setzen / an Knoten oder Segment andocken."
+          : "Direkt am Vektor, in Weltkoordinaten.";
   const p = n.paths.find((p) => p.id === selection.path),
     at = n.nodes.find((p) => p.id === selection.node);
   const input = (label: string, key: string, value: number) =>
@@ -421,7 +393,7 @@ function render() {
       panel += `<div class="section"><h3>Kontrollgriff ${key}</h3><div class="row">${input("Griff X (m)", "handleX", q.x)}${input("Griff Y (m)", "handleY", q.y)}</div><p class="hint">Weg und Wasser verwenden dieselben Vektorkurven.</p></div>`;
   }
   if (mode === "draw" && usingPen())
-    panel = `<h3>Stift zeichnen</h3><p class="muted"><strong>Klicken</strong> setzt eine Ecke.<br><strong>Ziehen</strong> bestimmt Richtung und Länge der Kurvengriffe.</p><p class="muted">${penPoints.length} Anker gesetzt. ${penPoints.length ? "Den nächsten Punkt setzen; die gestrichelte Linie zeigt die Vorschau." : "Den ersten Punkt auf der Zeichenfläche setzen."}</p><button class="full" data-action="finish-drawing">Offen beenden · Enter</button><p class="hint">Am Startpunkt schließt ein Klick ausdrücklich als Fläche. Esc verwirft eine laufende Ziehgeste; sonst beendet es das Zeichnen. V wechselt zur Auswahl.</p>`;
+    panel = `<h3>Stift zeichnen</h3><p class="muted"><strong>Klicken</strong> setzt eine Ecke.<br><strong>Ziehen</strong> bestimmt Richtung und Länge der Kurvengriffe.</p><p class="muted">${penPoints.length} Anker gesetzt. ${penPoints.length ? "Den nächsten Punkt setzen; die gestrichelte Linie zeigt die Vorschau." : "Den ersten Punkt auf der Zeichenfläche setzen."}</p><button class="full" data-action="finish-drawing">Offen beenden · Enter</button>`;
   if (mode === "island")
     panel = `<h3>Aussparung zeichnen</h3><p class="muted">${waterDraft.length} Anker · ${usingPen() ? "Klicken setzt Ecken, Ziehen formt Kurven." : "Segmenttyp oben wählen."} Am ersten Anker oder mit Enter schließen. Esc verwirft.</p><button class="full" data-action="water-close" ${waterDraft.length < 2 ? "disabled" : ""}>Fläche schließen</button><button class="full" data-action="water-cancel">Abbrechen</button>`;
   $("#inspector").innerHTML = panel;
@@ -435,11 +407,7 @@ function render() {
   $("#diagnostics").innerHTML = warnings.length
     ? `<h2 class="warning">Geometriehinweise</h2><ul>${warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>`
     : "";
-  const statusNotice =
-    notice ||
-    (invalidHouseSeed !== undefined
-      ? "Ungültiger Bauplatz: Haus-Seed muss eine ganze Zahl von 0 bis 4294967295 sein."
-      : "");
+  const statusNotice = notice;
   $("#status").textContent =
     statusNotice ||
     `${mode === "draw" ? "Zeichnen" : mode === "island" ? "Aussparung" : "Auswahl"} · ${n.nodes.length} Knoten · ${n.paths.length} Pfade · ${(n.areaBlockers?.length ?? 0) + (n.plots?.length ?? 0)} geschlossene Flächen`;
@@ -550,16 +518,8 @@ function renderView() {
     !penGesture
   )
     content += `<text class="empty-instruction" x="${view.x}" y="${-view.y}" style="font-size:${16 * unit}px">Material wählen → Vektor zeichnen → offen beenden oder am Start schließen</text>`;
-  let bounds = n.housePlot?.bounds;
-  if (
-    plotCorner &&
-    plotHover &&
-    plotCorner.x !== plotHover.x &&
-    plotCorner.y !== plotHover.y
-  )
-    bounds = plotFromCorners(plotCorner, plotHover);
   content += houseOverlay({
-    bounds,
+    bounds: n.housePlot?.bounds,
     access: n.housePlot?.access,
     house: n.housePlot?.accepted ?? housePreview,
     conflict: !!houseConflicts.length,
@@ -959,53 +919,6 @@ viewport.addEventListener("pointerdown", (e) => {
     return;
   }
   if (e.button !== 0 || spatial) return;
-  if (houseMode === "plot") {
-    const q = world(e);
-    if (!plotCorner) {
-      plotCorner = q;
-      plotHover = undefined;
-      render();
-    } else {
-      const a = plotCorner;
-      if (
-        apply((n) => {
-          const bounds = plotFromCorners(a, q);
-          if (n.version < 4) n.version = 4;
-          n.housePlot = {
-            ...n.housePlot,
-            bounds,
-            access: n.housePlot?.access ?? null,
-            seed: n.housePlot?.seed ?? 42,
-          };
-        })
-      ) {
-        plotCorner = plotHover = undefined;
-        houseMode = history.value.housePlot?.access ? "select" : "access";
-        render();
-      }
-    }
-    return;
-  }
-  if (houseMode === "access") {
-    const access = pickHouseAccess(
-      surface,
-      world(e),
-      (12 * view.height) / svg.clientHeight,
-    );
-    if (!access) {
-      notice =
-        "Einen tatsächlichen Wegrand anklicken. Wasser ist kein Wegzugang.";
-      render();
-    } else if (
-      apply((n) => {
-        if (n.housePlot) n.housePlot.access = access;
-      })
-    ) {
-      houseMode = "select";
-      render();
-    }
-    return;
-  }
   if (usingPen() && (mode === "draw" || mode === "island")) {
     beginPen(e);
     return;
@@ -1073,10 +986,6 @@ viewport.addEventListener("pointerdown", (e) => {
   render();
 });
 viewport.addEventListener("pointermove", (e) => {
-  if (!drag && houseMode === "plot" && plotCorner) {
-    plotHover = world(e);
-    renderView();
-  }
   if (penGesture) {
     const q = world(e),
       delta = { x: q.x - penGesture.press.x, y: q.y - penGesture.press.y };
@@ -1354,59 +1263,6 @@ $("#plot-inspector").addEventListener("click", (e) => {
       if (plot) plot.seed = (plot.seed + 1) >>> 0;
     });
 });
-$("#house-inspector").addEventListener("click", (e) => {
-  const action = (e.target as Element).closest<HTMLButtonElement>(
-    "[data-house-action]",
-  )?.dataset.houseAction;
-  if (!action) return;
-  if (action === "accept" && invalidHouseSeed !== undefined) {
-    render();
-    return;
-  }
-  if (action === "draw-plot" || action === "pick-access") {
-    setMode("select");
-    selection = {};
-    houseMode = action === "draw-plot" ? "plot" : "access";
-    render();
-    return;
-  }
-  apply((n) => {
-    const plot = n.housePlot;
-    if (!plot) return;
-    if (action === "accept" && housePreview && !plot.accepted) {
-      const errors = validateHouse(
-        houseRequest(plot, computeSurface(n)),
-        housePreview,
-      );
-      if (errors.length) throw new Error(errors.join(" "));
-      plot.accepted = structuredClone(housePreview);
-      plot.previewId = housePreview.id;
-    }
-    if (action === "remove-house") delete plot.accepted;
-    if (action === "delete-plot") {
-      invalidHouseSeed = undefined;
-      delete n.housePlot;
-    }
-  });
-});
-$("#house-inspector").addEventListener("change", (e) => {
-  const target = e.target as HTMLInputElement;
-  const editingSeed = target.dataset.houseField === "seed";
-  if (editingSeed) invalidHouseSeed = target.value;
-  const accepted = apply((n) => {
-    if (!n.housePlot || n.housePlot.accepted) return;
-    if (target.dataset.houseField === "seed") {
-      n.housePlot.seed = target.value === "" ? NaN : Number(target.value);
-      delete n.housePlot.previewId;
-    }
-    if (target.dataset.houseField === "preview")
-      n.housePlot.previewId = target.value;
-  });
-  if (editingSeed) {
-    if (accepted) invalidHouseSeed = undefined;
-    render();
-  }
-});
 $("#select").addEventListener("click", () => setMode("select"));
 $("#draw").addEventListener("click", () => setMode("draw"));
 let lastDrawingMode = "pen";
@@ -1443,9 +1299,6 @@ $("#undo").addEventListener("click", () => {
   }
   const continuePen = mode === "draw" && usingPen() && penPath !== undefined;
   history.undo();
-  invalidHouseSeed = undefined;
-  houseMode = "select";
-  plotCorner = plotHover = undefined;
   if (continuePen) restorePenPath();
   else {
     resetPen();
@@ -1458,9 +1311,6 @@ $("#undo").addEventListener("click", () => {
 $("#redo").addEventListener("click", () => {
   const continuePen = mode === "draw" && usingPen() && penPath !== undefined;
   history.redo();
-  invalidHouseSeed = undefined;
-  houseMode = "select";
-  plotCorner = plotHover = undefined;
   if (continuePen) restorePenPath();
   else {
     resetPen();
@@ -1478,10 +1328,6 @@ $("#new").addEventListener("click", () => {
     delete n.plots;
     Object.assign(n, emptyNetwork());
   });
-});
-$("#home").addEventListener("click", () => {
-  Object.assign(view, { x: 0, y: 0, height: 120 });
-  renderView();
 });
 $("#spatial").addEventListener("click", () => {
   spatial = !spatial;
@@ -1509,16 +1355,12 @@ $("#import").addEventListener("change", async (e) => {
     const n = parse(await file.text());
     evaluateProject(n);
     history.commit(n);
-    $<HTMLDetailsElement>("#legacy-house-panel").open = !!n.housePlot;
     resetPen();
     selection = n.plots?.length ? { area: n.plots[0].id, ring: 0 } : {};
     drawStart = undefined;
     drawPath = undefined;
     notice = "";
     mode = "select";
-    invalidHouseSeed = undefined;
-    houseMode = "select";
-    plotCorner = plotHover = undefined;
     waterDraft = [];
     holeEdges = [];
   } catch (e) {

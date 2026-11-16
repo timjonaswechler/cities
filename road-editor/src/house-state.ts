@@ -42,6 +42,8 @@ export function validateHousePlot(value: unknown): asserts value is HousePlot {
       !h.id ||
       !point(h.center) ||
       !Number.isFinite(h.angle) ||
+      (h.entranceSide !== undefined &&
+        !["front", "right", "back", "left"].includes(h.entranceSide)) ||
       !HOUSE_PROFILES.some(
         (p) =>
           h.width === p.width &&
